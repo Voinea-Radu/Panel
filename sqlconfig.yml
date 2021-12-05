@@ -1,7 +1,7 @@
 ---
 driver: "MYSQL"
 host: "162.55.135.18"
-database: ""
+database: "new_panel"
 username: "root"
 password: "5xbqT7JUaxam7heFeWH577M4QPTTYCTx"
 port: 3306

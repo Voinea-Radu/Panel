@@ -2,7 +2,8 @@ package dev.lightdream.originalpanel;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
-import dev.lightdream.originalpanel.dto.LoginData;
+import dev.lightdream.originalpanel.dto.data.FormData;
+import dev.lightdream.originalpanel.dto.data.LoginData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,6 +66,21 @@ public class RestEndPoints {
         return data.respond("200 OK");
     }
 
+    @PostMapping("/api/form/complain")
+    public @ResponseBody
+    FormData.FormDataResponse complain (@RequestBody FormData.FormDataRequest data){
+        if(!validateCookie(data.cookie).response.equals("200 OK")){
+            return FormData.FormDataResponse.error("401 Ban Credentials");
+        }
+
+        if(Main.instance.databaseManager.validateUser(data.target)){
+            return FormData.FormDataResponse.error("422 Invalid entry");
+        }
+
+
+        return FormData.FormDataResponse.error("500 Not Implemented");
+    }
+
 
     public boolean checkPassword(String username, String password) {
         return BCrypt.verifyer().verify(
@@ -76,4 +92,6 @@ public class RestEndPoints {
     public boolean checkPassword(LoginData.LoginDataAuth data) {
         return checkPassword(data.username, data.password);
     }
+
+
 }

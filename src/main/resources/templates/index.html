@@ -32,7 +32,7 @@
                 <ul>
                     <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text">Home</span></a></li>
                     <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text">Staff</a></span></li>
-                    <li><a href="/complaints"><i class="mdi mdi-alert-circle"></i> <span
+                    <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span
                             class="text">Complaints</a></span></li>
                     <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text">Unban Requests</a></span>
                     </li>
@@ -98,51 +98,64 @@
     function verifyCookie() {
         return fetch("https://panel.originalnetwork-panel.dev/api/login/validate", {
             method: "post",
-            body: document.cookie
+            body: getCookie("login_data")
         }).then(response => response.blob());
     }
 
-    async function exec() {
-        if (document.cookie === "") {
-            console.log("Setting cookie to none")
-            document.cookie = "none";
+    function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
         }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
 
-        if (document.cookie !== "none") {
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    async function exec() {
+        if (getCookie("login_data") !== null) {
 
             //Verify the cookie
             blob = await verifyCookie();
             json = await blob.text();
-            console.log(json)
+            //console.log(json)
             obj = {};
 
             try {
                 obj = JSON.parse(json);
 
                 if (obj.response !== "200 OK") {
-                    console.log("Setting cookie to none")
-                    document.cookie = "none";
+                    setCookie("login_data", "", 0)
                 }
 
                 if (obj.password !== "" && obj.password !== undefined) {
                     obj.response = undefined;
-                    document.cookie = JSON.stringify(obj);
+                    setCookie("login_data", JSON.stringify(obj), 30)
                 } else {
-                    console.log("Setting cookie to none")
-                    document.cookie = "none";
+                    setCookie("login_data", "", 0)
                 }
             } catch (error) {
-                console.log("Setting cookie to none")
-                document.cookie = "none";
+                setCookie("login_data", "", 0)
             }
 
 
             //Login
-            if (document.cookie !== "none") {
+            if (getCookie("login_data") !== null) {
                 login = document.getElementById("login-button");
 
                 url = getSkinURL(obj.username);
-                console.log(url);
 
                 login.outerHTML = "<img src=" + url + " style='width: min(20%,50px)'>";
             }

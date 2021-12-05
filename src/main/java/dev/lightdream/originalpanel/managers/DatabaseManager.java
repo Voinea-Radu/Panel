@@ -1,10 +1,13 @@
 package dev.lightdream.originalpanel.managers;
 
+import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
+import dev.lightdream.originalpanel.dto.data.FormData;
+import dev.lightdream.originalpanel.dto.data.LoginData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Logger;
 import lombok.SneakyThrows;
@@ -14,7 +17,10 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -31,6 +37,12 @@ public class DatabaseManager {
         this.sqlConfig = main.sqlConfig;
         connect();
         Logger.good("Database connected");
+        setup();
+
+    }
+
+    public void setup() {
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL , `proof` TEXT NOT NULL, PRIMARY KEY( `id`));", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -139,7 +151,7 @@ public class DatabaseManager {
 
     @SneakyThrows
     public List<Staff> getStaff() {
-        String sql = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( permission=\"group.trainee\" OR permission=\"group.helper\" OR permission=\"group.jrmod\" OR permission=\"group.mod\" OR permission=\"group.srmod\" OR permission=\"group.admin\" OR permission=\"group.sradmin\" OR permission=\"group.operator\" OR permission=\"group.manager\" OR permission=\"group.owner\" );";
+        String sql = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( permission=\"group.trainee\" OR permission=\"group.helper\" OR permission=\"group.jrmod\" OR permission=\"group.mod\" OR permission=\"group.srmod\" OR permission=\"group.admin\" OR permission=\"group.sradmin\" OR permission=\"group.operator\" OR permission=\"group.manager\" OR permission=\"group.h-manager\" OR permission=\"group.owner\" );";
         ResultSet r = executeQuery(sql, new ArrayList<>());
 
         List<Staff> staffs = new ArrayList<>();
@@ -155,17 +167,17 @@ public class DatabaseManager {
 
         //Sort staff
 
-        List<Staff> owner = staffs.stream().filter(staff->staff.rank.equals("owner")).collect(Collectors.toList());
-        List<Staff> hManager = staffs.stream().filter(staff->staff.rank.equals("h-manager")).collect(Collectors.toList());
-        List<Staff> manager = staffs.stream().filter(staff->staff.rank.equals("manager")).collect(Collectors.toList());
-        List<Staff> operator = staffs.stream().filter(staff->staff.rank.equals("operator")).collect(Collectors.toList());
-        List<Staff> srAdmin = staffs.stream().filter(staff->staff.rank.equals("srAdmin")).collect(Collectors.toList());
-        List<Staff> admin = staffs.stream().filter(staff->staff.rank.equals("admin")).collect(Collectors.toList());
-        List<Staff> srMod = staffs.stream().filter(staff->staff.rank.equals("srMod")).collect(Collectors.toList());
-        List<Staff> mod = staffs.stream().filter(staff->staff.rank.equals("mod")).collect(Collectors.toList());
-        List<Staff> jrMod = staffs.stream().filter(staff->staff.rank.equals("jrMod")).collect(Collectors.toList());
-        List<Staff> helper = staffs.stream().filter(staff->staff.rank.equals("helper")).collect(Collectors.toList());
-        List<Staff> trainee = staffs.stream().filter(staff->staff.rank.equals("trainee")).collect(Collectors.toList());
+        List<Staff> owner = staffs.stream().filter(staff -> staff.rank.equals("owner")).collect(Collectors.toList());
+        List<Staff> hManager = staffs.stream().filter(staff -> staff.rank.equals("h-manager")).collect(Collectors.toList());
+        List<Staff> manager = staffs.stream().filter(staff -> staff.rank.equals("manager")).collect(Collectors.toList());
+        List<Staff> operator = staffs.stream().filter(staff -> staff.rank.equals("operator")).collect(Collectors.toList());
+        List<Staff> srAdmin = staffs.stream().filter(staff -> staff.rank.equals("sradmin")).collect(Collectors.toList());
+        List<Staff> admin = staffs.stream().filter(staff -> staff.rank.equals("admin")).collect(Collectors.toList());
+        List<Staff> srMod = staffs.stream().filter(staff -> staff.rank.equals("srmod")).collect(Collectors.toList());
+        List<Staff> mod = staffs.stream().filter(staff -> staff.rank.equals("mod")).collect(Collectors.toList());
+        List<Staff> jrMod = staffs.stream().filter(staff -> staff.rank.equals("jrmod")).collect(Collectors.toList());
+        List<Staff> helper = staffs.stream().filter(staff -> staff.rank.equals("helper")).collect(Collectors.toList());
+        List<Staff> trainee = staffs.stream().filter(staff -> staff.rank.equals("trainee")).collect(Collectors.toList());
 
         Collections.sort(owner);
         Collections.sort(hManager);
@@ -207,6 +219,39 @@ public class DatabaseManager {
         }
 
         return "Undefined";
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public boolean validateUser(String username) {
+        String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_players` WHERE username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username));
+
+        if (r.next()) {
+            return r.getInt(0) >= 1;
+        }
+
+        return false;
+    }
+
+    public void saveComplain(FormData.FormDataRequest data) {
+        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof) VALUE (?, ?, ?, ?, ?, ?)";
+        LoginData.LoginDataAuth loginData;
+
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.LoginDataAuth.class);
+        } catch (Throwable t) {
+            return;
+        }
+
+        executeUpdate(sql, Arrays.asList(
+                loginData.username,
+                data.target,
+                data.section,
+                data.dateAndTime,
+                data.description,
+                data.proof
+        ));
     }
 
 

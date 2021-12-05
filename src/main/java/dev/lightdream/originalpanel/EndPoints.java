@@ -42,6 +42,12 @@ public class EndPoints {
         return "server-rules.html";
     }
 
+    @GetMapping("/complain")
+    public String complain(Model model) {
+        return "complaints.html";
+    }
+
+
 
 
 

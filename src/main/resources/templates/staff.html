@@ -51,23 +51,33 @@
             border-radius: 100px;
         }
 
-        @media only screen and (max-width: 768px) {
-            .grid {
-                grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-            }
-        }
-
-        @media only screen and (max-width: 1500px) {
+        @media only screen and (max-width: 1350px) and (min-width: 850px) {
             .grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
             }
-        }
-
-        @media only screen and (max-width: 1150px) {
-            * {
-
+            .grid-card{
+                padding: 40px !important;
             }
         }
+
+        @media only screen and (max-width: 850px) {
+            .grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+            .grid-card{
+                padding: 40px !important;
+            }
+        }
+
+        @media only screen and (max-width: 1750px) and (min-width: 1350px){
+            .grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
+            .grid-card{
+                padding: 40px !important;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -75,13 +85,13 @@
     <div class="page-sidebar">
         <div class="nav-content">
             <div id="logo">
-                <a href="index.php"><img src="https://i.imgur.com/5MjoUuh.png"></a>
+                <a href="/"><img src="https://i.imgur.com/5MjoUuh.png"></a>
             </div>
             <div id="sidebar-links">
                 <ul>
                     <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text">Home</span></a></li>
                     <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text">Staff</a></span></li>
-                    <li><a href="/complaints"><i class="mdi mdi-alert-circle"></i> <span
+                    <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span
                             class="text">Complaints</a></span></li>
                     <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text">Unban Requests</a></span>
                     </li>
@@ -144,7 +154,7 @@
                             <span class="label sradmin" style="margin: 40px;" th:if="${staff.rank == 'sradmin'}">Sr.Admin</span>
                             <span class="label operator" style="margin: 40px;" th:if="${staff.rank == 'operator'}">Operator</span>
                             <span class="label manager" style="margin: 40px;" th:if="${staff.rank == 'manager'}">Manager</span>
-                            <span class="label hmanager" style="margin: 40px;" th:if="${staff.rank == 'hmanager'}">H-Manager</span>
+                            <span class="label hmanager" style="margin: 40px;" th:if="${staff.rank == 'h-manager'}">HManager</span>
                             <span class="label owner" style="margin: 40px;" th:if="${staff.rank == 'owner'}">Owner</span>
 
                         </div>
@@ -169,58 +179,71 @@
     function verifyCookie() {
         return fetch("https://panel.originalnetwork-panel.dev/api/login/validate", {
             method: "post",
-            body: document.cookie
+            body: getCookie("login_data")
         }).then(response => response.blob());
     }
 
-    async function exec() {
-        if (document.cookie === "") {
-            console.log("Setting cookie to none")
-            document.cookie = "none";
+    function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days*24*60*60*1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "")  + expires + "; path=/";
         }
 
-        if (document.cookie !== "none") {
-
-            //Verify the cookie
-            blob = await verifyCookie();
-            json = await blob.text();
-            console.log(json)
-            obj = {};
-
-            try {
-                obj = JSON.parse(json);
-
-                if (obj.response !== "200 OK") {
-                    console.log("Setting cookie to none")
-                    document.cookie = "none";
-                }
-
-                if (obj.password !== "" && obj.password !== undefined) {
-                    obj.response = undefined;
-                    document.cookie = JSON.stringify(obj);
-                } else {
-                    console.log("Setting cookie to none")
-                    document.cookie = "none";
-                }
-            } catch (error) {
-                console.log("Setting cookie to none")
-                document.cookie = "none";
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
             }
+            return null;
+        }
+
+        async function exec() {
+            if (getCookie("login_data") !== null) {
+
+                //Verify the cookie
+                blob = await verifyCookie();
+                json = await blob.text();
+                //console.log(json)
+                obj = {};
+
+                try {
+                    obj = JSON.parse(json);
+
+                    if (obj.response !== "200 OK") {
+                        setCookie("login_data", "", 0)
+                    }
+
+                    if (obj.password !== "" && obj.password !== undefined) {
+                        obj.response = undefined;
+                        setCookie("login_data", JSON.stringify(obj), 30)
+                    } else {
+                        setCookie("login_data", "", 0)
+                    }
+                } catch (error) {
+                    setCookie("login_data", "", 0)
+                }
 
 
-            //Login
-            if (document.cookie !== "none") {
-                login = document.getElementById("login-button");
+                //Login
+                if (getCookie("login_data") !== null) {
+                    login = document.getElementById("login-button");
 
-                url = getSkinURL(obj.username);
-                console.log(url);
+                    url = getSkinURL(obj.username);
 
-                login.outerHTML = "<img src=" + url + " style='width: min(20%,50px)'>";
+                    login.outerHTML = "<img src=" + url + " style='width: min(20%,50px)'>";
+                }
             }
         }
-    }
 
-    exec();
+        exec();
 
 
 </script>

@@ -11,7 +11,7 @@ public class SQLConfig {
 
     public Driver driver = Driver.MYSQL;
     public String host = "162.55.135.18";
-    public String database = "";
+    public String database = "new_panel";
     public String username = "root";
     public String password = "5xbqT7JUaxam7heFeWH577M4QPTTYCTx";
     public int port = 3306;

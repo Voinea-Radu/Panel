@@ -31,7 +31,7 @@
                 <ul>
                     <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text">Home</span></a></li>
                     <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text">Staff</a></span></li>
-                    <li><a href="/complaints"><i class="mdi mdi-alert-circle"></i> <span
+                    <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span
                             class="text">Complaints</a></span></li>
                     <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text">Unban Requests</a></span>
                     </li>
@@ -96,6 +96,28 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+
+    function setCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
     error = document.getElementById("login-error");
     error.hidden = true;
 
@@ -150,22 +172,23 @@
             obj = JSON.parse(json);
 
             if (obj.response !== "200 OK") {
-                document.cookie = "none";
+                setCookie("login_data", "", 0);
                 error.hidden = false;
                 error.innerText = obj.response;
             }
 
             if (obj.password !== "" && obj.password !== undefined) {
                 obj.response = undefined;
-                document.cookie = JSON.stringify(obj);
+                setCookie("login_data", JSON.stringify(obj), 30)
+                //document.cookie = JSON.stringify(obj);
                 window.location.replace("https://panel.originalnetwork-panel.dev/");
             } else {
-                document.cookie = "none";
+                setCookie("login_data", "", 0);
                 error.hidden = false;
                 error.innerText = obj.response;
             }
         } catch (error) {
-            document.cookie = "none";
+            setCookie("login_data", "", 0);
             error.hidden = false;
             error.innerText = obj.response;
         }
