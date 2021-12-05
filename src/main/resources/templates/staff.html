@@ -1,0 +1,229 @@
+<html>
+<head>
+    <title>Original | Staff</title>
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <link href="https://i.imgur.com/W6F7QEN.png" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://assets.original.gg/css/theme.css" rel="stylesheet">
+    <link crossorigin="anonymous"
+          href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.2.95/css/materialdesignicons.min.css"
+          integrity="sha512-tYefTUoWKpCvU14EKu/b/VxnSaT3+1ZBlL0BhTPSYCiqsMTbGylad3l6HCr9i4vpsDgJIFke+LQBq3MCXko6Qw=="
+          referrerpolicy="no-referrer" rel="stylesheet"/>
+    <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
+          integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
+          rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,800&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,800;0,900;1,800&display=swap"
+          rel="stylesheet">
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+            gap: 2rem !important;
+            -webkit-box-sizing: content-box;
+            box-sizing: content-box;
+            padding-left: 2.5%;
+        }
+
+        .grid-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1b1a2a;
+            padding: 40px;
+            border-radius: 10px;
+            border: 2px solid #212032;
+            width: 150px;
+            height: 150px;
+        }
+
+        .label {
+            background: #3e93d5;
+            padding: 8px 15px;
+            font-size: 14px;
+            color: #d7eeff;
+            font-weight: bold;
+            border-radius: 100px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media only screen and (max-width: 1500px) {
+            .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media only screen and (max-width: 1150px) {
+            * {
+
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="page">
+    <div class="page-sidebar">
+        <div class="nav-content">
+            <div id="logo">
+                <a href="index.php"><img src="https://i.imgur.com/5MjoUuh.png"></a>
+            </div>
+            <div id="sidebar-links">
+                <ul>
+                    <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text">Home</span></a></li>
+                    <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text">Staff</a></span></li>
+                    <li><a href="/complaints"><i class="mdi mdi-alert-circle"></i> <span
+                            class="text">Complaints</a></span></li>
+                    <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text">Unban Requests</a></span>
+                    </li>
+                    <li><a href="/bugs"><i class="mdi mdi-bug-outline"></i> <span class="text">Bugs</a></span></li>
+                    <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span
+                            class="text">Rules</a></span></li>
+                    <li><a href="/rules"><i class="mdi mdi-clipboard-list"></i> <span class="text">Entries
+                        <!--(Staff Applications, Complains, Unbans, Bugs)--></a></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="page-content">
+        <div class="page-top-bar">
+            <div class="container">
+                <div class="left">
+                    <a href="https://discord.gg/original" target="_blank"><i class="mdi mdi-discord"></i></a>
+                    <a href="https://tiktok.com/@original.gg__official" target="_blank"><i
+                            class="fab fa-tiktok"></i></a>
+                    <a href="https://instagram.com/original.gg__official/" target="_blank"><i
+                            class="mdi mdi-instagram"></i></a>
+                    <a href="https://youtube.com/channel/UC3VrKxY8oDM6pldT_kbAgag/featured" target="_blank"><i
+                            class="mdi mdi-youtube"></i></a>
+                    <a href="https://store.original.gg" target="_blank"><i class="mdi mdi-cart"></i></a>
+                    <a href="https://vote.original.gg" target="_blank"><i class="mdi mdi-map-marker-check"></i></a>
+                </div>
+                <div class="right">
+                    <a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>
+                    <a class="top-btn login" href="login" id="login-button">
+                        Login
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div class="container">
+                <h1 class="panel-title">Staff</h1>
+                <div class="grid">
+                    <div class="grid-card" th:each="staff : ${staffs}" th:if="${staff.username != 'Undefined'}">
+                        <div>
+                            <script th:inline="javascript">
+                                var name = [[${staff.username}]];
+                                var uuid = [[${staff.uuid}]]
+                                url = `https://cravatar.eu/helmavatar/${name}/190.png`;
+                                document.write("<img class=\"\" src=\"" + url + "\" style=\"width: 64px;display: flex; margin-left: auto; margin-right: auto;\">");
+                                document.write("<!-- " + uuid + "  -->");
+                            </script>
+                            <br>
+                            <strong>
+                                <div class="user" style="text-align: center;" th:text="${staff.username}"/>
+                            </strong>
+                            <br>
+
+                            <span class="label trainee" style="margin: 40px;" th:if="${staff.rank == 'trainee'}">Trainee</span>
+                            <span class="label helper" style="margin: 40px;" th:if="${staff.rank == 'helper'}">Helper</span>
+                            <span class="label jrmod" style="margin: 40px;" th:if="${staff.rank == 'jrmod'}">Jr.Mod</span>
+                            <span class="label mod" style="margin: 40px;" th:if="${staff.rank == 'mod'}">Mod</span>
+                            <span class="label srmod" style="margin: 40px;" th:if="${staff.rank == 'srmod'}">Sr.Mod</span>
+                            <span class="label admin" style="margin: 40px;" th:if="${staff.rank == 'admin'}">Admin</span>
+                            <span class="label sradmin" style="margin: 40px;" th:if="${staff.rank == 'sradmin'}">Sr.Admin</span>
+                            <span class="label operator" style="margin: 40px;" th:if="${staff.rank == 'operator'}">Operator</span>
+                            <span class="label manager" style="margin: 40px;" th:if="${staff.rank == 'manager'}">Manager</span>
+                            <span class="label hmanager" style="margin: 40px;" th:if="${staff.rank == 'hmanager'}">H-Manager</span>
+                            <span class="label owner" style="margin: 40px;" th:if="${staff.rank == 'owner'}">Owner</span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-table">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script crossorigin="anonymous"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function getSkinURL(name) {
+        return `https://cravatar.eu/helmavatar/${name}/190.png`
+    }
+
+    function verifyCookie() {
+        return fetch("https://panel.originalnetwork-panel.dev/api/login/validate", {
+            method: "post",
+            body: document.cookie
+        }).then(response => response.blob());
+    }
+
+    async function exec() {
+        if (document.cookie === "") {
+            console.log("Setting cookie to none")
+            document.cookie = "none";
+        }
+
+        if (document.cookie !== "none") {
+
+            //Verify the cookie
+            blob = await verifyCookie();
+            json = await blob.text();
+            console.log(json)
+            obj = {};
+
+            try {
+                obj = JSON.parse(json);
+
+                if (obj.response !== "200 OK") {
+                    console.log("Setting cookie to none")
+                    document.cookie = "none";
+                }
+
+                if (obj.password !== "" && obj.password !== undefined) {
+                    obj.response = undefined;
+                    document.cookie = JSON.stringify(obj);
+                } else {
+                    console.log("Setting cookie to none")
+                    document.cookie = "none";
+                }
+            } catch (error) {
+                console.log("Setting cookie to none")
+                document.cookie = "none";
+            }
+
+
+            //Login
+            if (document.cookie !== "none") {
+                login = document.getElementById("login-button");
+
+                url = getSkinURL(obj.username);
+                console.log(url);
+
+                login.outerHTML = "<img src=" + url + " style='width: min(20%,50px)'>";
+            }
+        }
+    }
+
+    exec();
+
+
+</script>
+
+</body>
+</html>
