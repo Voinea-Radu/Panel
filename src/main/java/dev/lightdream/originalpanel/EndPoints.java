@@ -16,12 +16,25 @@ public class EndPoints {
         </tr>
      */
 
+    /*
     @GetMapping("/")
     public String index(Model model) {
 
         model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
         model.addAttribute("registered_count", Main.instance.cacheManager.registeredPlayersCount.get());
         model.addAttribute("online_players_count", Main.instance.cacheManager.onlinePlayers.get());
+
+        return "index.html";
+    }
+    */
+
+    @GetMapping("/")
+    public String indexWithMessage(Model model, String message) {
+
+        model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
+        model.addAttribute("registered_count", Main.instance.cacheManager.registeredPlayersCount.get());
+        model.addAttribute("online_players_count", Main.instance.cacheManager.onlinePlayers.get());
+        model.addAttribute("message", message);
 
         return "index.html";
     }

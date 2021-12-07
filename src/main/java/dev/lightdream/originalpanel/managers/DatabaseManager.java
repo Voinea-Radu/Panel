@@ -6,7 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
-import dev.lightdream.originalpanel.dto.data.FormData;
+import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.LoginData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Logger;
@@ -42,7 +42,7 @@ public class DatabaseManager {
     }
 
     public void setup() {
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL , `proof` TEXT NOT NULL, PRIMARY KEY( `id`));", new ArrayList<>());
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT NOT NULL , `proof` TEXT NOT NULL, PRIMARY KEY( `id`));", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -228,14 +228,14 @@ public class DatabaseManager {
         ResultSet r = executeQuery(sql, Arrays.asList(username));
 
         if (r.next()) {
-            return r.getInt(0) >= 1;
+            return r.getInt(1) >= 1;
         }
 
         return false;
     }
 
-    public void saveComplain(FormData.FormDataRequest data) {
-        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof) VALUE (?, ?, ?, ?, ?, ?)";
+    public void saveComplain(ComplainData.ComplainDataRequest data) {
+        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, target_response) VALUE (?, ?, ?, ?, ?, ?, ?, ?)";
         LoginData.LoginDataAuth loginData;
 
         try {
@@ -250,7 +250,9 @@ public class DatabaseManager {
                 data.section,
                 data.dateAndTime,
                 data.description,
-                data.proof
+                data.proof,
+                data.status.toString(),
+                data.target
         ));
     }
 

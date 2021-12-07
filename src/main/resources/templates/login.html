@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://assets.original.gg/css/theme.css">
+    <link href="https://css.original.gg/style.css" rel="stylesheet">
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.2.95/css/materialdesignicons.min.css"
           integrity="sha512-tYefTUoWKpCvU14EKu/b/VxnSaT3+1ZBlL0BhTPSYCiqsMTbGylad3l6HCr9i4vpsDgJIFke+LQBq3MCXko6Qw=="
@@ -29,17 +29,13 @@
             </div>
             <div id="sidebar-links">
                 <ul>
-                    <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text">Home</span></a></li>
-                    <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text">Staff</a></span></li>
-                    <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span
-                            class="text">Complaints</a></span></li>
-                    <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text">Unban Requests</a></span>
-                    </li>
-                    <li><a href="/bugs"><i class="mdi mdi-bug-outline"></i> <span class="text">Bugs</a></span></li>
-                    <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span
-                            class="text">Rules</a></span></li>
-                    <li><a href="/rules"><i class="mdi mdi-clipboard-list"></i> <span class="text">Entries
-                        <!--(Staff Applications, Complains, Unbans, Bugs)--></a></span></li>
+                    <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text" id="home">Home</span></a></li>
+                    <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text" id="staff">Staff</span></a></li>
+                    <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span class="text" id="complaints">Complaints</span></a></li>
+                    <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text" id="unban">Unban Requests</span></a></li>
+                    <li><a href="/bugs"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
+                    <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span class="text" id="rules">Rules</span></a></li>
+                    <li><a href="/rules"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
                 </ul>
             </div>
         </div>
@@ -49,20 +45,18 @@
             <div class="container">
                 <div class="left">
                     <a href="https://discord.gg/original" target="_blank"><i class="mdi mdi-discord"></i></a>
-                    <a href="https://tiktok.com/@original.gg__official" target="_blank"><i
-                            class="fab fa-tiktok"></i></a>
-                    <a href="https://instagram.com/original.gg__official/" target="_blank"><i
-                            class="mdi mdi-instagram"></i></a>
-                    <a href="https://youtube.com/channel/UC3VrKxY8oDM6pldT_kbAgag/featured" target="_blank"><i
-                            class="mdi mdi-youtube"></i></a>
+                    <a href="https://tiktok.com/@original.gg__official" target="_blank"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://instagram.com/original.gg__official/" target="_blank"><i class="mdi mdi-instagram"></i></a>
+                    <a href="https://youtube.com/channel/UC3VrKxY8oDM6pldT_kbAgag/featured" target="_blank"><i class="mdi mdi-youtube"></i></a>
                     <a href="https://store.original.gg" target="_blank"><i class="mdi mdi-cart"></i></a>
                     <a href="https://vote.original.gg" target="_blank"><i class="mdi mdi-map-marker-check"></i></a>
                 </div>
                 <div class="right">
-                    <a href="/" class="search-btn"><i class="mdi mdi-magnify"></i></a>
-                    <a href="login" class="top-btn login">
-                        Login
-                    </a>
+                    <img class="language-chose pointer" src="https://images.original.gg/english.png" onclick="changeLanguage('en')">
+                    <img class="language-chose pointer" src="https://images.original.gg/romanian.png" onclick="changeLanguage('ro')">
+
+                    <a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>
+                    <a class="top-btn login" href="login" id="login-button">Login</a>
                 </div>
             </div>
         </div>
@@ -70,21 +64,21 @@
             <div class="container">
                 <h1 class="panel-title">Login</h1>
 
-                <h3 style="color: red" id="login-error">Error message here</h3>
+                <h3 id="error">Error message here</h3>
 
                 <div class="panel-form">
-                    <div style="display: block; margin-top: 0em; margin-block-end: 1em; width: 100%">
+                    <div class="form-block">
                         <div class="form-group">
-                            <label for="login-username">Username</label>
-                            <input class="form-control" type="text" id="login-username" name="fname">
+                            <label for="username">Username</label>
+                            <input class="form-control" type="text" id="username" name="fname">
                         </div>
                         <div class="form-group">
-                            <label for="login-password">Password</label>
-                            <input class="form-control" type="password" id="login-password">
+                            <label for="password">Password</label>
+                            <input class="form-control" type="password" id="password">
                         </div>
                         <div class="form-buttons">
-                            <button class="form-button submit" id="login-button-confirm" type="button">Login</button>
-                            <button class="form-button cancel">Cancel</button>
+                            <button class="form-button submit" id="login-submit" type="button">Login</button>
+                            <button class="form-button cancel" id="cancel">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -95,105 +89,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://js.original.gg/scripts.js"></script>
 <script>
-
-    function setCookie(name,value,days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    }
-
-    function getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-
-    error = document.getElementById("login-error");
-    error.hidden = true;
-
-    const input1 = document.getElementById('login-username');
-    const input2 = document.getElementById('login-password');
-    const button = document.getElementById('login-button-confirm');
-
-    input1.addEventListener("keydown", function (e) {
-        console.log("keydown");
-        if (e.key === "Enter") {
-            console.log("enter")
-            login();
-        }
-    });
-
-    input2.addEventListener("keydown", function (e) {
-        console.log("keydown");
-        if (e.key === "Enter") {
-            console.log("enter")
-            login();
-        }
-    });
-
-    button.addEventListener('click',function f()
-    {
-        console.log("click")
-        login()
-    });
-
-    async function login(){
-        console.log("Logging in")
-        username = document.getElementById("login-username").value;
-        password = document.getElementById("login-password").value;
-
-        loginData = {};
-        loginData.username = username;
-        loginData.password = password;
-
-        var blob;
-
-        blob = await fetch('https://panel.originalnetwork-panel.dev/api/login/v2', {
-            method: 'post',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginData)
-        }).then(response => response.blob());
-        json = await blob.text();
-
-        try {
-            obj = JSON.parse(json);
-
-            if (obj.response !== "200 OK") {
-                setCookie("login_data", "", 0);
-                error.hidden = false;
-                error.innerText = obj.response;
-            }
-
-            if (obj.password !== "" && obj.password !== undefined) {
-                obj.response = undefined;
-                setCookie("login_data", JSON.stringify(obj), 30)
-                //document.cookie = JSON.stringify(obj);
-                window.location.replace("https://panel.originalnetwork-panel.dev/");
-            } else {
-                setCookie("login_data", "", 0);
-                error.hidden = false;
-                error.innerText = obj.response;
-            }
-        } catch (error) {
-            setCookie("login_data", "", 0);
-            error.hidden = false;
-            error.innerText = obj.response;
-        }
-    }
-
+    loginTemplate();
 </script>
 </body>
 </html>

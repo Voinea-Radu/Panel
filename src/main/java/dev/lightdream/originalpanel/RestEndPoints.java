@@ -2,7 +2,7 @@ package dev.lightdream.originalpanel;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
-import dev.lightdream.originalpanel.dto.data.FormData;
+import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.LoginData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,17 +68,23 @@ public class RestEndPoints {
 
     @PostMapping("/api/form/complain")
     public @ResponseBody
-    FormData.FormDataResponse complain (@RequestBody FormData.FormDataRequest data){
-        if(!validateCookie(data.cookie).response.equals("200 OK")){
-            return FormData.FormDataResponse.error("401 Ban Credentials");
+    ComplainData.ComplainDataResponse complain(@RequestBody ComplainData.ComplainDataRequest data) {
+
+        Debugger.info("Received complain");
+
+        if (!validateCookie(data.cookie).response.equals("200 OK")) {
+            return ComplainData.ComplainDataResponse.error("401 Ban Credentials");
         }
 
-        if(Main.instance.databaseManager.validateUser(data.target)){
-            return FormData.FormDataResponse.error("422 Invalid entry");
+        if (!Main.instance.databaseManager.validateUser(data.target)) {
+            return ComplainData.ComplainDataResponse.error("422 Invalid entry");
         }
 
+        data.status = ComplainData.ComplainStatus.OPENED_AWAITING_TARGET_RESPONSE;
+        data.targetResponse = "";
 
-        return FormData.FormDataResponse.error("500 Not Implemented");
+        Main.instance.databaseManager.saveComplain(data);
+        return ComplainData.ComplainDataResponse.error("200 OK");
     }
 
 
