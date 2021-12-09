@@ -23,9 +23,10 @@ public class ComplainData {
         public String proof;
         public ComplainStatus status;
         public String targetResponse;
+        public Long timestamp;
 
         public ComplainDataResponse respond(String response) {
-            return new ComplainDataResponse(cookie, target, section, dateAndTime, description, proof, status, targetResponse, response);
+            return new ComplainDataResponse(cookie, target, section, dateAndTime, description, proof, status, targetResponse, timestamp, response);
         }
 
     }
@@ -42,8 +43,8 @@ public class ComplainData {
         public String proof;
         public ComplainStatus status;
         public String targetResponse;
+        public Long timestamp;
         public String response;
-
 
         public static ComplainDataResponse error(String error) {
             ComplainDataResponse output = new ComplainDataResponse();

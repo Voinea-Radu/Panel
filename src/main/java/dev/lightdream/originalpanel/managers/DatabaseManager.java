@@ -17,10 +17,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
@@ -42,7 +39,7 @@ public class DatabaseManager {
     }
 
     public void setup() {
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT NOT NULL , `proof` TEXT NOT NULL, PRIMARY KEY( `id`));", new ArrayList<>());
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT NOT NULL , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL , PRIMARY KEY( `id`));", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -99,7 +96,7 @@ public class DatabaseManager {
 
     @SneakyThrows
     private ResultSet executeQuery(String sql, List<Object> values) {
-        Debugger.info(sql);
+        Debugger.info(sql + " => " + values);
         PreparedStatement statement;
         try {
             statement = connection.prepareStatement(sql);
@@ -151,19 +148,62 @@ public class DatabaseManager {
 
     @SneakyThrows
     public List<Staff> getStaff() {
-        String sql = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( permission=\"group.trainee\" OR permission=\"group.helper\" OR permission=\"group.jrmod\" OR permission=\"group.mod\" OR permission=\"group.srmod\" OR permission=\"group.admin\" OR permission=\"group.sradmin\" OR permission=\"group.operator\" OR permission=\"group.manager\" OR permission=\"group.h-manager\" OR permission=\"group.owner\" );";
-        ResultSet r = executeQuery(sql, new ArrayList<>());
+
+        List<String> staffRanks = Arrays.asList(
+                "owner",
+                "h-manager",
+                "manager",
+                "operator",
+                "aradmin",
+                "admin",
+                "srmod",
+                "mod",
+                "jrmod",
+                "helper",
+                "trainee"
+        );
+
+        String args1 = "";
+        String args2 = "";
+
+        for (String staffRank : staffRanks) {
+            //noinspection StringConcatenationInLoop
+            args1 += "permission=\"group." + staffRank + "\" OR ";
+            //noinspection StringConcatenationInLoop
+            args2 += "primary_group=\"" + staffRank + "\" OR ";
+        }
+        args1 += "OR";
+        args1 = args1.replace("OR OR", "");
+        args2 += "OR";
+        args2 = args2.replace("OR OR", "");
+
+        String sql1 = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( " + args1 + " );";
+        String sql2 = "SELECT * FROM `luckperms`.`luckperms_players` WHERE " + args2;
+
+        ResultSet r1 = executeQuery(sql1, new ArrayList<>());
+        ResultSet r2 = executeQuery(sql2, new ArrayList<>());
+
+        HashSet<String> staffsUUID = new HashSet<>();
+
+        while (r1.next()) {
+            staffsUUID.add(r1.getString("uuid"));
+        }
+
+        while (r2.next()) {
+            staffsUUID.add(r2.getString("uuid"));
+        }
 
         List<Staff> staffs = new ArrayList<>();
 
-        while (r.next()) {
+        staffsUUID.forEach(uuid -> {
             Staff staff = new Staff();
-            staff.uuid = r.getString("uuid");
-            staff.rank = r.getString("permission").replace("group.", "");
-            staff.username = getPlayerName(staff.uuid);
-
-            staffs.add(staff);
-        }
+            staff.uuid = uuid;
+            staff.username = getPlayerName(uuid);
+            staff.rank = getRank(uuid);
+            if (!staff.username.equals("null")) {
+                staffs.add(staff);
+            }
+        });
 
         //Sort staff
 
@@ -235,7 +275,7 @@ public class DatabaseManager {
     }
 
     public void saveComplain(ComplainData.ComplainDataRequest data) {
-        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, target_response) VALUE (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, target_response, timestamp) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         LoginData.LoginDataAuth loginData;
 
         try {
@@ -252,9 +292,136 @@ public class DatabaseManager {
                 data.description,
                 data.proof,
                 data.status.toString(),
-                data.target
+                data.target,
+                data.timestamp
         ));
     }
 
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public String getPlayerUUID(String username) {
+        String sql = "SELECT uuid FROM `luckperms`.`luckperms_players` WHERE username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
+
+        if (r.next()) {
+            return r.getString(1);
+        }
+
+        return "";
+
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public String getRank(String uuid) {
+        String sql1 = "SELECT primary_group FROM `luckperms`.`luckperms_players` WHERE uuid=?";
+        String sql2 = "SELECT permission FROM `luckperms`.`luckperms_user_permissions` WHERE permission LIKE \"group.%\" AND uuid=?";
+
+        List<String> userRanks = new ArrayList<>();
+
+        ResultSet r1 = executeQuery(sql1, Arrays.asList(uuid));
+        ResultSet r2 = executeQuery(sql2, Arrays.asList(uuid));
+
+        if (r1.next()) {
+            userRanks.add(r1.getString(1).replace("group.", ""));
+        }
+
+        while (r2.next()) {
+            userRanks.add(r2.getString(1).replace("group.", ""));
+        }
+
+        return selectHighestRank(userRanks);
+    }
+
+    public String selectHighestRank(List<String> ranks) {
+
+        Debugger.info(ranks);
+
+        List<String> definedRanks = new ArrayList<>(Arrays.asList(
+                "owner",
+                "h-manager",
+                "manager",
+                "operator",
+                "aradmin",
+                "admin",
+                "srmod",
+                "mod",
+                "jrmod",
+                "helper",
+                "trainee",
+                "sponsor",
+                "original",
+                "eternal",
+                "platinum",
+                "legendary",
+                "god",
+                "xenon",
+                "heda",
+                "suprem",
+                "alpha"
+        ));
+
+        for (String rank : definedRanks) {
+            if (ranks.contains(rank)) {
+                return rank;
+            }
+        }
+
+        return "default";
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public Long getJoinDate(String username) {
+        String sql = "SELECT regdate FROM `authme`.`authme` WHERE  username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
+
+        if (r.next()) {
+            return r.getLong(1);
+        }
+
+        return 0L;
+    }
+
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    @SneakyThrows
+    public int getPlayTime(String uuid) {
+        String sql = "SELECT playedtime FROM `bungeecord`.`playtime` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        int output = 0;
+
+        while (r.next()) {
+            output += r.getInt(1);
+        }
+
+        return output;
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public int getOriginalCoins(String uuid) {
+        String sql = "SELECT points FROM `player_points`.`playerpoints_points` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        if (r.next()) {
+            return r.getInt(1);
+        }
+
+        return 0;
+    }
+
+    @SneakyThrows
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public Long getDiscordID(String uuid) {
+        String sql = "SELECT discord_id FROM `royal_security`.`users` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        if (r.next()) {
+            return r.getLong(1);
+        }
+
+        return 0L;
+    }
 
 }

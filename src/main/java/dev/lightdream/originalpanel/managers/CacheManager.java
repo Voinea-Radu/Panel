@@ -23,6 +23,7 @@ public class CacheManager {
 
             if (server.isOffline()) {
                 cache.update(1);
+                return;
             }
 
             cache.update(server.getPlayers().getOnline());

@@ -60,41 +60,41 @@
                     <img class="language-chose pointer" src="https://images.original.gg/romanian.png" onclick="changeLanguage('ro')">
 
                     <a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>
-                    <a class="top-btn login" href="login" id="login-button">Login</a>
+                    <a class="top-btn login" href="/login" id="login-button">Login</a>
                 </div>
             </div>
         </div>
         <div class="content-wrap">
             <div class="container">
-                <h1 class="panel-title">Submit a complaint</h1>
+                <h1 class="panel-title" id="complain-title">Submit a complaint</h1>
 
                 <h3 id="error">Error message here</h3>
 
                 <div class="panel-form">
                     <form>
                         <div class="form-group">
-                            <label for="target">Target</label>
+                            <label for="target" id="target-label">Target</label>
                             <input class="form-control" id="target" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="section">Section</label>
+                            <label for="section" id="section-label">Section</label>
                             <input class="form-control" id="section" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="date_and_time">Date and Time</label>
+                            <label for="date_and_time" id="date_and_time-label">Date and Time</label>
                             <input class="form-control" id="date_and_time" type="text">
                         </div>
                         <div class="form-group">
-                            <label for="description">Description</label>
+                            <label for="description" id="description-label">Description</label>
                             <textarea class="form-control vertical-text" id="description"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="proof">Proof</label>
+                            <label for="proof" id="proof-label">Proof</label>
                             <textarea class="form-control vertical-text" id="proof"></textarea>
                         </div>
                         <div class="form-buttons">
                             <button class="form-button submit" id="complain-submit" type="button">Submit</button>
-                            <button class="form-button cancel" id="complain-cancel">Cancel</button>
+                            <button class="form-button cancel" id="cancel">Cancel</button>
                         </div>
                     </form>
                 </div>

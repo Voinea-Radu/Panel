@@ -15,6 +15,10 @@ import java.nio.charset.StandardCharsets;
 @RestController("")
 public class RestEndPoints {
 
+    public RestEndPoints(){
+
+    }
+
     @PostMapping("/api/login/v2")
     public @ResponseBody
     LoginData.LoginDataResponse login(@RequestBody String dataStream) {
@@ -82,6 +86,7 @@ public class RestEndPoints {
 
         data.status = ComplainData.ComplainStatus.OPENED_AWAITING_TARGET_RESPONSE;
         data.targetResponse = "";
+        data.timestamp = System.currentTimeMillis();
 
         Main.instance.databaseManager.saveComplain(data);
         return ComplainData.ComplainDataResponse.error("200 OK");

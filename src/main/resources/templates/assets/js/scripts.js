@@ -4,7 +4,7 @@ if (error !== null) {
 }
 
 // ----- DEVELOPMENT ONLY -----
-setCookie("login_data", "", 0);
+//setCookie("login_data", "", 0);
 
 if (getCookie("lang") == null) {
     setCookie('lang', "en", 0);
@@ -92,9 +92,14 @@ async function loginCookie() {
 
             url = getSkinURL(obj.username);
 
-            login.outerHTML = "<img src=" + url + " style='width: min(20%,50px)'>";
+            login.outerHTML = "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "')>";
         }
     }
+}
+
+function profile(name) {
+    window.location.replace(`/profile/?user=${name}`);
+
 }
 
 function loginTemplate() {
@@ -218,7 +223,11 @@ async function submit() {
             error.hidden = false;
             error.innerText = obj.response;
         } else {
-            window.location.replace("/?message=Complain sent successfully");
+            if (getCookie("lang") === "en") {
+                window.location.replace("/?message=Complain sent successfully");
+            } else {
+                window.location.replace("/?message=Reclamatia trimisa cu succes");
+            }
         }
 
     } catch (error) {
@@ -295,6 +304,71 @@ function setSiteLanguage() {
     var login = document.getElementById("login-button");
     if (login !== null) {
         login.innerText = "Logheaza-te";
+    }
+
+    var complainTitle = document.getElementById("complain-title");
+    if (complainTitle !== null) {
+        complainTitle.innerText = "Creaza o reclamatie";
+    }
+
+    var target = document.getElementById("target-label");
+    if (target !== null) {
+        target.innerText = "Reclamatul";
+    }
+
+    var section = document.getElementById("section-label");
+    if (section !== null) {
+        section.innerText = "Sectiune";
+    }
+
+    var date = document.getElementById("date_and_time-label");
+    if (date !== null) {
+        date.innerText = "Data si Ora";
+    }
+
+    var description = document.getElementById("description-label");
+    if (description !== null) {
+        description.innerText = "Descriere";
+    }
+
+    var proof = document.getElementById("proof-label");
+    if (proof !== null) {
+        proof.innerText = "Dovada";
+    }
+
+    var complainSubmit = document.getElementById("complain-submit");
+    if (complainSubmit !== null) {
+        complainSubmit.innerText = "Trimite";
+    }
+
+    var complainCancel = document.getElementById("complain-cancel");
+    if (complainCancel !== null) {
+        complainCancel.innerText = "Anuleaza";
+    }
+
+    var loginTitle = document.getElementById("login-title");
+    if (loginTitle !== null) {
+        loginTitle.innerText = "Logheaza-te";
+    }
+
+    var username = document.getElementById("username-label");
+    if (username !== null) {
+        username.innerText = "Nume de utilizator";
+    }
+
+    var password = document.getElementById("password-label");
+    if (password !== null) {
+        password.innerText = "Parola";
+    }
+
+    var loginSubmit = document.getElementById("login-submit");
+    if (loginSubmit !== null) {
+        loginSubmit.innerText = "Logheaza-te";
+    }
+
+    var cancel = document.getElementById("cancel");
+    if (cancel !== null) {
+        cancel.innerText = "Anuleaza";
     }
 
 

@@ -281,6 +281,62 @@ body {
     background: #73a13f;
     color: #ecffd7;
 }
+
+.label.alpha{
+    background: #072CAE;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.suprem{
+    background: #CD3D20;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.heda{
+    background: #D8D53E;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.xenon{
+    background: #DB3A1A;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.god{
+    background: #E1DD19;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.legendary{
+    background: #1CE119;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.platinum{
+    background: #20BBCD;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.eternal{
+    background: #E10FE7;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.original{
+    background: #0CCCF0;
+    color: #ffd7d4;
+    margin: 40px;
+}
+.label.sponsor{
+    background: #EE930C;
+    color: #ffd7d4;
+    margin: 40px;
+}
+
+
+
+
+
 .label.trainee{
     background: #12e371;
     color: #ffd7d4;
@@ -711,3 +767,6 @@ body {
     margin-right: auto;
 }
 
+.user-icon{
+    width: min(20%,50px)
+}

@@ -146,11 +146,15 @@
             <artifactId>guava</artifactId>
             <version>20.0</version>
         </dependency>
-        <!--  -->
         <dependency>
             <groupId>at.favre.lib</groupId>
             <artifactId>bcrypt</artifactId>
             <version>0.9.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-alpha.2</version>
         </dependency>
     </dependencies>
 

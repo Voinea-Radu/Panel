@@ -1,9 +1,13 @@
 package dev.lightdream.originalpanel;
 
+import dev.lightdream.originalpanel.dto.data.PlayerProfile;
+import dev.lightdream.originalpanel.dto.data.ProfileData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class EndPoints {
@@ -58,6 +62,14 @@ public class EndPoints {
     @GetMapping("/complain")
     public String complain(Model model) {
         return "complaints.html";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, String user){
+        PlayerProfile profile = new PlayerProfile(user);
+        model.addAttribute("profile", profile);
+        Debugger.info(profile);
+        return "user.html";
     }
 
 
