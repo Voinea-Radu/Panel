@@ -246,6 +246,10 @@ function changeLanguage(language) {
     window.location.reload();
 }
 
+function redirect(path){
+    window.location.replace(path);
+}
+
 function setSiteLanguage() {
     if (getCookie("lang") === "en") {
         return;

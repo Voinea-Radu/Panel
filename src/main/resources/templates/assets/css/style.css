@@ -770,3 +770,8 @@ body {
 .user-icon{
     width: min(20%,50px)
 }
+
+.no-decorate-url{
+    text-decoration: none;
+    color: inherit;
+}

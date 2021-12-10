@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
+import dev.lightdream.originalpanel.dto.data.Complain;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.LoginData;
 import dev.lightdream.originalpanel.utils.Debugger;
@@ -423,5 +424,39 @@ public class DatabaseManager {
 
         return 0L;
     }
+
+
+    @SneakyThrows
+    public List<Complain> getComplains(String username) {
+        List<Complain> complaints =new ArrayList<>();
+
+        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE user=? or target=?";
+        LoginData.LoginDataAuth loginData;
+
+        ResultSet r =executeQuery(sql, Arrays.asList(
+                username,
+                username
+        ));
+
+        while(r.next()){
+            Complain complain =new Complain(
+                    r.getInt("id"),
+                    r.getString("user"),
+                    r.getString("target"),
+                    r.getString("section"),
+                    r.getString("date_and_time"),
+                    r.getString("description"),
+                    r.getString("proof"),
+                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
+                    r.getString("target_response"),
+                    r.getLong("timestamp")
+            );
+            complaints.add(complain);
+        }
+
+        return complaints;
+    }
+
+
 
 }

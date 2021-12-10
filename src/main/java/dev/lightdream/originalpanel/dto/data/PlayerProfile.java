@@ -5,6 +5,8 @@ import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Utils;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 public class PlayerProfile {
 
@@ -19,20 +21,21 @@ public class PlayerProfile {
     public String discordName;
     public String avatarURL;
     public Long discordID;
+    public List<Complain> complaints;
     //public int votes;
 
     public PlayerProfile(String username) {
         this.username = username;
-        this.avatarURL="https://cravatar.eu/helmavatar/"+username+"/190.png";
+        this.avatarURL = "https://cravatar.eu/helmavatar/" + username + "/190.png";
         this.uuid = Main.instance.databaseManager.getPlayerUUID(username);
         this.rank = Main.instance.databaseManager.getRank(uuid);
         this.joinDateMilliseconds = Main.instance.databaseManager.getJoinDate(username);
-        if(joinDateMilliseconds == 0){
-            this.joinDate="Unknown";
-        }else{
+        if (joinDateMilliseconds == 0) {
+            this.joinDate = "Unknown";
+        } else {
             this.joinDate = Utils.millisecondsToDate(joinDateMilliseconds);
         }
-        this.playTimeSeconds=Main.instance.databaseManager.getPlayTime(uuid);
+        this.playTimeSeconds = Main.instance.databaseManager.getPlayTime(uuid);
         this.playTime = Utils.millisecondsToHours(playTimeSeconds);
         this.originalCoins = Main.instance.databaseManager.getOriginalCoins(uuid);
         this.discordID = Main.instance.databaseManager.getDiscordID(uuid);
@@ -40,22 +43,23 @@ public class PlayerProfile {
             this.discordName = "Not Linked";
         } else {
             Main.instance.bot.retrieveUserById(discordID).queue(user -> {
-                if(user==null){
-                    this.discordName="Not Linked";
+                if (user == null) {
+                    this.discordName = "Not Linked";
                     return;
                 }
                 this.discordName = user.getAsTag();
             });
         }
+        this.complaints = Main.instance.databaseManager.getComplains(username);
 
-        int cycles=0;
+        int cycles = 0;
 
         //Awaiting for the discord username to be retrieved from discord API
-        while(this.discordName==null){
+        while (this.discordName == null) {
             cycles++;
-            if(cycles>200000000){
+            if (cycles > 200000000) {
                 Debugger.info("Break because of timeout");
-                this.discordName="Not Loaded";
+                this.discordName = "Not Loaded";
                 break;
             }
         }
@@ -75,6 +79,9 @@ public class PlayerProfile {
                 ", discordName='" + discordName + '\'' +
                 ", avatarURL='" + avatarURL + '\'' +
                 ", discordID=" + discordID +
+                ", complains=" + complaints +
                 '}';
     }
 }
+
+

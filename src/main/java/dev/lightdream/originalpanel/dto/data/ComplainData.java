@@ -6,9 +6,15 @@ import lombok.NoArgsConstructor;
 public class ComplainData {
 
     public enum ComplainStatus {
-        OPENED_AWAITING_TARGET_RESPONSE,
-        OPEN_AWAITING_STAFF_APPROVAL,
-        CLOSED
+        OPENED_AWAITING_TARGET_RESPONSE("Awaiting target response"),
+        OPEN_AWAITING_STAFF_APPROVAL("Awaiting staff approval"),
+        CLOSED("Closed");
+
+        public String message;
+
+        ComplainStatus(String message){
+            this.message=message;
+        }
     }
 
     @AllArgsConstructor
