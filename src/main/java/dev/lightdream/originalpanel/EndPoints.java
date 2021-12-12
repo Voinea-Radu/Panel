@@ -1,37 +1,14 @@
 package dev.lightdream.originalpanel;
 
+import dev.lightdream.originalpanel.dto.data.Complain;
 import dev.lightdream.originalpanel.dto.data.PlayerProfile;
-import dev.lightdream.originalpanel.dto.data.ProfileData;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class EndPoints {
-
-    /*
-        <tr th:each="message : ${messages}">
-            <td th:text="${message.id}">1</td>
-            <td><a href="#" th:text="${message.title}">Title ...</a></td>
-            <td th:text="${message.text}">Text ...</td>
-        </tr>
-     */
-
-    /*
-    @GetMapping("/")
-    public String index(Model model) {
-
-        model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
-        model.addAttribute("registered_count", Main.instance.cacheManager.registeredPlayersCount.get());
-        model.addAttribute("online_players_count", Main.instance.cacheManager.onlinePlayers.get());
-
-        return "index.html";
-    }
-    */
-
     @GetMapping("/")
     public String indexWithMessage(Model model, String message) {
 
@@ -60,20 +37,47 @@ public class EndPoints {
     }
 
     @GetMapping("/complain")
-    public String complain(Model model) {
-        return "complaints.html";
+    public String complain(Model model, Integer id) {
+        if (id == null) {
+            return "complaints.html";
+        }
+
+        Complain complain = Main.instance.databaseManager.getComplain(id);
+
+        if (complain == null) {
+            return "404.html";
+        }
+
+        model.addAttribute("complain", complain);
+
+        return "complaints-details.html";
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, String user){
+    public String profile(Model model, String user) {
         PlayerProfile profile = new PlayerProfile(user);
         model.addAttribute("profile", profile);
         Debugger.info(profile);
         return "user.html";
     }
 
+    @GetMapping("/unauthorised")
+    public String unauthorised(Model model) {
+        return "401.html";
+    }
 
+    @GetMapping("/notfound")
+    public String notFound(Model model) {
+        return "404.html";
+    }
 
+    @GetMapping("/entries")
+    public String entries(Model model) {
 
+        model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
 
+        return "entries.html";
+    }
 }
+
+

@@ -775,3 +775,30 @@ body {
     text-decoration: none;
     color: inherit;
 }
+
+.center-div{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.form-buttons > button.approve{
+    background: limegreen;
+    color: white;
+}
+
+.form-buttons > button.deny{
+    background: red;
+    color: white;
+}
+
+.approved{
+    color: limegreen;
+}
+
+.denied{
+    color: red;
+}
+

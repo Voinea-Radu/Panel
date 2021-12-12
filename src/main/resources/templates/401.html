@@ -1,7 +1,7 @@
-<!--suppress ThymeleafVariablesResolveInspection -->
-<html>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Original | Staff</title>
+    <title>Original | Dashboard</title>
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <link href="https://i.imgur.com/W6F7QEN.png" rel="icon" sizes="32x32" type="image/png"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -61,44 +61,11 @@
                 </div>
             </div>
         </div>
-        <div class="">
-            <div class="container">
-                <h1 class="panel-title">Staff</h1>
-                <div class="grid">
-                    <div class="grid-card" th:each="staff : ${staffs}" th:if="${staff.username != 'Undefined'}">
-                        <div>
-                            <script th:inline="javascript">
-                                var name = [[${staff.username}]];
-                                var uuid = [[${staff.uuid}]]
-                                url = `https://cravatar.eu/helmavatar/${name}/190.png`;
-                                document.write("<img class=\"avatar\" src=\"" + url + "\">");
-                                document.write("<!-- " + uuid + "  -->");
-                            </script>
-                            <br>
-                            <strong>
-                                <div class="user" th:text="${staff.username}"/>
-                            </strong>
-                            <br>
 
-                            <span class="label trainee" th:if="${staff.rank == 'trainee'}">Trainee</span>
-                            <span class="label helper" th:if="${staff.rank == 'helper'}">Helper</span>
-                            <span class="label jrmod" th:if="${staff.rank == 'jrmod'}">Jr.Mod</span>
-                            <span class="label mod" th:if="${staff.rank == 'mod'}">Mod</span>
-                            <span class="label srmod" th:if="${staff.rank == 'srmod'}">Sr.Mod</span>
-                            <span class="label admin" th:if="${staff.rank == 'admin'}">Admin</span>
-                            <span class="label sradmin" th:if="${staff.rank == 'sradmin'}">Sr.Admin</span>
-                            <span class="label operator" th:if="${staff.rank == 'operator'}">Operator</span>
-                            <span class="label manager" th:if="${staff.rank == 'manager'}">Manager</span>
-                            <span class="label hmanager" th:if="${staff.rank == 'h-manager'}">HManager</span>
-                            <span class="label owner" th:if="${staff.rank == 'owner'}">Owner</span>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="panel-table">
-
-
-                </div>
+        <div class="center-div">
+            <div class="center-div">
+                <!-- TODO scale -->
+                <img src="https://images.original.gg/401.png">
             </div>
         </div>
     </div>
@@ -107,6 +74,5 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://js.original.gg/scripts.js"></script>
-
 </body>
 </html>

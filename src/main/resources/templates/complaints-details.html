@@ -1,7 +1,10 @@
+<?php 
+    $page = 'index';
+?>
 <!--suppress ThymeleafVariablesResolveInspection -->
 <html>
 <head>
-    <title>Original | Staff</title>
+    <title>Original | Complaints</title>
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <link href="https://i.imgur.com/W6F7QEN.png" rel="icon" sizes="32x32" type="image/png"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -37,6 +40,7 @@
                     <li><a href="/bugs"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
                     <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span class="text" id="rules">Rules</span></a></li>
                     <li><a href="/entries"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
+
                 </ul>
             </div>
         </div>
@@ -61,43 +65,64 @@
                 </div>
             </div>
         </div>
-        <div class="">
+        <div class="content-wrap">
             <div class="container">
-                <h1 class="panel-title">Staff</h1>
-                <div class="grid">
-                    <div class="grid-card" th:each="staff : ${staffs}" th:if="${staff.username != 'Undefined'}">
-                        <div>
-                            <script th:inline="javascript">
-                                var name = [[${staff.username}]];
-                                var uuid = [[${staff.uuid}]]
-                                url = `https://cravatar.eu/helmavatar/${name}/190.png`;
-                                document.write("<img class=\"avatar\" src=\"" + url + "\">");
-                                document.write("<!-- " + uuid + "  -->");
-                            </script>
-                            <br>
-                            <strong>
-                                <div class="user" th:text="${staff.username}"/>
-                            </strong>
-                            <br>
+                <h1 class="panel-title" id="complain-title">Submit a complaint</h1>
 
-                            <span class="label trainee" th:if="${staff.rank == 'trainee'}">Trainee</span>
-                            <span class="label helper" th:if="${staff.rank == 'helper'}">Helper</span>
-                            <span class="label jrmod" th:if="${staff.rank == 'jrmod'}">Jr.Mod</span>
-                            <span class="label mod" th:if="${staff.rank == 'mod'}">Mod</span>
-                            <span class="label srmod" th:if="${staff.rank == 'srmod'}">Sr.Mod</span>
-                            <span class="label admin" th:if="${staff.rank == 'admin'}">Admin</span>
-                            <span class="label sradmin" th:if="${staff.rank == 'sradmin'}">Sr.Admin</span>
-                            <span class="label operator" th:if="${staff.rank == 'operator'}">Operator</span>
-                            <span class="label manager" th:if="${staff.rank == 'manager'}">Manager</span>
-                            <span class="label hmanager" th:if="${staff.rank == 'h-manager'}">HManager</span>
-                            <span class="label owner" th:if="${staff.rank == 'owner'}">Owner</span>
-
+                <h3 id="error">Error message here</h3>
+                <h2 class="approved" id="approved" hidden="hidden" th:if="${complain.decision.toString() == 'APPROVED'}">Approved</h2>
+                <h2 class="denied" id="denied" hidden="hidden" th:if="${complain.decision.toString() =='DENIED'}">Denied</h2>
+                <div class="panel-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="user" id="id-label">ID</label>
+                            <input class="form-control" id="id" type="text" readonly="readonly" th:value="${complain.id}">
                         </div>
-                    </div>
-                </div>
-                <div class="panel-table">
-
-
+                        <div class="form-group">
+                            <label for="user" id="user-label">By</label>
+                            <input class="form-control" id="user" type="text" readonly="readonly" th:value="${complain.user}">
+                        </div>
+                        <div class="form-group">
+                            <label for="target" id="target-label">Target</label>
+                            <input class="form-control" id="target" type="text" readonly="readonly" th:value="${complain.target}">
+                        </div>
+                        <div class="form-group">
+                            <label for="section" id="section-label">Section</label>
+                            <input class="form-control" id="section" type="text" readonly="readonly" th:value="${complain.section}">
+                        </div>
+                        <div class="form-group">
+                            <label for="date_and_time" id="date_and_time-label">Date and Time</label>
+                            <input class="form-control" id="date_and_time" type="text" readonly="readonly" th:value="${complain.dateAndTime}">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" id="description-label">Description</label>
+                            <textarea class="form-control vertical-text" id="description" readonly="readonly" th:text="${complain.description}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="proof" id="proof-label">Proof</label>
+                            <textarea class="form-control vertical-text" id="proof" readonly="readonly" th:text="${complain.proof}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="target-response" id="target-response-label">Target Response</label>
+                            <textarea class="form-control vertical-text" id="target-response"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="target-response-db" id="target-response-db-label" hidden="hidden">Target Response</label>
+                            <textarea class="form-control vertical-text" id="target-response-db" hidden="hidden" th:text="${complain.targetResponse}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" id="status-label" hidden="hidden">Status</label>
+                            <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${complain.status}" hidden="hidden"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="form-button submit" id="complain-submit" type="button">Submit</button>
+                            <button class="form-button cancel" id="cancel">Cancel</button>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve</button>
+                            <button class="form-button deny" id="deny" type="button"  hidden="hidden">Deny</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -107,6 +132,9 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://js.original.gg/scripts.js"></script>
+<script>
+    complaintsDetails();
+</script>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@AllArgsConstructor
 public class Complain{
 
     public int id;
@@ -18,18 +19,18 @@ public class Complain{
     public ComplainData.ComplainStatus status;
     public String targetResponse;
     public Long timestamp;
+    public ComplainData.ComplainDecision decision;
 
-    public Complain(int id, String user, String target, String section, String dateAndTime, String description, String proof, ComplainData.ComplainStatus status, String targetResponse, Long timestamp) {
-        this.id = id;
-        this.user = user;
-        this.target = target;
-        this.section = section;
-        this.dateAndTime = dateAndTime;
-        this.description = description;
-        this.proof = proof;
-        this.status = status;
-        this.targetResponse = targetResponse;
-        this.timestamp = timestamp;
+    public String getTimestampDate() {
+        return Utils.millisecondsToDate(timestamp);
+    }
+
+    public String getComplainURL(){
+        return "/complain?id="+id;
+    }
+
+    public String getComplainURLFunction(){
+        return "redirect('/complain?id="+id + "')";
     }
 
     @Override
@@ -45,19 +46,7 @@ public class Complain{
                 ", status=" + status +
                 ", targetResponse='" + targetResponse + '\'' +
                 ", timestamp=" + timestamp +
+                ", decision=" + decision +
                 '}';
     }
-
-    public String getTimestampDate() {
-        return Utils.millisecondsToDate(timestamp);
-    }
-
-    public String getComplainURL(){
-        return "/complain?id="+id;
-    }
-
-    public String getComplainURLFunction(){
-        return "redirect('/complain?id="+id + "')";
-    }
-
 }

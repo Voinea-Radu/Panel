@@ -40,7 +40,7 @@ public class DatabaseManager {
     }
 
     public void setup() {
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT NOT NULL , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL , PRIMARY KEY( `id`));", new ArrayList<>());
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL ,`decision` TEXT, PRIMARY KEY( `id`));", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -85,7 +85,7 @@ public class DatabaseManager {
 
     @SneakyThrows
     private void executeUpdate(String sql, List<Object> values) {
-        Debugger.info(sql);
+        Debugger.info(sql + " => " + values);
         PreparedStatement statement = connection.prepareStatement(sql);
 
         for (int i = 0; i < values.size(); i++) {
@@ -275,12 +275,12 @@ public class DatabaseManager {
         return false;
     }
 
-    public void saveComplain(ComplainData.ComplainDataRequest data) {
-        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, target_response, timestamp) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        LoginData.LoginDataAuth loginData;
+    public void saveComplain(ComplainData.ComplainCreateData data) {
+        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, timestamp, target_response, decision) VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)";
+        LoginData loginData;
 
         try {
-            loginData = new Gson().fromJson(data.cookie, LoginData.LoginDataAuth.class);
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
         } catch (Throwable t) {
             return;
         }
@@ -293,8 +293,8 @@ public class DatabaseManager {
                 data.description,
                 data.proof,
                 data.status.toString(),
-                data.target,
-                data.timestamp
+                data.timestamp,
+                ComplainData.ComplainDecision.UNANSWERED.toString()
         ));
     }
 
@@ -428,18 +428,17 @@ public class DatabaseManager {
 
     @SneakyThrows
     public List<Complain> getComplains(String username) {
-        List<Complain> complaints =new ArrayList<>();
+        List<Complain> complaints = new ArrayList<>();
 
-        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE user=? or target=?";
-        LoginData.LoginDataAuth loginData;
+        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE user=? or target=? ORDER BY id DESC LIMIT 10";
 
-        ResultSet r =executeQuery(sql, Arrays.asList(
+        ResultSet r = executeQuery(sql, Arrays.asList(
                 username,
                 username
         ));
 
-        while(r.next()){
-            Complain complain =new Complain(
+        while (r.next()) {
+            Complain complain = new Complain(
                     r.getInt("id"),
                     r.getString("user"),
                     r.getString("target"),
@@ -449,7 +448,83 @@ public class DatabaseManager {
                     r.getString("proof"),
                     ComplainData.ComplainStatus.valueOf(r.getString("status")),
                     r.getString("target_response"),
-                    r.getLong("timestamp")
+                    r.getLong("timestamp"),
+                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
+            );
+            complaints.add(complain);
+        }
+
+        return complaints;
+    }
+
+    @SneakyThrows
+    public Complain getComplain(int id) {
+        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE id=?";
+
+        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
+                id
+        ));
+
+        if (r.next()) {
+            return new Complain(
+                    r.getInt("id"),
+                    r.getString("user"),
+                    r.getString("target"),
+                    r.getString("section"),
+                    r.getString("date_and_time"),
+                    r.getString("description"),
+                    r.getString("proof"),
+                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
+                    r.getString("target_response"),
+                    r.getLong("timestamp"),
+                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
+            );
+        }
+
+        return null;
+    }
+
+    public void setTargetMessageComplain(ComplainData.ComplainTargetResponseData data) {
+        String sql = "UPDATE `complaints` SET target_response=?, status=? WHERE id=? ";
+
+        executeUpdate(sql, Arrays.asList(
+                data.targetResponse,
+                ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL.toString(),
+                data.id
+        ));
+    }
+
+    public void setComplainDecision(ComplainData.ComplainDecisionData data) {
+            String sql = "UPDATE `complaints` SET status=?, decision=? WHERE id=? ";
+
+        executeUpdate(sql, Arrays.asList(
+                ComplainData.ComplainStatus.CLOSED.toString(),
+                data.decision,
+                data.id
+        ));
+    }
+
+    @SneakyThrows
+    public List<Complain> getComplains() {
+        List<Complain> complaints = new ArrayList<>();
+
+        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE status='OPEN_AWAITING_STAFF_APPROVAL' ORDER BY id ASC LIMIT 20";
+
+        ResultSet r = executeQuery(sql, new ArrayList<>());
+
+        while (r.next()) {
+            Complain complain = new Complain(
+                    r.getInt("id"),
+                    r.getString("user"),
+                    r.getString("target"),
+                    r.getString("section"),
+                    r.getString("date_and_time"),
+                    r.getString("description"),
+                    r.getString("proof"),
+                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
+                    r.getString("target_response"),
+                    r.getLong("timestamp"),
+                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
             );
             complaints.add(complain);
         }
@@ -458,5 +533,12 @@ public class DatabaseManager {
     }
 
 
-
 }
+
+/*
+INSERT into `complaints`
+(      user,        target, section, date_and_time, description, proof, status,                        timestamp,     target_response, decision)
+VALUE (?,           ?,      ?,       ?,             ?,           ?,     ?,                             ?,             NULL,            ?)
+=> [   _LightDream, 1,      1,       2,             3,           4,     OPEN_AWAITING_TARGET_RESPONSE, 1639336286054, NULL,            UNANSWERED]
+
+ */

@@ -2,8 +2,11 @@ package dev.lightdream.originalpanel;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import dev.lightdream.originalpanel.dto.Staff;
+import dev.lightdream.originalpanel.dto.data.Complain;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.LoginData;
+import dev.lightdream.originalpanel.dto.data.Response;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,87 +14,113 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 @RestController("")
 public class RestEndPoints {
 
-    public RestEndPoints(){
+    public List<String> complainStaff = Arrays.asList(
+            "admin",
+            "sradmin",
+            "operator",
+            "manager",
+            "h-manager",
+            "owner"
+    );
+
+    public RestEndPoints() {
 
     }
 
     @PostMapping("/api/login/v2")
     public @ResponseBody
-    LoginData.LoginDataResponse login(@RequestBody String dataStream) {
-        LoginData.LoginDataAuth data;
+    Response login(@RequestBody String dataStream) {
+        LoginData data;
 
         try {
-            data = new Gson().fromJson(dataStream, LoginData.LoginDataAuth.class);
+            data = new Gson().fromJson(dataStream, LoginData.class);
         } catch (Throwable t) {
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
+            return Response.BAD_CREDENTIALS_401();
         }
 
-        if (data == null) {
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
+        if (data == null || !checkPassword(data)) {
+            return Response.BAD_CREDENTIALS_401();
         }
 
-        if (!checkPassword(data)) {
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
-        }
-
-        data.password = Main.instance.databaseManager.getAuthMePassword(data.username);
-
-        return data.respond("200 OK");
+        return Response.OK_200(Main.instance.databaseManager.getAuthMePassword(data.username));
     }
 
     @PostMapping("/api/login/validate")
     public @ResponseBody
-    LoginData.LoginDataResponse validateCookie(@RequestBody String dataStream) {
+    Response validateCookie(@RequestBody String dataStream) {
         Debugger.info(dataStream);
-        LoginData.LoginDataAuth data;
+        LoginData data;
         try {
-            data = new Gson().fromJson(dataStream, LoginData.LoginDataAuth.class);
+            data = new Gson().fromJson(dataStream, LoginData.class);
         } catch (Throwable t) {
-            Debugger.info(1);
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
+            return Response.BAD_CREDENTIALS_401();
         }
 
-        Debugger.info(data);
 
-        if (data == null) {
-            Debugger.info(2);
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
+        if (data == null || !data.password.equals(Main.instance.databaseManager.getAuthMePassword(data.username))) {
+            return Response.BAD_CREDENTIALS_401();
         }
 
-        if (!data.password.equals(Main.instance.databaseManager.getAuthMePassword(data.username))) {
-            Debugger.info(3);
-            return new LoginData.LoginDataResponse("", "", "401 Bad Credentials");
-        }
-
-        return data.respond("200 OK");
+        return Response.OK_200();
     }
 
     @PostMapping("/api/form/complain")
     public @ResponseBody
-    ComplainData.ComplainDataResponse complain(@RequestBody ComplainData.ComplainDataRequest data) {
+    Response complain(@RequestBody ComplainData.ComplainCreateData data) {
 
         Debugger.info("Received complain");
 
-        if (!validateCookie(data.cookie).response.equals("200 OK")) {
-            return ComplainData.ComplainDataResponse.error("401 Ban Credentials");
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
         }
 
         if (!Main.instance.databaseManager.validateUser(data.target)) {
-            return ComplainData.ComplainDataResponse.error("422 Invalid entry");
+            return Response.INVALID_ENTRY_422();
         }
 
-        data.status = ComplainData.ComplainStatus.OPENED_AWAITING_TARGET_RESPONSE;
+        data.status = ComplainData.ComplainStatus.OPEN_AWAITING_TARGET_RESPONSE;
         data.targetResponse = "";
         data.timestamp = System.currentTimeMillis();
 
         Main.instance.databaseManager.saveComplain(data);
-        return ComplainData.ComplainDataResponse.error("200 OK");
+        return Response.OK_200();
     }
 
+    @PostMapping("/api/form/complain-target-responde")
+    public @ResponseBody
+    Response complainTargetRespond(@RequestBody ComplainData.ComplainTargetResponseData data) {
+
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Complain complain = Main.instance.databaseManager.getComplain(data.id);
+
+        if (complain == null) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (loginData == null || !loginData.username.equals(complain.target)) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Main.instance.databaseManager.setTargetMessageComplain(data);
+
+        return Response.OK_200();
+    }
 
     public boolean checkPassword(String username, String password) {
         return BCrypt.verifyer().verify(
@@ -100,8 +129,54 @@ public class RestEndPoints {
         ).verified;
     }
 
-    public boolean checkPassword(LoginData.LoginDataAuth data) {
+    public boolean checkPassword(LoginData data) {
         return checkPassword(data.username, data.password);
+    }
+
+    @PostMapping("/api/check/staff")
+    public Response checkStaff(String user, String useCase) {
+
+        @SuppressWarnings("unchecked") List<Staff> staffs = (List<Staff>) Main.instance.cacheManager.staffs.get();
+
+        if (staffs.stream().anyMatch(staff -> {
+            if (useCase.equals("complain")) {
+                return staff.username.equalsIgnoreCase(user) && complainStaff.contains(staff.rank);
+            }
+            return false;
+        })) {
+            return Response.OK_200();
+        }
+
+        return Response.BAD_CREDENTIALS_401();
+
+    }
+
+    @PostMapping("/api/update/form/complain")
+    public Response changeComplainStatus(@RequestBody ComplainData.ComplainDecisionData data) {
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Complain complain = Main.instance.databaseManager.getComplain(data.id);
+
+        if (complain == null) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (loginData == null || !checkStaff(loginData.username, "complain").code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Main.instance.databaseManager.setComplainDecision(data);
+
+        return Response.OK_200();
     }
 
 
