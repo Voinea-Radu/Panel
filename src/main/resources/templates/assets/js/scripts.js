@@ -120,65 +120,6 @@ async function login() {
         setCookie("login_data", JSON.stringify(cookie), 30)
         window.location.replace("/");
     });
-
-    //TODO remove
-    /*
-    const usernameField = document.getElementById('username');
-    const passwordField = document.getElementById('password');
-
-    loginData = {};
-    loginData.username = usernameField.value;
-    loginData.password = passwordField.value;
-
-    var blob = await fetch('/api/login/v2', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(loginData)
-    }).then(response => response.blob());
-
-    json = await blob.text();
-
-    try {
-        obj = JSON.parse(json);
-
-        if (obj.code !== "200") {
-            setCookie("login_data", "", 0);
-            error.hidden = false;
-            if (getCookie("lang") === "en") {
-                error.innerText = obj.messageEn;
-            } else {
-                error.innerText = obj.messageRo;
-            }
-        }
-
-        if (obj.data !== "" && obj.data !== undefined) {
-            cookie = {}
-            cookie.username = loginData.username;
-            cookie.password = obj.data;
-            setCookie("login_data", JSON.stringify(cookie), 30)
-            window.location.replace("/");
-        } else {
-            setCookie("login_data", "", 0);
-            error.hidden = false;
-            if (getCookie("lang") === "en") {
-                error.innerText = obj.messageEn;
-            } else {
-                error.innerText = obj.messageRo;
-            }
-        }
-    } catch (error) {
-        setCookie("login_data", "", 0);
-        error.hidden = false;
-        if (getCookie("lang") === "en") {
-            error.innerText = obj.messageEn;
-        } else {
-            error.innerText = obj.messageRo;
-        }
-    }
-     */
 }
 
 function complainsTemplate() {
@@ -227,57 +168,6 @@ async function complain() {
     }, () => {
         redirect("/?message=Reclamatia trimisa cu succes");
     })
-
-    //TODO remove
-    /*
-    data = {};
-
-    data.cookie = getCookie("login_data");
-    data.target = document.getElementById("target").value;
-    data.section = document.getElementById("section").value;
-    data.dateAndTime = document.getElementById("date_and_time").value;
-    data.description = document.getElementById("description").value;
-    data.proof = document.getElementById("proof").value;
-
-    var blob = await fetch('/api/form/complain', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.blob());
-
-    json = await blob.text();
-
-    try {
-        obj = JSON.parse(json);
-
-        if (obj.code !== "200") {
-            error.hidden = false;
-            if (getCookie("lang") === "en") {
-                error.innerText = obj.messageEn;
-            } else {
-                error.innerText = obj.messageRo;
-            }
-        } else {
-            if (getCookie("lang") === "en") {
-                redirect("/?message=Complain sent successfully");
-            } else {
-                redirect("/?message=Reclamatia trimisa cu succes");
-            }
-        }
-
-    } catch (error) {
-        error.hidden = false;
-        if (getCookie("lang") === "en") {
-            error.innerText = obj.messageEn;
-        } else {
-            error.innerText = obj.messageRo;
-        }
-    }
-
-     */
 }
 
 function changeLanguage(language) {
@@ -461,56 +351,6 @@ async function complainRespond() {
     }, () => {
         window.location.replace("/?message=Raspunsul reclamatiei a fost trimis cu succes");
     })
-
-    //TODO remove
-    /*
-    data = {}
-
-    data.id = document.getElementById("id").value;
-    data.cookie = getCookie("login_data");
-    data.targetResponse = document.getElementById("target-response").value;
-
-
-    var blob = await fetch('', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    }).then(response => response.blob());
-
-    json = await blob.text();
-
-    try {
-        obj = JSON.parse(json);
-
-        if (obj.code !== "200") {
-            error.hidden = false;
-            if (getCookie("lang") === "en") {
-                error.innerText = obj.messageEn;
-            } else {
-                error.innerText = obj.messageRo;
-            }
-        } else {
-            if (getCookie("lang") === "en") {
-                window.location.replace("/?message=Complain response sent successfully");
-            } else {
-                window.location.replace("/?message=Raspunsul reclamatiei a fost trimis cu succes");
-            }
-        }
-
-    } catch (error) {
-        error.hidden = false;
-        if (getCookie("lang") === "en") {
-            error.innerText = obj.messageEn;
-        } else {
-            error.innerText = obj.messageRo;
-        }
-    }
-
-     */
-
 }
 
 function setSiteLanguage() {
