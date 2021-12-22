@@ -22,6 +22,7 @@ public class PlayerProfile {
     public String avatarURL;
     public Long discordID;
     public List<Complain> complaints;
+    public List<UnbanRequest> unbanRequests;
     //public int votes;
 
     public PlayerProfile(String username) {
@@ -51,6 +52,7 @@ public class PlayerProfile {
             });
         }
         this.complaints = Main.instance.databaseManager.getComplains(username);
+        this.unbanRequests = Main.instance.databaseManager.getUnbanRequests(username);
 
         int cycles = 0;
 

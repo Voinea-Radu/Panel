@@ -3,10 +3,7 @@ package dev.lightdream.originalpanel;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import dev.lightdream.originalpanel.dto.Staff;
-import dev.lightdream.originalpanel.dto.data.Complain;
-import dev.lightdream.originalpanel.dto.data.ComplainData;
-import dev.lightdream.originalpanel.dto.data.LoginData;
-import dev.lightdream.originalpanel.dto.data.Response;
+import dev.lightdream.originalpanel.dto.data.*;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,10 +14,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController("")
+@RestController()
 public class RestEndPoints {
 
     public List<String> complainStaff = Arrays.asList(
+            "admin",
+            "sradmin",
+            "operator",
+            "manager",
+            "h-manager",
+            "owner"
+    );
+
+    public List<String> unbanStaff = Arrays.asList(
+            "srmod",
             "admin",
             "sradmin",
             "operator",
@@ -142,13 +149,15 @@ public class RestEndPoints {
             if (useCase.equals("complain")) {
                 return staff.username.equalsIgnoreCase(user) && complainStaff.contains(staff.rank);
             }
+            if (useCase.equals("unban")) {
+                return staff.username.equalsIgnoreCase(user) && unbanStaff.contains(staff.rank);
+            }
             return false;
         })) {
             return Response.OK_200();
         }
 
         return Response.BAD_CREDENTIALS_401();
-
     }
 
     @PostMapping("/api/update/form/complain")
@@ -175,6 +184,53 @@ public class RestEndPoints {
         }
 
         Main.instance.databaseManager.setComplainDecision(data);
+
+        return Response.OK_200();
+    }
+
+    @PostMapping("/api/form/unban")
+    public @ResponseBody
+    Response unban(@RequestBody UnbanData.UnbanCreateData data) {
+
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        if (!Main.instance.databaseManager.validateUser(data.staff)) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        data.status = UnbanData.UnbanStatus.OPEN;
+        data.timestamp = System.currentTimeMillis();
+
+        Main.instance.databaseManager.saveUnban(data);
+        return Response.OK_200();
+    }
+
+    @PostMapping("/api/update/form/unban")
+    public Response changeUnbanStatus (@RequestBody UnbanData.UnbanDecisionData data) {
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Complain complain = Main.instance.databaseManager.getComplain(data.id);
+
+        if (complain == null) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (loginData == null || !checkStaff(loginData.username, "unban").code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Main.instance.databaseManager.setUnbanDecision(data);
 
         return Response.OK_200();
     }

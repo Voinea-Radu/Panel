@@ -160,6 +160,25 @@
                         </tr>
                     </table>
                 </div>
+                <h2><strong>Unban Requests</strong></h2>
+                <div class="panel-table">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>By</th>
+                            <th>Staff</th>
+                            <th>Status</th>
+                            <th>Creation Date</th>
+                        </tr>
+                        <tr th:each="unbanRequest : ${profile.unbanRequests}" th:data-arg1="${unbanRequest.getComplainURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                            <td><a th:href="@{${unbanRequest.complainURL}}" th:text="${unbanRequest.id}" class="no-decorate-url">Unknown</a></td>
+                            <td th:text="${unbanRequest.user}">Unknown</td>
+                            <td th:text="${unbanRequest.staff}">Unknown</td>
+                            <td th:text="${unbanRequest.status.message}">Unknown</td>
+                            <td th:text="${unbanRequest.getTimestampDate}">Unknown</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

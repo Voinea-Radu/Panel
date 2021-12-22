@@ -6,9 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
-import dev.lightdream.originalpanel.dto.data.Complain;
-import dev.lightdream.originalpanel.dto.data.ComplainData;
-import dev.lightdream.originalpanel.dto.data.LoginData;
+import dev.lightdream.originalpanel.dto.data.*;
 import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Logger;
 import lombok.SneakyThrows;
@@ -21,7 +19,7 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "ArraysAsListWithZeroOrOneArgument"})
 public class DatabaseManager {
 
     public SQLConfig sqlConfig;
@@ -41,6 +39,7 @@ public class DatabaseManager {
 
     public void setup() {
         executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL ,`decision` TEXT, PRIMARY KEY( `id`));", new ArrayList<>());
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`unbans` ( `id` INT NOT NULL AUTO_INCREMENT, `user` TEXT NOT NULL , `staff` TEXT NOT NULL , `reason` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `ban` TEXT NOT NULL , `argument` TEXT NOT NULL , `status` TEXT NOT NULL , `timestamp` BIGINT NOT NULL, `decision` TEXT , PRIMARY KEY (`id`))", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -298,6 +297,29 @@ public class DatabaseManager {
         ));
     }
 
+    public void saveUnban(UnbanData.UnbanCreateData data) {
+        String sql = "INSERT into `unbans` (user, staff, reason, date_and_time, ban, argument, status, timestamp, decision) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        LoginData loginData;
+
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return;
+        }
+
+        executeUpdate(sql, Arrays.asList(
+                loginData.username,
+                data.staff,
+                data.reason,
+                data.dateAndTime,
+                data.ban,
+                data.argument,
+                data.status.toString(),
+                data.timestamp,
+                UnbanData.UnbanDecision.UNANSWERED.toString()
+        ));
+    }
+
     @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public String getPlayerUUID(String username) {
@@ -457,6 +479,38 @@ public class DatabaseManager {
         return complaints;
     }
 
+
+    @SneakyThrows
+    public List<UnbanRequest> getUnbanRequests(String username) {
+        List<UnbanRequest> unbanRequests = new ArrayList<>();
+
+        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE user=? or staff=? ORDER BY id DESC LIMIT 10";
+
+        ResultSet r = executeQuery(sql, Arrays.asList(
+                username,
+                username
+        ));
+
+        while (r.next()) {
+            UnbanRequest unbanRequest = new UnbanRequest(
+                    r.getInt("id"),
+                    r.getString("user"),
+                    r.getString("staff"),
+                    r.getString("reason"),
+                    r.getString("date_and_time"),
+                    r.getString("ban"),
+                    r.getString("argument"),
+                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
+                    r.getLong("timestamp"),
+                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
+            );
+            unbanRequests.add(unbanRequest);
+        }
+
+        return unbanRequests;
+    }
+
+
     @SneakyThrows
     public Complain getComplain(int id) {
         String sql = "SELECT * FROM `new_panel`.`complaints` WHERE id=?";
@@ -484,6 +538,33 @@ public class DatabaseManager {
         return null;
     }
 
+    @SneakyThrows
+    public UnbanRequest getUnbanRequest(int id) {
+        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE id=?";
+
+        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
+                id
+        ));
+
+        if (r.next()) {
+            return new UnbanRequest(
+                    r.getInt("id"),
+                    r.getString("user"),
+                    r.getString("staff"),
+                    r.getString("reason"),
+                    r.getString("date_and_time"),
+                    r.getString("ban"),
+                    r.getString("argument"),
+                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
+                    r.getLong("timestamp"),
+                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
+            );
+        }
+
+        return null;
+    }
+
+
     public void setTargetMessageComplain(ComplainData.ComplainTargetResponseData data) {
         String sql = "UPDATE `complaints` SET target_response=?, status=? WHERE id=? ";
 
@@ -504,13 +585,26 @@ public class DatabaseManager {
         ));
     }
 
+    public void setUnbanDecision(UnbanData.UnbanDecisionData data) {
+            String sql = "UPDATE `unbans` SET status=?, decision=? WHERE id=? ";
+
+        executeUpdate(sql, Arrays.asList(
+                UnbanData.UnbanStatus.CLOSED.toString(),
+                data.decision,
+                data.id
+        ));
+    }
+
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @SneakyThrows
     public List<Complain> getComplains() {
         List<Complain> complaints = new ArrayList<>();
 
-        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE status='OPEN_AWAITING_STAFF_APPROVAL' ORDER BY id ASC LIMIT 20";
+        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE status=? ORDER BY id ASC LIMIT 20";
 
-        ResultSet r = executeQuery(sql, new ArrayList<>());
+        ResultSet r = executeQuery(sql, Arrays.asList(
+                ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL.toString()
+        ));
 
         while (r.next()) {
             Complain complain = new Complain(
@@ -534,11 +628,3 @@ public class DatabaseManager {
 
 
 }
-
-/*
-INSERT into `complaints`
-(      user,        target, section, date_and_time, description, proof, status,                        timestamp,     target_response, decision)
-VALUE (?,           ?,      ?,       ?,             ?,           ?,     ?,                             ?,             NULL,            ?)
-=> [   _LightDream, 1,      1,       2,             3,           4,     OPEN_AWAITING_TARGET_RESPONSE, 1639336286054, NULL,            UNANSWERED]
-
- */
