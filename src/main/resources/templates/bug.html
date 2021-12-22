@@ -1,7 +1,6 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Original | Dashboard</title>
+    <title>Original | Complaints</title>
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <link href="https://i.imgur.com/W6F7QEN.png" rel="icon" sizes="32x32" type="image/png"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -37,6 +36,7 @@
                     <li><a href="/bug"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
                     <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span class="text" id="rules">Rules</span></a></li>
                     <li><a href="/entries"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
+
                 </ul>
             </div>
         </div>
@@ -61,10 +61,28 @@
                 </div>
             </div>
         </div>
+        <div class="content-wrap">
+            <div class="container">
+                <h1 class="panel-title" id="complain-title">Submit a complaint</h1>
 
-        <div class="center-div">
-            <div class="center-div">
-                <img src="https://images.original.gg/401.png" class="error-image">
+                <h3 id="error">Error message here</h3>
+
+                <div class="panel-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="section" id="section-label">Section</label>
+                            <input class="form-control" id="section" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="description" id="description-label">Description</label>
+                            <textarea class="form-control vertical-text" id="description"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="form-button submit" id="submit" type="button">Submit</button>
+                            <button class="form-button cancel" id="cancel">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -73,5 +91,9 @@
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://js.original.gg/scripts.js"></script>
+<script>
+    bugsTemplate();
+</script>
+
 </body>
 </html>

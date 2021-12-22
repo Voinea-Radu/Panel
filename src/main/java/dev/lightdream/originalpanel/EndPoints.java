@@ -1,8 +1,9 @@
 package dev.lightdream.originalpanel;
 
-import dev.lightdream.originalpanel.dto.data.Complain;
+import dev.lightdream.originalpanel.dto.data.frontend.Bug;
+import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.PlayerProfile;
-import dev.lightdream.originalpanel.dto.data.UnbanRequest;
+import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -76,6 +77,8 @@ public class EndPoints {
     public String entries(Model model) {
 
         model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
+        model.addAttribute("unbans", Main.instance.databaseManager.getUnbans());
+        model.addAttribute("bugs", Main.instance.databaseManager.getBugs());
 
         return "entries.html";
     }
@@ -95,6 +98,23 @@ public class EndPoints {
         model.addAttribute("unbanRequest", unbanRequest);
 
         return "unban-details.html";
+    }
+
+    @GetMapping("/bug")
+    public String bugs(Model model, Integer id) {
+        if (id == null) {
+            return "bug.html";
+        }
+
+        Bug bug = Main.instance.databaseManager.getBug(id);
+
+        if (bug == null) {
+            return "404.html";
+        }
+
+        model.addAttribute("bug", bug);
+
+        return "bug-details.html";
     }
 }
 

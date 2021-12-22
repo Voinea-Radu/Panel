@@ -34,7 +34,7 @@
                     <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text" id="staff">Staff</span></a></li>
                     <li><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span class="text" id="complaints">Complaints</span></a></li>
                     <li><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text" id="unban">Unban Requests</span></a></li>
-                    <li><a href="/bugs"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
+                    <li><a href="/bug"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
                     <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span class="text" id="rules">Rules</span></a></li>
                     <li><a href="/entries"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
                 </ul>
@@ -63,25 +63,68 @@
         </div>
         <div class="content-wrap">
             <div class="container">
-                <h2><strong>Complaints</strong></h2>
-                <div class="panel-table">
-                    <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>By</th>
-                            <th>Target</th>
-                            <th>Status</th>
-                            <th>Creation Date</th>
-                        </tr>
-                        <tr th:each="complain : ${complaints}" th:data-arg1="${complain.getComplainURL}" onclick="redirect(this.getAttribute('data-arg1'));">
-                            <td><a th:href="@{${complain.complainURL}}" th:text="${complain.id}" class="no-decorate-url">Unknown</a></td>
-                            <td th:text="${complain.user}">Unknown</td>
-                            <td th:text="${complain.target}">Unknown</td>
-                            <td th:text="${complain.status.message}">Unknown</td>
-                            <td th:text="${complain.getTimestampDate}">Unknown</td>
-                        </tr>
-                    </table>
+                <div style="display: block">
+                    <h2><strong>Complaints</strong></h2>
+                    <div class="panel-table">
+                        <table>
+                            <tr>
+                                <th>ID</th>
+                                <th>By</th>
+                                <th>Target</th>
+                                <th>Creation Date</th>
+                            </tr>
+                            <tr th:each="complain : ${complaints}" th:data-arg1="${complain.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                                <td th:text="${complain.id}" class="no-decorate-url">Unknown</td>
+                                <td th:text="${complain.user}">Unknown</td>
+                                <td th:text="${complain.target}">Unknown</td>
+                                <td th:text="${complain.getTimestampDate}">Unknown</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
+                <br><br>
+                <div style="display: block">
+                    <h2><strong>Unbans</strong></h2>
+                    <div class="panel-table">
+                        <table>
+                            <tr>
+                                <th>ID</th>
+                                <th>By</th>
+                                <th>Staff</th>
+                                <th>Creation Date</th>
+                            </tr>
+                            <tr th:each="unban : ${unbans}" th:data-arg1="${unban.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                                <td th:text="${unban.id}" class="no-decorate-url">Unknown</td>
+                                <td th:text="${unban.user}">Unknown</td>
+                                <td th:text="${unban.staff}">Unknown</td>
+                                <td th:text="${unban.getTimestampDate}">Unknown</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <br><br>
+                <div style="display: block">
+                    <h2><strong>Bugs</strong></h2>
+                    <div class="panel-table">
+                        <table>
+                            <tr>
+                                <th>ID</th>
+                                <th>By</th>
+                                <th>Section</th>
+                                <th>Description</th>
+                                <th>Creation Date</th>
+                            </tr>
+                            <tr th:each="bug : ${bugs}" th:data-arg1="${bug.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                                <td th:text="${bug.id}" class="no-decorate-url">Unknown</td>
+                                <td th:text="${bug.user}">Unknown</td>
+                                <td th:text="${bug.section}">Unknown</td>
+                                <td th:text="${bug.description}">Unknown</td>
+                                <td th:text="${bug.getTimestampDate}">Unknown</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

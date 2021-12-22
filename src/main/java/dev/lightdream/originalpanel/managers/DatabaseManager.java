@@ -7,6 +7,9 @@ import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.*;
+import dev.lightdream.originalpanel.dto.data.frontend.Bug;
+import dev.lightdream.originalpanel.dto.data.frontend.Complain;
+import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
 import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Logger;
 import lombok.SneakyThrows;
@@ -40,6 +43,7 @@ public class DatabaseManager {
     public void setup() {
         executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL ,`decision` TEXT, PRIMARY KEY( `id`));", new ArrayList<>());
         executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`unbans` ( `id` INT NOT NULL AUTO_INCREMENT, `user` TEXT NOT NULL , `staff` TEXT NOT NULL , `reason` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `ban` TEXT NOT NULL , `argument` TEXT NOT NULL , `status` TEXT NOT NULL , `timestamp` BIGINT NOT NULL, `decision` TEXT , PRIMARY KEY (`id`))", new ArrayList<>());
+        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`bugs` ( `id` INT NOT NULL AUTO_INCREMENT, `user` TEXT NOT NULL , `section` TEXT NOT NULL , `description` TEXT NOT NULL , `timestamp` TEXT NOT NULL , `status` TEXT NOT NULL , PRIMARY KEY (`id`))", new ArrayList<>());
     }
 
     public @NotNull String getDatabaseURL() {
@@ -462,6 +466,7 @@ public class DatabaseManager {
         while (r.next()) {
             Complain complain = new Complain(
                     r.getInt("id"),
+                    r.getLong("timestamp"),
                     r.getString("user"),
                     r.getString("target"),
                     r.getString("section"),
@@ -470,7 +475,6 @@ public class DatabaseManager {
                     r.getString("proof"),
                     ComplainData.ComplainStatus.valueOf(r.getString("status")),
                     r.getString("target_response"),
-                    r.getLong("timestamp"),
                     ComplainData.ComplainDecision.valueOf(r.getString("decision"))
             );
             complaints.add(complain);
@@ -494,6 +498,7 @@ public class DatabaseManager {
         while (r.next()) {
             UnbanRequest unbanRequest = new UnbanRequest(
                     r.getInt("id"),
+                    r.getLong("timestamp"),
                     r.getString("user"),
                     r.getString("staff"),
                     r.getString("reason"),
@@ -501,7 +506,6 @@ public class DatabaseManager {
                     r.getString("ban"),
                     r.getString("argument"),
                     UnbanData.UnbanStatus.valueOf(r.getString("status")),
-                    r.getLong("timestamp"),
                     UnbanData.UnbanDecision.valueOf(r.getString("decision"))
             );
             unbanRequests.add(unbanRequest);
@@ -522,6 +526,7 @@ public class DatabaseManager {
         if (r.next()) {
             return new Complain(
                     r.getInt("id"),
+                    r.getLong("timestamp"),
                     r.getString("user"),
                     r.getString("target"),
                     r.getString("section"),
@@ -530,7 +535,6 @@ public class DatabaseManager {
                     r.getString("proof"),
                     ComplainData.ComplainStatus.valueOf(r.getString("status")),
                     r.getString("target_response"),
-                    r.getLong("timestamp"),
                     ComplainData.ComplainDecision.valueOf(r.getString("decision"))
             );
         }
@@ -549,6 +553,7 @@ public class DatabaseManager {
         if (r.next()) {
             return new UnbanRequest(
                     r.getInt("id"),
+                    r.getLong("timestamp"),
                     r.getString("user"),
                     r.getString("staff"),
                     r.getString("reason"),
@@ -556,7 +561,6 @@ public class DatabaseManager {
                     r.getString("ban"),
                     r.getString("argument"),
                     UnbanData.UnbanStatus.valueOf(r.getString("status")),
-                    r.getLong("timestamp"),
                     UnbanData.UnbanDecision.valueOf(r.getString("decision"))
             );
         }
@@ -609,6 +613,7 @@ public class DatabaseManager {
         while (r.next()) {
             Complain complain = new Complain(
                     r.getInt("id"),
+                    r.getLong("timestamp"),
                     r.getString("user"),
                     r.getString("target"),
                     r.getString("section"),
@@ -617,13 +622,118 @@ public class DatabaseManager {
                     r.getString("proof"),
                     ComplainData.ComplainStatus.valueOf(r.getString("status")),
                     r.getString("target_response"),
-                    r.getLong("timestamp"),
                     ComplainData.ComplainDecision.valueOf(r.getString("decision"))
             );
             complaints.add(complain);
         }
 
         return complaints;
+    }
+
+    public void saveBug(BugsData.BugCreateData data) {
+        String sql = "INSERT into `bugs` (user, section, description, timestamp, status) VALUE (?, ?, ?, ?, ?)";
+        LoginData loginData;
+
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return;
+        }
+
+        executeUpdate(sql, Arrays.asList(
+                loginData.username,
+                data.section,
+                data.description,
+                data.timestamp,
+                data.status.toString()
+        ));
+    }
+
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    @SneakyThrows
+    public List<UnbanRequest> getUnbans() {
+        List<UnbanRequest> complaints = new ArrayList<>();
+
+        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE status=? ORDER BY id ASC LIMIT 20";
+
+        ResultSet r = executeQuery(sql, Arrays.asList(
+                UnbanData.UnbanStatus.OPEN.toString()
+        ));
+
+        while (r.next()) {
+            UnbanRequest complain = new UnbanRequest(
+                    r.getInt("id"),
+                    r.getLong("timestamp"),
+                    r.getString("user"),
+                    r.getString("staff"),
+                    r.getString("reason"),
+                    r.getString("date_and_time"),
+                    r.getString("ban"),
+                    r.getString("argument"),
+                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
+                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
+            );
+            complaints.add(complain);
+        }
+
+        return complaints;
+    }
+
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    @SneakyThrows
+    public List<Bug> getBugs() {
+        List<Bug> complaints = new ArrayList<>();
+
+        String sql = "SELECT * FROM `new_panel`.`bugs` WHERE status=? ORDER BY id ASC LIMIT 20";
+
+        ResultSet r = executeQuery(sql, Arrays.asList(
+                BugsData.BugStatus.OPEN.toString()
+        ));
+
+        while (r.next()) {
+            Bug complain = new Bug(
+                    r.getInt("id"),
+                    r.getLong("timestamp"),
+                    r.getString("user"),
+                    r.getString("section"),
+                    r.getString("description"),
+                    BugsData.BugStatus.valueOf(r.getString("status"))
+            );
+            complaints.add(complain);
+        }
+
+        return complaints;
+    }
+
+    @SneakyThrows
+    public Bug getBug(int id) {
+        String sql = "SELECT * FROM `new_panel`.`bugs` WHERE id=?";
+
+        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
+                id
+        ));
+
+        if (r.next()) {
+            return new Bug(
+                    r.getInt("id"),
+                    r.getLong("timestamp"),
+                    r.getString("user"),
+                    r.getString("section"),
+                    r.getString("description"),
+                    BugsData.BugStatus.valueOf(r.getString("status"))
+            );
+        }
+
+        return null;
+    }
+
+    public void closeBug(BugsData.BugCloseData data) {
+        String sql = "UPDATE `bugs` SET status=? WHERE id=? ";
+
+        executeUpdate(sql, Arrays.asList(
+                BugsData.BugStatus.CLOSED.toString(),
+                data.id
+        ));
     }
 
 

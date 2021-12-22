@@ -4,6 +4,9 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
 import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.*;
+import dev.lightdream.originalpanel.dto.data.frontend.Bug;
+import dev.lightdream.originalpanel.dto.data.frontend.Complain;
+import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +19,11 @@ import java.util.List;
 
 @RestController()
 public class RestEndPoints {
+
+    public List<String> bugsStaff = Arrays.asList(
+            "h-manager",
+            "owner"
+    );
 
     public List<String> complainStaff = Arrays.asList(
             "admin",
@@ -152,6 +160,9 @@ public class RestEndPoints {
             if (useCase.equals("unban")) {
                 return staff.username.equalsIgnoreCase(user) && unbanStaff.contains(staff.rank);
             }
+            if (useCase.equals("bug")) {
+                return staff.username.equalsIgnoreCase(user) && bugsStaff.contains(staff.rank);
+            }
             return false;
         })) {
             return Response.OK_200();
@@ -220,7 +231,7 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Complain complain = Main.instance.databaseManager.getComplain(data.id);
+        UnbanRequest complain = Main.instance.databaseManager.getUnbanRequest(data.id);
 
         if (complain == null) {
             return Response.INVALID_ENTRY_422();
@@ -234,6 +245,50 @@ public class RestEndPoints {
 
         return Response.OK_200();
     }
+
+    @PostMapping("/api/form/bugs")
+    public @ResponseBody
+    Response bugs(@RequestBody BugsData.BugCreateData data) {
+
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        data.status = BugsData.BugStatus.OPEN;
+        data.timestamp = System.currentTimeMillis();
+
+        Main.instance.databaseManager.saveBug(data);
+        return Response.OK_200();
+    }
+
+    @PostMapping("/api/update/form/bug")
+    public Response closeBug (@RequestBody BugsData.BugCloseData data) {
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Bug complain = Main.instance.databaseManager.getBug(data.id);
+
+        if (complain == null) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (loginData == null || !checkStaff(loginData.username, "bug").code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Main.instance.databaseManager.closeBug(data);
+
+        return Response.OK_200();
+    }
+
 
 
 }
