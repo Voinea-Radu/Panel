@@ -2,12 +2,10 @@ package dev.lightdream.originalpanel.dto.data.frontend;
 
 
 import dev.lightdream.originalpanel.dto.data.ComplainData;
-import dev.lightdream.originalpanel.utils.Utils;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class Complain extends FrontEndData{
+public class Complain extends FrontEndData {
 
     public String target;
     public String section;

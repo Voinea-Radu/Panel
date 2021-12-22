@@ -14,6 +14,4 @@ public class ProfileData {
         return new Gson().fromJson(this.cookie, LoginData.class).username;
     }
 
-
-
 }

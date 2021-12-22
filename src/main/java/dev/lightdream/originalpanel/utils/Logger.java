@@ -8,6 +8,7 @@ public class Logger {
     public static boolean enabled = false;
     private static Main main;
 
+    @SuppressWarnings("unused")
     public static void info(Object object) {
         if (object == null) {
             info("null");

@@ -1,14 +1,15 @@
 package dev.lightdream.originalpanel;
 
+import dev.lightdream.originalpanel.dto.data.PlayerProfile;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
-import dev.lightdream.originalpanel.dto.data.PlayerProfile;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
 import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@SuppressWarnings("SpringMVCViewInspection")
 @Controller
 public class EndPoints {
     @GetMapping("/")
@@ -23,7 +24,7 @@ public class EndPoints {
     }
 
     @GetMapping("/login")
-    public String login(Model model) {
+    public String login() {
         return "login.html";
     }
 
@@ -34,7 +35,7 @@ public class EndPoints {
     }
 
     @GetMapping("/rules")
-    public String rules(Model model) {
+    public String rules() {
         return "server-rules.html";
     }
 
@@ -64,12 +65,12 @@ public class EndPoints {
     }
 
     @GetMapping("/unauthorised")
-    public String unauthorised(Model model) {
+    public String unauthorised() {
         return "401.html";
     }
 
     @GetMapping("/notfound")
-    public String notFound(Model model) {
+    public String notFound() {
         return "404.html";
     }
 

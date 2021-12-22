@@ -13,12 +13,13 @@ public abstract class FrontEndData {
     public Long timestamp;
     public String user;
 
-
+    @SuppressWarnings("unused")
     public String getTimestampDate() {
         return Utils.millisecondsToDate(timestamp);
     }
 
+    @SuppressWarnings("unused")
     public String getURL() {
-        return "/"+url+"?id=" + id;
+        return "/" + url + "?id=" + id;
     }
 }

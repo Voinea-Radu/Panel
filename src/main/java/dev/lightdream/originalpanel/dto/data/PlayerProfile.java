@@ -25,7 +25,6 @@ public class PlayerProfile {
     public Long discordID;
     public List<Complain> complaints;
     public List<UnbanRequest> unbanRequests;
-    //public int votes;
 
     public PlayerProfile(String username) {
         this.username = username;
@@ -69,23 +68,6 @@ public class PlayerProfile {
         }
     }
 
-    @Override
-    public String toString() {
-        return "PlayerProfile{" +
-                "username='" + username + '\'' +
-                ", uuid='" + uuid + '\'' +
-                ", rank='" + rank + '\'' +
-                ", joinDateMilliseconds=" + joinDateMilliseconds +
-                ", joinDate='" + joinDate + '\'' +
-                ", playTimeSeconds=" + playTimeSeconds +
-                ", playTime='" + playTime + '\'' +
-                ", originalCoins=" + originalCoins +
-                ", discordName='" + discordName + '\'' +
-                ", avatarURL='" + avatarURL + '\'' +
-                ", discordID=" + discordID +
-                ", complains=" + complaints +
-                '}';
-    }
 }
 
 

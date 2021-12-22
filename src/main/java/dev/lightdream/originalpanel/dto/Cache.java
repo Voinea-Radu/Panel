@@ -35,10 +35,8 @@ public class Cache {
         }, updateDelay);
     }
 
-
-    public Object get(){
+    public Object get() {
         return value;
     }
-
 
 }

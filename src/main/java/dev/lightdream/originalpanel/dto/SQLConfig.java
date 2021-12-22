@@ -17,7 +17,6 @@ public class SQLConfig {
     public int port = 3306;
     public boolean useSSL = false;
 
-
     public enum Driver {
         MYSQL(
                 "SELECT * FROM %table% WHERE %placeholder%",
@@ -26,7 +25,7 @@ public class SQLConfig {
                 "INSERT INTO %table% (%placeholder-1%) VALUES(%placeholder-2%)",
                 "CREATE TABLE IF NOT EXISTS %table% (%placeholder%, PRIMARY KEY(%keys%))",
                 "DELETE FROM %table% WHERE id=?",
-                new HashMap<Class<?>, String>() {{
+                new HashMap<>() {{
                     put(int.class, "INT");
                     put(Integer.class, "INT");
                     put(String.class, "TEXT");
@@ -53,7 +52,7 @@ public class SQLConfig {
                 "INSERT INTO %table% (%placeholder-1%) VALUES(%placeholder-2%)",
                 "CREATE TABLE IF NOT EXISTS %table% (%placeholder%)",
                 "DELETE FROM %table% WHERE id=?",
-                new HashMap<Class<?>, String>() {{
+                new HashMap<>() {{
                     put(int.class, "INTEGER");
                     put(Integer.class, "INTEGER");
                     put(String.class, "TEXT");

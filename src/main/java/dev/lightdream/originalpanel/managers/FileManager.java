@@ -93,6 +93,7 @@ public class FileManager {
         return load(clazz, getFile(clazz));
     }
 
+    @SuppressWarnings("deprecation")
     public <T> T load(Class<T> clazz, File file) {
         if (file.exists()) {
             try {

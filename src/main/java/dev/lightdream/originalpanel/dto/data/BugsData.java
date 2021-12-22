@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 
 public class BugsData {
 
+    @SuppressWarnings("unused")
     public enum BugStatus {
+
         OPEN("Awaiting staff review"),
         CLOSED("Closed");
 
@@ -14,6 +16,7 @@ public class BugsData {
         BugStatus(String message) {
             this.message = message;
         }
+
     }
 
     @AllArgsConstructor

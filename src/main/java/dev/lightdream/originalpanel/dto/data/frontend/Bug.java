@@ -2,7 +2,6 @@ package dev.lightdream.originalpanel.dto.data.frontend;
 
 
 import dev.lightdream.originalpanel.dto.data.BugsData;
-import dev.lightdream.originalpanel.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 

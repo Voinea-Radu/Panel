@@ -219,7 +219,7 @@ public class RestEndPoints {
     }
 
     @PostMapping("/api/update/form/unban")
-    public Response changeUnbanStatus (@RequestBody UnbanData.UnbanDecisionData data) {
+    public Response changeUnbanStatus(@RequestBody UnbanData.UnbanDecisionData data) {
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
         }
@@ -262,7 +262,7 @@ public class RestEndPoints {
     }
 
     @PostMapping("/api/update/form/bug")
-    public Response closeBug (@RequestBody BugsData.BugCloseData data) {
+    public Response closeBug(@RequestBody BugsData.BugCloseData data) {
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
         }
@@ -288,7 +288,6 @@ public class RestEndPoints {
 
         return Response.OK_200();
     }
-
 
 
 }

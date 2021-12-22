@@ -11,16 +11,6 @@ public class Staff implements Comparable<Staff> {
     public String username;
     public String rank;
 
-
-    @Override
-    public String toString() {
-        return "Staff{" +
-                "uuid='" + uuid + '\'' +
-                ", username='" + username + '\'' +
-                ", rank='" + rank + '\'' +
-                '}';
-    }
-
     @Override
     public int compareTo(Staff e) {
         return this.username.compareTo(e.username);

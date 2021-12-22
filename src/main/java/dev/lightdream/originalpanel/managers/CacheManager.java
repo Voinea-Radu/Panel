@@ -29,17 +29,14 @@ public class CacheManager {
             cache.update(server.getPlayers().getOnline());
         }, 60 * 1000L); //1 minute
 
-        registeredPlayersCount = new Cache(cache -> {
-            cache.update(Main.instance.databaseManager.getRegisteredCount());
-        }, 30 * 60 * 60 * 1000L); // 30 minutes
+        registeredPlayersCount = new Cache(cache -> cache.update(Main.instance.databaseManager.getRegisteredCount()),
+                30 * 60 * 60 * 1000L); // 30 minutes
 
-        donorsCount = new Cache(cache -> {
-            cache.update(Main.instance.databaseManager.getDonorsCount());
-        }, 30 * 60 * 60 * 1000L); //30 minutes
+        donorsCount = new Cache(cache -> cache.update(Main.instance.databaseManager.getDonorsCount()),
+                30 * 60 * 60 * 1000L); //30 minutes
 
-        staffs = new Cache(cache->{
-            cache.update(Main.instance.databaseManager.getStaff());
-        }, 12 * 60 * 60 * 60 * 1000L); // 12 hours
+        staffs = new Cache(cache -> cache.update(Main.instance.databaseManager.getStaff()),
+                12 * 60 * 60 * 60 * 1000L); // 12 hours
     }
 
 

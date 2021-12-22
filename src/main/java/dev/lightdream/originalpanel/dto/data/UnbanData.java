@@ -6,20 +6,25 @@ import lombok.NoArgsConstructor;
 public class UnbanData {
 
     public enum UnbanStatus {
+
         OPEN("Awaiting staff response"),
         CLOSED("Closed");
 
         public String message;
 
-        UnbanStatus(String message){
-            this.message=message;
+        UnbanStatus(String message) {
+            this.message = message;
         }
+
     }
 
+    @SuppressWarnings("unused")
     public enum UnbanDecision {
+
         UNANSWERED,
         APPROVED,
-        DENIED;
+        DENIED
+
     }
 
     @AllArgsConstructor
@@ -33,8 +38,8 @@ public class UnbanData {
         public String ban;
         public String argument;
         public UnbanStatus status;
-        //public String targetResponse;
         public Long timestamp;
+
     }
 
     @AllArgsConstructor

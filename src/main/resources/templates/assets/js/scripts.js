@@ -79,10 +79,10 @@ async function loginCookie() {
         if (getCookie("login_data") !== null) {
             login = document.getElementById("login-button");
 
-            obj = JSON.parse(getCookie("login_data"));
+            let obj = JSON.parse(getCookie("login_data"));
             url = getSkinURL(obj.username);
 
-            login.outerHTML = "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "')>";
+            login.outerHTML = "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "') alt=\"profile\">";
         }
     }
 }
@@ -191,6 +191,7 @@ async function complaintsDetails() {
     if (status === "OPEN_AWAITING_TARGET_RESPONSE") {
         var target = document.getElementById("target").value;
         var by = document.getElementById("user").value;
+        // noinspection JSDuplicatedDeclaration
         var user = JSON.parse(getCookie("login_data"))
 
         if (user === null) {
@@ -233,9 +234,10 @@ async function complaintsDetails() {
 
     }
     if (status === "OPEN_AWAITING_STAFF_APPROVAL") {
+        // noinspection JSDuplicatedDeclaration
         var user = JSON.parse(getCookie("login_data"));
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=complain`, {}, ()=>{
+        callAPI(`/api/check/staff?user=${user.username}&useCase=complain`, {}, () => {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
 
@@ -513,7 +515,7 @@ function unbanTemplate() {
     });
 }
 
-async function unban(){
+async function unban() {
 
     callAPI("/api/form/unban", {
         cookie: getCookie("login_data"),
@@ -536,7 +538,7 @@ async function unbanDetails() {
     if (status === "OPEN") {
         var user = JSON.parse(getCookie("login_data"));
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=unban`, {}, ()=>{
+        callAPI(`/api/check/staff?user=${user.username}&useCase=unban`, {}, () => {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
 
@@ -552,7 +554,7 @@ async function unbanDetails() {
     }
 }
 
-async function approveUnban(){
+async function approveUnban() {
     callAPI("/api/update/form/unban", {
         cookie: getCookie("login_data"),
         decision: "APPROVED",
@@ -564,7 +566,7 @@ async function approveUnban(){
     });
 }
 
-async function denyUnban(){
+async function denyUnban() {
     callAPI("/api/update/form/unban", {
         cookie: getCookie("login_data"),
         decision: "DENY",
@@ -595,7 +597,7 @@ function bugsTemplate() {
     });
 }
 
-async function bug(){
+async function bug() {
     callAPI("/api/form/bugs", {
         cookie: getCookie("login_data"),
         section: document.getElementById("section").value,
@@ -614,7 +616,7 @@ async function bugDetails() {
     if (status === "OPEN") {
         var user = JSON.parse(getCookie("login_data"));
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=bug`, {}, ()=>{
+        callAPI(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
             document.getElementById("close").hidden = false;
 
             document.getElementById('close').addEventListener('click', function f() {
@@ -625,7 +627,7 @@ async function bugDetails() {
     }
 }
 
-async function closeBug(){
+async function closeBug() {
     callAPI("/api/update/form/bug", {
         cookie: getCookie("login_data"),
         id: status = document.getElementById("id").value

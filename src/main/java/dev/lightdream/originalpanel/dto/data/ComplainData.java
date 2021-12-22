@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 public class ComplainData {
 
     public enum ComplainStatus {
+
         OPEN_AWAITING_TARGET_RESPONSE("Awaiting target response"),
         OPEN_AWAITING_STAFF_APPROVAL("Awaiting staff approval"),
         CLOSED("Closed");
@@ -15,12 +16,16 @@ public class ComplainData {
         ComplainStatus(String message){
             this.message=message;
         }
+
     }
 
+    @SuppressWarnings("unused")
     public enum ComplainDecision {
+
         UNANSWERED,
         APPROVED,
         DENIED;
+
     }
 
     @AllArgsConstructor
@@ -42,18 +47,11 @@ public class ComplainData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ComplainTargetResponseData{
+
         public String cookie;
         public int id;
         public String targetResponse;
 
-        @Override
-        public String toString() {
-            return "ComplainTargetResponseData{" +
-                    "cookie='" + cookie + '\'' +
-                    ", id=" + id +
-                    ", targetResponse='" + targetResponse + '\'' +
-                    '}';
-        }
     }
 
 

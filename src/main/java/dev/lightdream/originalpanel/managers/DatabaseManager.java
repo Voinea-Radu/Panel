@@ -266,7 +266,7 @@ public class DatabaseManager {
     }
 
     @SneakyThrows
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    @SuppressWarnings({"ArraysAsListWithZeroOrOneArgument", "BooleanMethodIsAlwaysInverted"})
     public boolean validateUser(String username) {
         String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_players` WHERE username=?";
         ResultSet r = executeQuery(sql, Arrays.asList(username));
