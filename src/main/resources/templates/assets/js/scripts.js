@@ -475,7 +475,7 @@ function setSiteLanguage() {
 
     var complainTitle = document.getElementById("complain-title");
     if (complainTitle !== null) {
-        complainTitle.innerText = "Creaza o reclamatie";
+        complainTitle.innerText = "Creeaza o reclamatie";
     }
 
     var target = document.getElementById("target-label");
@@ -537,6 +537,44 @@ function setSiteLanguage() {
     if (cancel !== null) {
         cancel.innerText = "Anuleaza";
     }
+
+    var joinDate = document.getElementById("join-date");
+    if (joinDate !== null) {
+        joinDate.innerText = "Data Alaturari";
+    }
+
+    var playingHours = document.getElementById("playing-hours");
+    if (playingHours !== null) {
+        playingHours.innerText = "Ore Jucate";
+    }
+
+    var unbanTitle = document.getElementById("unban-title");
+    if (unbanTitle !== null) {
+        unbanTitle.innerText = "Cere Unban";
+    }
+    
+    var reasonLabel = document.getElementById("reason-label");
+    if (reasonLabel !== null) {
+        reasonLabel.innerText = "Motiv";
+    }
+
+    var photoLabel = document.getElementById("photo-label");
+    if (photoLabel !== null) {
+        photoLabel.innerText = "Fotografie cu banul";
+    }
+
+    var bugTitle = document.getElementById("bug-title");
+    if (bugTitle !== null) {
+        bugTitle.innerText = "Raporteaza un bug";
+    }
+
+    var submit = document.getElementById("submit");
+    if (submit !== null) {
+        submit.innerText = "Trimite";
+    }
+
+
+
 
 
 }

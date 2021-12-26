@@ -145,6 +145,11 @@ public class RestEndPoints {
     }
 
     public boolean checkPassword(LoginData data) {
+        if (data == null) {
+            return false;
+        } else if (data.username == null || data.username.equals("") || data.password == null || data.password.equals("")) {
+            return false;
+        }
         return checkPassword(data.username, data.password);
     }
 
@@ -163,7 +168,7 @@ public class RestEndPoints {
             if (useCase.equals("bug")) {
                 return staff.username.equalsIgnoreCase(user) && bugsStaff.contains(staff.rank);
             }
-            if(useCase.equals("any")){
+            if (useCase.equals("any")) {
                 return staff.username.equalsIgnoreCase(user);
             }
             return false;

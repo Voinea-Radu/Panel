@@ -61,7 +61,7 @@
                     <img class="language-chose pointer" onclick="changeLanguage('ro')"
                          src="https://images.original.gg/romanian.png">
 
-                    <a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>
+                    <!--<a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>-->
                     <a class="top-btn login" href="/login" id="login-button">Login</a>
                 </div>
             </div>
@@ -117,12 +117,12 @@
                     <div class="panel-table">
                         <table>
                             <tr>
-                                <td class="row-name">Join Date</td>
+                                <td class="row-name" id="join-date">Join Date</td>
                                 <td style="text-align:right;"><span class="label default" th:text="${profile.joinDate}">Unkonwn></span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="row-name">Playing Hours</td>
+                                <td class="row-name" id="playing-hours">Playing Hours</td>
                                 <td style="text-align:right;"><span class="label default" th:text="${profile.playTime}">0s</span>
                                 </td>
                             </tr>
