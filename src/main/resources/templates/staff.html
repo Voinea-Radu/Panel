@@ -88,7 +88,7 @@
                             <span class="label admin" th:if="${staff.rank == 'admin'}">Admin</span>
                             <span class="label sradmin" th:if="${staff.rank == 'sradmin'}">Sr.Admin</span>
                             <span class="label operator" th:if="${staff.rank == 'operator'}">Operator</span>
-                            <span class="label supervizor" th:if="${profile.rank == 'supervizor'}">Supervizor</span>
+                            <span class="label supervizor" th:if="${staff.rank == 'supervizor'}">Supervizor</span>
                             <span class="label manager" th:if="${staff.rank == 'manager'}">Manager</span>
                             <span class="label hmanager" th:if="${staff.rank == 'h-manager'}">HManager</span>
                             <span class="label owner" th:if="${staff.rank == 'owner'}">Owner</span>
