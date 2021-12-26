@@ -163,6 +163,9 @@ public class RestEndPoints {
             if (useCase.equals("bug")) {
                 return staff.username.equalsIgnoreCase(user) && bugsStaff.contains(staff.rank);
             }
+            if(useCase.equals("any")){
+                return staff.username.equalsIgnoreCase(user);
+            }
             return false;
         })) {
             return Response.OK_200();

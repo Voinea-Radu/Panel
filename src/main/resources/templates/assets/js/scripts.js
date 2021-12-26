@@ -6,18 +6,45 @@ if (error !== null) {
 // ----- DEVELOPMENT ONLY -----
 //setCookie("login_data", "", 0);
 
+//Language sanitization
 if (getCookie("lang") == null) {
     setCookie('lang', "en", 0);
 }
 
+//Login
 loginCookie();
 setSiteLanguage();
 
+//Cancel button
 const cancel = document.getElementById('cancel');
 if (cancel !== null) {
     cancel.addEventListener('click', function () {
         window.location.replace("/");
     });
+}
+
+//Dashboard sanitization
+dashBoard();
+
+async function dashBoard(){
+    logged = await isLoggedIn();
+    if (!logged) {
+        console.log(2)
+        document.getElementById("entries-item").hidden = true;
+        document.getElementById("complaints-item").hidden = true;
+        document.getElementById("unban-item").hidden = true;
+        document.getElementById("bugs-item").hidden = true;
+    } else {
+        user = JSON.parse(getCookie("login_data"))
+        callAPI(`/api/check/staff?user=${user.username}&useCase=any`, {},
+            () => {
+            }, () => {
+            }, () => {
+                document.getElementById("entries-item").hidden = true;
+            }, () => {
+                document.getElementById("entries-item").hidden = false;
+            })
+    }
 }
 
 function getSkinURL(name) {
@@ -119,14 +146,23 @@ async function login() {
     });
 }
 
-function isLoggedIn() {
-    return verifyCookie(getCookie("login_data")).code === 200;
+async function isLoggedIn() {
+    if (getCookie("login_data") === null || getCookie("login_data") === undefined) {
+        return false;
+    }
+    verifier = await verifyCookie(getCookie("login_data"))
+    // noinspection EqualityComparisonWithCoercionJS
+    return verifier.code == 200
 }
 
-function complainsTemplate() {
+function checkLoggedStatus() {
     if (!isLoggedIn()) {
         redirect("/401");
     }
+}
+
+function complainsTemplate() {
+    checkLoggedStatus();
 
     document.getElementById("target").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
@@ -299,7 +335,7 @@ async function denyComplain() {
     })
 }
 
-async function callAPI(api, data, callbackEn, callbackRo) {
+async function callAPI(api, data, callbackEn, callbackRo, failCallbackEn, failCallbackRo) {
     var blob = await fetch(api, {
         method: 'post', headers: {
             'Accept': 'application/json', 'Content-Type': 'application/json'
@@ -314,9 +350,20 @@ async function callAPI(api, data, callbackEn, callbackRo) {
         if (obj.code !== "200") {
             error.hidden = false;
             if (getCookie("lang") === "en") {
-                error.innerText = obj.messageEn;
+                if (failCallbackEn === undefined) {
+                    error.innerText = obj.messageEn;
+                } else {
+                    failCallbackEn();
+                }
             } else {
-                error.innerText = obj.messageRo;
+                if (failCallbackRo === undefined) {
+                    if (failCallbackEn === undefined) {
+                        error.innerText = obj.messageRo;
+                    } else {
+                        failCallbackEn();
+                    }
+                }
+                failCallbackRo();
             }
         } else {
             if (getCookie("lang") === "en") {
@@ -331,11 +378,24 @@ async function callAPI(api, data, callbackEn, callbackRo) {
         }
 
     } catch (error) {
-        error.hidden = false;
+        if (error !== undefined) {
+            error.hidden = false;
+        }
         if (getCookie("lang") === "en") {
-            error.innerText = obj.messageEn;
+            if (failCallbackEn === undefined) {
+                error.innerText = obj.messageEn;
+            } else {
+                failCallbackEn();
+            }
         } else {
-            error.innerText = obj.messageRo;
+            if (failCallbackRo === undefined) {
+                if (failCallbackEn === undefined) {
+                    error.innerText = obj.messageRo;
+                } else {
+                    failCallbackEn();
+                }
+            }
+            failCallbackRo();
         }
     }
 }
@@ -482,6 +542,8 @@ function setSiteLanguage() {
 }
 
 function unbanTemplate() {
+    checkLoggedStatus();
+
     document.getElementById("staff-user").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             unban();
@@ -575,6 +637,8 @@ async function denyUnban() {
 }
 
 function bugsTemplate() {
+    checkLoggedStatus();
+
     document.getElementById("section").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             bug();

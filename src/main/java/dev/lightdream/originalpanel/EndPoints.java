@@ -69,8 +69,18 @@ public class EndPoints {
         return "401.html";
     }
 
+    @GetMapping("/401")
+    public String unauthorised_401() {
+        return "401.html";
+    }
+
     @GetMapping("/notfound")
     public String notFound() {
+        return "404.html";
+    }
+
+    @GetMapping("/404")
+    public String notFound_404() {
         return "404.html";
     }
 

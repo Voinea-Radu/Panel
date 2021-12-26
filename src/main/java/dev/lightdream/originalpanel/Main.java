@@ -41,7 +41,7 @@ public class Main {
     }
 
     public boolean debug() {
-        return true; //todo configure
+        return false; //todo configure
     }
 
     public void log(String log) {
