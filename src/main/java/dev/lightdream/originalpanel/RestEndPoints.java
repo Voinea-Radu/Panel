@@ -29,6 +29,7 @@ public class RestEndPoints {
             "admin",
             "sradmin",
             "operator",
+            "supervizor",
             "manager",
             "h-manager",
             "owner"
@@ -39,6 +40,7 @@ public class RestEndPoints {
             "admin",
             "sradmin",
             "operator",
+            "supervizor",
             "manager",
             "h-manager",
             "owner"

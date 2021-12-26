@@ -389,6 +389,13 @@ body {
     color: #ffd7d4;
     margin: 40px;
 }
+
+.label.supervizor{
+    background: limegreen;
+    color: #ffd7d4;
+    margin: 40px;
+}
+
 .label.manager{
     background: #ff0000;
     color: #ffd7d4;
