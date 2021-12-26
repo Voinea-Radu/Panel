@@ -26,8 +26,7 @@ function getSkinURL(name) {
 
 async function verifyCookie() {
     blob = await fetch("/api/login/validate", {
-        method: "post",
-        body: getCookie("login_data")
+        method: "post", body: getCookie("login_data")
     }).then(response => response.blob());
 
     return JSON.parse(await blob.text());
@@ -109,12 +108,10 @@ function loginTemplate() {
 
 async function login() {
     callAPI("/api/login/v2", {
-        username: document.getElementById('username').value,
-        password: document.getElementById('password').value
+        username: document.getElementById('username').value, password: document.getElementById('password').value
     }, () => {
         cookie = {
-            username: document.getElementById('username').value,
-            password: obj.data
+            username: document.getElementById('username').value, password: obj.data
         }
 
         setCookie("login_data", JSON.stringify(cookie), 30)
@@ -122,7 +119,15 @@ async function login() {
     });
 }
 
+function isLoggedIn() {
+    return verifyCookie(getCookie("login_data")).code === 200;
+}
+
 function complainsTemplate() {
+    if (!isLoggedIn()) {
+        redirect("/401");
+    }
+
     document.getElementById("target").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             complain();
@@ -272,9 +277,7 @@ async function complaintsDetails() {
 
 async function approveComplain() {
     callAPI("/api/update/form/complain", {
-        cookie: getCookie("login_data"),
-        decision: "APPROVED",
-        id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
     }, () => {
         console.log("sent")
         window.location.reload();
@@ -286,9 +289,7 @@ async function approveComplain() {
 
 async function denyComplain() {
     callAPI("/api/update/form/complain", {
-        cookie: getCookie("login_data"),
-        decision: "DENY",
-        id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "DENY", id: status = document.getElementById("id").value
     }, () => {
         console.log("sent")
         window.location.reload();
@@ -300,12 +301,9 @@ async function denyComplain() {
 
 async function callAPI(api, data, callbackEn, callbackRo) {
     var blob = await fetch(api, {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
+        method: 'post', headers: {
+            'Accept': 'application/json', 'Content-Type': 'application/json'
+        }, body: JSON.stringify(data)
     }).then(response => response.blob());
 
     json = await blob.text();
@@ -556,9 +554,7 @@ async function unbanDetails() {
 
 async function approveUnban() {
     callAPI("/api/update/form/unban", {
-        cookie: getCookie("login_data"),
-        decision: "APPROVED",
-        id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
@@ -568,9 +564,7 @@ async function approveUnban() {
 
 async function denyUnban() {
     callAPI("/api/update/form/unban", {
-        cookie: getCookie("login_data"),
-        decision: "DENY",
-        id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "DENY", id: document.getElementById("id").value
     }, () => {
         console.log("sent")
         window.location.reload();
@@ -629,8 +623,7 @@ async function bugDetails() {
 
 async function closeBug() {
     callAPI("/api/update/form/bug", {
-        cookie: getCookie("login_data"),
-        id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
