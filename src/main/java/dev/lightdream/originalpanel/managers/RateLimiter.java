@@ -17,8 +17,6 @@ public class RateLimiter {
         Requests requests = loginAttempts.getOrDefault(user, new Requests());
         requests.requests.add(System.currentTimeMillis());
         loginAttempts.put(user, requests);
-        System.out.println(requests.isRateLimited(loginAttemptRateLimit));
-        System.out.println(requests.requests.size());
         return !requests.isRateLimited(loginAttemptRateLimit);
     }
 

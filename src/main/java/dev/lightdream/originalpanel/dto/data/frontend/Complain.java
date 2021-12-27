@@ -27,7 +27,7 @@ public class Complain extends FrontEndData {
 
 
     public Complain(String user, Long timestamp, String target, String section, String dateAndTime, String description, String proof, ComplainData.ComplainStatus status, String targetResponse, ComplainData.ComplainDecision decision) {
-        super(Main.instance, user, "complain", timestamp);
+        super(Main.instance, user, timestamp);
         this.target = target;
         this.section = section;
         this.dateAndTime = dateAndTime;
@@ -39,7 +39,7 @@ public class Complain extends FrontEndData {
     }
 
     public Complain(ComplainData.ComplainCreateData data) {
-        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), "complain", data.timestamp);
+        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.target = data.target;
         this.section = data.section;
         this.dateAndTime = data.dateAndTime;
@@ -51,6 +51,11 @@ public class Complain extends FrontEndData {
     }
 
     public Complain() {
-        super();
+        super(Main.instance, "", 0L);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return "complain";
     }
 }

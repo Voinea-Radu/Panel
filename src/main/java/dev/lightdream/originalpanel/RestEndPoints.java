@@ -48,11 +48,11 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        if(!Main.instance.rateLimiter.attemptLogin(data.username)){
+        if (!Main.instance.rateLimiter.attemptLogin(data.username)) {
             return Response.RATE_LIMITED_429();
         }
 
-        if(!checkPassword(data)){
+        if (!checkPassword(data)) {
             return Response.BAD_CREDENTIALS_401();
         }
 
@@ -84,7 +84,7 @@ public class RestEndPoints {
 
         Debugger.info("Received complain");
 
-        if(Main.instance.databaseManager.getRecentComplaints(Utils.getUsernameFromCookie(data.cookie)).size()!=0){
+        if (Main.instance.databaseManager.getRecentComplaints(Utils.getUsernameFromCookie(data.cookie)).size() != 0) {
             return Response.RATE_LIMITED_429();
         }
 
@@ -140,7 +140,14 @@ public class RestEndPoints {
     }
 
     public boolean checkPassword(String username, String password) {
-        return BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), Main.instance.databaseManager.getAuthMePassword(username).getBytes(StandardCharsets.UTF_8)).verified;
+        if (username == null || username.equals("") || password == null || password.equals("")) {
+            return false;
+        }
+        try{
+            return BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), Main.instance.databaseManager.getAuthMePassword(username).getBytes(StandardCharsets.UTF_8)).verified;
+        }catch (Throwable t){
+            return false;
+        }
     }
 
     public boolean checkPassword(LoginData data) {
@@ -213,7 +220,7 @@ public class RestEndPoints {
     public @ResponseBody
     Response unban(@RequestBody UnbanData.UnbanCreateData data) {
 
-        if(Main.instance.databaseManager.getRecentUnbanRequests(Utils.getUsernameFromCookie(data.cookie)).size()!=0){
+        if (Main.instance.databaseManager.getRecentUnbanRequests(Utils.getUsernameFromCookie(data.cookie)).size() != 0) {
             return Response.RATE_LIMITED_429();
         }
 
@@ -267,7 +274,7 @@ public class RestEndPoints {
     public @ResponseBody
     Response bugs(@RequestBody BugsData.BugCreateData data) {
 
-        if(Main.instance.databaseManager.getRecentBugs(Utils.getUsernameFromCookie(data.cookie)).size()!=0) {
+        if (Main.instance.databaseManager.getRecentBugs(Utils.getUsernameFromCookie(data.cookie)).size() != 0) {
             return Response.RATE_LIMITED_429();
         }
 

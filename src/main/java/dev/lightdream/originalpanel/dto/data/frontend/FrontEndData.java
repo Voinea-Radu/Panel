@@ -12,12 +12,9 @@ public abstract class FrontEndData extends DatabaseEntry {
     @DatabaseField(columnName = "timestamp")
     public Long timestamp;
 
-    public String url;
-
-    public FrontEndData(DatabaseMain main, String user, String url, Long timestamp) {
+    public FrontEndData(DatabaseMain main, String user, Long timestamp) {
         super(main);
         this.user = user;
-        this.url = url;
         this.timestamp = timestamp;
     }
 
@@ -32,6 +29,8 @@ public abstract class FrontEndData extends DatabaseEntry {
 
     @SuppressWarnings("unused")
     public String getURL() {
-        return "/" + url + "?id=" + id;
+        return "/" + getBaseUrl() + "?id=" + id;
     }
+
+    public abstract String getBaseUrl();
 }

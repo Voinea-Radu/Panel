@@ -22,8 +22,9 @@ import java.util.stream.Collectors;
 public class DatabaseManager extends HikariDatabaseManager {
 
     @SuppressWarnings("FieldMayBeFinal")
-    public DatabaseManager(Main main) {
-        super(main);
+    public DatabaseManager() {
+        super(Main.instance);
+        Debugger.info("Passed main as " + Main.instance);
         setup();
     }
 

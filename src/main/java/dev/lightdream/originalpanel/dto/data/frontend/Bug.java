@@ -17,18 +17,23 @@ public class Bug extends FrontEndData {
     public BugsData.BugStatus status;
 
     public Bug(String user, Long timestamp, String section, String description, BugsData.BugStatus status) {
-        super(Main.instance, user, "bug", timestamp);
+        super(Main.instance, user, timestamp);
         this.section = section;
         this.description = description;
         this.status = status;
     }
 
     public Bug() {
-        super();
+        super(Main.instance, "", 0L);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return "bug";
     }
 
     public Bug(BugsData.BugCreateData data) {
-        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), "bug", data.timestamp);
+        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.section = data.section;
         this.description = data.description;
         this.status = data.status;

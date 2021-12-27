@@ -8,9 +8,10 @@
         <version>2.6.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>dev.lightdream</groupId>
     <artifactId>OriginalPanel</artifactId>
-    <version>1.0</version>
+    <version>1.4</version>
     <name>OriginalPanel</name>
     <description>Original Panel</description>
 
@@ -159,7 +160,7 @@
         <dependency>
             <groupId>dev.lightdream</groupId>
             <artifactId>DatabaseManager</artifactId>
-            <version>1.6</version>
+            <version>1.10</version>
         </dependency>
     </dependencies>
     <build>

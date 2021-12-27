@@ -33,9 +33,11 @@ public class Main implements DatabaseMain, LoggableMain {
         Logger.init(this);
         Main.instance = this;
 
+        Logger.good("Starting Panel version 1.4");
+
         this.fileManager = new FileManager(this, FileManager.PersistType.YAML);
         loadConfigs();
-        this.databaseManager = new DatabaseManager(this);
+        this.databaseManager = new DatabaseManager();
         this.cacheManager = new CacheManager(this);
         this.restEndPoints = new RestEndPoints();
         this.bot = JDABuilder.createDefault("OTAyNTgxODA2NTE4MzcwMzE0.YXggzw.tllpHKmKFul4mYgDG7Ihmv84mxk").build();

@@ -27,7 +27,7 @@ public class UnbanRequest extends FrontEndData {
 
     @SuppressWarnings("unused")
     public UnbanRequest(String user, Long timestamp, String staff, String reason, String dateAndTime, String ban, String argument, UnbanData.UnbanStatus status, UnbanData.UnbanDecision decision) {
-        super(Main.instance, user, "unban", timestamp);
+        super(Main.instance, user, timestamp);
         this.staff = staff;
         this.reason = reason;
         this.dateAndTime = dateAndTime;
@@ -38,7 +38,7 @@ public class UnbanRequest extends FrontEndData {
     }
 
     public UnbanRequest(UnbanData.UnbanCreateData data) {
-        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), "unban", data.timestamp);
+        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.staff = data.staff;
         this.reason = data.reason;
         this.dateAndTime = data.dateAndTime;
@@ -50,6 +50,11 @@ public class UnbanRequest extends FrontEndData {
 
     @SuppressWarnings("unused")
     public UnbanRequest() {
-        super();
+        super(Main.instance, "", 0L);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return "unban";
     }
 }
