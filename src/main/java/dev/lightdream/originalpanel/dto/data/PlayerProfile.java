@@ -1,9 +1,9 @@
 package dev.lightdream.originalpanel.dto.data;
 
+import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
-import dev.lightdream.originalpanel.utils.Debugger;
 import dev.lightdream.originalpanel.utils.Utils;
 import lombok.NoArgsConstructor;
 
@@ -57,7 +57,7 @@ public class PlayerProfile {
 
         int cycles = 0;
 
-        //Awaiting for the discord username to be retrieved from discord API
+        //Awaiting the discord username to be retrieved from discord API
         while (this.discordName == null) {
             cycles++;
             if (cycles > 200000000) {

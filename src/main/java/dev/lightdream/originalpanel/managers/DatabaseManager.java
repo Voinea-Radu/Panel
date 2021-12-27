@@ -1,120 +1,36 @@
 package dev.lightdream.originalpanel.managers;
 
-import com.google.gson.Gson;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import dev.lightdream.databasehandler.OrderByType;
+import dev.lightdream.databasehandler.database.HikariDatabaseManager;
+import dev.lightdream.databasehandler.dto.LambdaExecutor;
+import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
-import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.dto.Staff;
-import dev.lightdream.originalpanel.dto.data.*;
+import dev.lightdream.originalpanel.dto.data.BugsData;
+import dev.lightdream.originalpanel.dto.data.ComplainData;
+import dev.lightdream.originalpanel.dto.data.UnbanData;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
-import dev.lightdream.originalpanel.utils.Debugger;
-import dev.lightdream.originalpanel.utils.Logger;
 import lombok.SneakyThrows;
 
-import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "ArraysAsListWithZeroOrOneArgument"})
-public class DatabaseManager {
-
-    public SQLConfig sqlConfig;
-    public Main main;
-    private Connection connection;
+public class DatabaseManager extends HikariDatabaseManager {
 
     @SuppressWarnings("FieldMayBeFinal")
     public DatabaseManager(Main main) {
-        Logger.good("Connecting to the database...");
-        this.main = main;
-        this.sqlConfig = main.sqlConfig;
-        connect();
-        Logger.good("Database connected");
+        super(main);
         setup();
-
     }
 
     public void setup() {
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`complaints` ( `id` INT NOT NULL AUTO_INCREMENT , `user` TEXT NOT NULL , `target` TEXT NOT NULL , `section` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `description` TEXT NOT NULL, `status` TEXT NOT NULL , `target_response` TEXT , `proof` TEXT NOT NULL , `timestamp` BIGINT NOT NULL ,`decision` TEXT, PRIMARY KEY( `id`));", new ArrayList<>());
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`unbans` ( `id` INT NOT NULL AUTO_INCREMENT, `user` TEXT NOT NULL , `staff` TEXT NOT NULL , `reason` TEXT NOT NULL , `date_and_time` TEXT NOT NULL , `ban` TEXT NOT NULL , `argument` TEXT NOT NULL , `status` TEXT NOT NULL , `timestamp` BIGINT NOT NULL, `decision` TEXT , PRIMARY KEY (`id`))", new ArrayList<>());
-        executeUpdate("CREATE TABLE IF NOT EXISTS `new_panel`.`bugs` ( `id` INT NOT NULL AUTO_INCREMENT, `user` TEXT NOT NULL , `section` TEXT NOT NULL , `description` TEXT NOT NULL , `timestamp` TEXT NOT NULL , `status` TEXT NOT NULL , PRIMARY KEY (`id`))", new ArrayList<>());
-    }
-
-    public @NotNull String getDatabaseURL() {
-        switch (sqlConfig.driver) {
-            case MYSQL:
-            case MARIADB:
-            case POSTGRESQL:
-                return "jdbc:" + sqlConfig.driver.toString().toLowerCase() + "://" + sqlConfig.host + ":" + sqlConfig.port + "/" + sqlConfig.database + "?useSSL=" + sqlConfig.useSSL + "&autoReconnect=true";
-            case SQLSERVER:
-                return "jdbc:sqlserver://" + sqlConfig.host + ":" + sqlConfig.port + ";databaseName=" + sqlConfig.database;
-            case H2:
-                return "jdbc:h2:file:" + sqlConfig.database;
-            case SQLITE:
-                return "jdbc:sqlite:" + new File(main.getDataFolder(), sqlConfig.database + ".db");
-            default:
-                throw new UnsupportedOperationException("Unsupported driver (how did we get here?): " + sqlConfig.driver.name());
-        }
-    }
-
-    @SneakyThrows
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    public void connect() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(getDatabaseURL());
-        config.setUsername(sqlConfig.username);
-        config.setPassword(sqlConfig.password);
-        config.setConnectionTestQuery("SELECT 1");
-        config.setMinimumIdle(5);
-        config.setMaximumPoolSize(50);
-        config.setConnectionTimeout(1000000000);
-        config.setIdleTimeout(600000000);
-        config.setMaxLifetime(1800000000);
-        switch (sqlConfig.driver) {
-            case SQLITE:
-                config.setDriverClassName("org.sqlite.JDBC");
-                config.addDataSourceProperty("dataSourceClassName", "org.sqlite.SQLiteDataSource");
-                break;
-        }
-        HikariDataSource ds = new HikariDataSource(config);
-        connection = ds.getConnection();
-    }
-
-    @SneakyThrows
-    private void executeUpdate(String sql, List<Object> values) {
-        Debugger.info(sql + " => " + values);
-        PreparedStatement statement = connection.prepareStatement(sql);
-
-        for (int i = 0; i < values.size(); i++) {
-            statement.setObject(i + 1, values.get(i));
-        }
-
-        statement.executeUpdate();
-    }
-
-    @SneakyThrows
-    private ResultSet executeQuery(String sql, List<Object> values) {
-        Debugger.info(sql + " => " + values);
-        PreparedStatement statement;
-        try {
-            statement = connection.prepareStatement(sql);
-        } catch (Throwable t) {
-            Logger.error("The connection to the database has been lost trying to reconnect!");
-            connect();
-            return executeQuery(sql, values);
-        }
-
-        for (int i = 0; i < values.size(); i++) {
-            statement.setObject(i + 1, values.get(i));
-        }
-
-        return statement.executeQuery();
+        createTable(Complain.class);
+        createTable(UnbanRequest.class);
+        createTable(Bug.class);
     }
 
     @SneakyThrows
@@ -279,52 +195,6 @@ public class DatabaseManager {
         return false;
     }
 
-    public void saveComplain(ComplainData.ComplainCreateData data) {
-        String sql = "INSERT into `complaints` (user, target, section, date_and_time, description, proof, status, timestamp, target_response, decision) VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?)";
-        LoginData loginData;
-
-        try {
-            loginData = new Gson().fromJson(data.cookie, LoginData.class);
-        } catch (Throwable t) {
-            return;
-        }
-
-        executeUpdate(sql, Arrays.asList(
-                loginData.username,
-                data.target,
-                data.section,
-                data.dateAndTime,
-                data.description,
-                data.proof,
-                data.status.toString(),
-                data.timestamp,
-                ComplainData.ComplainDecision.UNANSWERED.toString()
-        ));
-    }
-
-    public void saveUnban(UnbanData.UnbanCreateData data) {
-        String sql = "INSERT into `unbans` (user, staff, reason, date_and_time, ban, argument, status, timestamp, decision) VALUE (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        LoginData loginData;
-
-        try {
-            loginData = new Gson().fromJson(data.cookie, LoginData.class);
-        } catch (Throwable t) {
-            return;
-        }
-
-        executeUpdate(sql, Arrays.asList(
-                loginData.username,
-                data.staff,
-                data.reason,
-                data.dateAndTime,
-                data.ban,
-                data.argument,
-                data.status.toString(),
-                data.timestamp,
-                UnbanData.UnbanDecision.UNANSWERED.toString()
-        ));
-    }
-
     @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public String getPlayerUUID(String username) {
@@ -456,286 +326,95 @@ public class DatabaseManager {
 
     @SneakyThrows
     public List<Complain> getComplains(String username) {
-        List<Complain> complaints = new ArrayList<>();
-
-        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE user=? or target=? ORDER BY id DESC LIMIT 10";
-
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                username,
-                username
-        ));
-
-        while (r.next()) {
-            Complain complain = new Complain(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("target"),
-                    r.getString("section"),
-                    r.getString("date_and_time"),
-                    r.getString("description"),
-                    r.getString("proof"),
-                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
-                    r.getString("target_response"),
-                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
-            );
-            complaints.add(complain);
-        }
-
-        return complaints;
+        return get(Complain.class, new HashMap<>() {{
+            put("user", username);
+            put("target", username);
+        }}, "id", 10, OrderByType.DESCENDENT);
     }
 
 
     @SneakyThrows
     public List<UnbanRequest> getUnbanRequests(String username) {
-        List<UnbanRequest> unbanRequests = new ArrayList<>();
-
-        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE user=? or staff=? ORDER BY id DESC LIMIT 10";
-
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                username,
-                username
-        ));
-
-        while (r.next()) {
-            UnbanRequest unbanRequest = new UnbanRequest(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("staff"),
-                    r.getString("reason"),
-                    r.getString("date_and_time"),
-                    r.getString("ban"),
-                    r.getString("argument"),
-                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
-                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
-            );
-            unbanRequests.add(unbanRequest);
-        }
-
-        return unbanRequests;
+        return get(UnbanRequest.class, new HashMap<>() {{
+            put("user", username);
+            put("staff", username);
+        }}, "id", 10, OrderByType.DESCENDENT);
     }
 
 
     @SneakyThrows
     public Complain getComplain(int id) {
-        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE id=?";
-
-        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
-                id
-        ));
-
-        if (r.next()) {
-            return new Complain(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("target"),
-                    r.getString("section"),
-                    r.getString("date_and_time"),
-                    r.getString("description"),
-                    r.getString("proof"),
-                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
-                    r.getString("target_response"),
-                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
-            );
-        }
-
-        return null;
+        return get(Complain.class, new HashMap<>() {{
+            put("id", id);
+        }}).stream().findFirst().orElse(null);
     }
 
     @SneakyThrows
     public UnbanRequest getUnbanRequest(int id) {
-        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE id=?";
-
-        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
-                id
-        ));
-
-        if (r.next()) {
-            return new UnbanRequest(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("staff"),
-                    r.getString("reason"),
-                    r.getString("date_and_time"),
-                    r.getString("ban"),
-                    r.getString("argument"),
-                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
-                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
-            );
-        }
-
-        return null;
+        return get(UnbanRequest.class, new HashMap<>() {{
+            put("id", id);
+        }}).stream().findFirst().orElse(null);
     }
 
-
-    public void setTargetMessageComplain(ComplainData.ComplainTargetResponseData data) {
-        String sql = "UPDATE `complaints` SET target_response=?, status=? WHERE id=? ";
-
-        executeUpdate(sql, Arrays.asList(
-                data.targetResponse,
-                ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL.toString(),
-                data.id
-        ));
-    }
-
-    public void setComplainDecision(ComplainData.ComplainDecisionData data) {
-            String sql = "UPDATE `complaints` SET status=?, decision=? WHERE id=? ";
-
-        executeUpdate(sql, Arrays.asList(
-                ComplainData.ComplainStatus.CLOSED.toString(),
-                data.decision,
-                data.id
-        ));
-    }
-
-    public void setUnbanDecision(UnbanData.UnbanDecisionData data) {
-            String sql = "UPDATE `unbans` SET status=?, decision=? WHERE id=? ";
-
-        executeUpdate(sql, Arrays.asList(
-                UnbanData.UnbanStatus.CLOSED.toString(),
-                data.decision,
-                data.id
-        ));
-    }
-
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @SneakyThrows
     public List<Complain> getComplains() {
-        List<Complain> complaints = new ArrayList<>();
-
-        String sql = "SELECT * FROM `new_panel`.`complaints` WHERE status=? ORDER BY id ASC LIMIT 20";
-
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL.toString()
-        ));
-
-        while (r.next()) {
-            Complain complain = new Complain(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("target"),
-                    r.getString("section"),
-                    r.getString("date_and_time"),
-                    r.getString("description"),
-                    r.getString("proof"),
-                    ComplainData.ComplainStatus.valueOf(r.getString("status")),
-                    r.getString("target_response"),
-                    ComplainData.ComplainDecision.valueOf(r.getString("decision"))
-            );
-            complaints.add(complain);
-        }
-
-        return complaints;
+        return get(Complain.class, new HashMap<>() {{
+            put("status", ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL.toString());
+        }}, "id", 20, OrderByType.ASCENDANT);
     }
 
-    public void saveBug(BugsData.BugCreateData data) {
-        String sql = "INSERT into `bugs` (user, section, description, timestamp, status) VALUE (?, ?, ?, ?, ?)";
-        LoginData loginData;
-
-        try {
-            loginData = new Gson().fromJson(data.cookie, LoginData.class);
-        } catch (Throwable t) {
-            return;
-        }
-
-        executeUpdate(sql, Arrays.asList(
-                loginData.username,
-                data.section,
-                data.description,
-                data.timestamp,
-                data.status.toString()
-        ));
-    }
-
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @SneakyThrows
     public List<UnbanRequest> getUnbans() {
-        List<UnbanRequest> complaints = new ArrayList<>();
-
-        String sql = "SELECT * FROM `new_panel`.`unbans` WHERE status=? ORDER BY id ASC LIMIT 20";
-
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                UnbanData.UnbanStatus.OPEN.toString()
-        ));
-
-        while (r.next()) {
-            UnbanRequest complain = new UnbanRequest(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("staff"),
-                    r.getString("reason"),
-                    r.getString("date_and_time"),
-                    r.getString("ban"),
-                    r.getString("argument"),
-                    UnbanData.UnbanStatus.valueOf(r.getString("status")),
-                    UnbanData.UnbanDecision.valueOf(r.getString("decision"))
-            );
-            complaints.add(complain);
-        }
-
-        return complaints;
+        return get(UnbanRequest.class, new HashMap<>() {{
+            put("status", UnbanData.UnbanStatus.OPEN.toString());
+        }}, "id", 20, OrderByType.ASCENDANT);
     }
 
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     @SneakyThrows
     public List<Bug> getBugs() {
-        List<Bug> complaints = new ArrayList<>();
-
-        String sql = "SELECT * FROM `new_panel`.`bugs` WHERE status=? ORDER BY id ASC LIMIT 20";
-
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                BugsData.BugStatus.OPEN.toString()
-        ));
-
-        while (r.next()) {
-            Bug complain = new Bug(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("section"),
-                    r.getString("description"),
-                    BugsData.BugStatus.valueOf(r.getString("status"))
-            );
-            complaints.add(complain);
-        }
-
-        return complaints;
+        return get(Bug.class, new HashMap<>() {{
+            put("status", BugsData.BugStatus.OPEN.toString());
+        }}, "id", 20, OrderByType.ASCENDANT);
     }
 
     @SneakyThrows
     public Bug getBug(int id) {
-        String sql = "SELECT * FROM `new_panel`.`bugs` WHERE id=?";
-
-        @SuppressWarnings("ArraysAsListWithZeroOrOneArgument") ResultSet r = executeQuery(sql, Arrays.asList(
-                id
-        ));
-
-        if (r.next()) {
-            return new Bug(
-                    r.getInt("id"),
-                    r.getLong("timestamp"),
-                    r.getString("user"),
-                    r.getString("section"),
-                    r.getString("description"),
-                    BugsData.BugStatus.valueOf(r.getString("status"))
-            );
-        }
-
-        return null;
+        return get(Bug.class, new HashMap<>() {{
+            put("id", id);
+        }}).stream().findFirst().orElse(null);
     }
 
-    public void closeBug(BugsData.BugCloseData data) {
-        String sql = "UPDATE `bugs` SET status=? WHERE id=? ";
+    @Override
+    public HashMap<Class<?>, String> getDataTypes() {
+        return new HashMap<>() {{
+            put(ComplainData.ComplainStatus.class, "TEXT");
+            put(ComplainData.ComplainDecision.class, "TEXT");
+            put(UnbanData.UnbanStatus.class, "TEXT");
+            put(UnbanData.UnbanDecision.class, "TEXT");
+            put(BugsData.BugStatus.class, "TEXT");
+        }};
+    }
 
-        executeUpdate(sql, Arrays.asList(
-                BugsData.BugStatus.CLOSED.toString(),
-                data.id
-        ));
+    @Override
+    public HashMap<Class<?>, LambdaExecutor> getSerializeMap() {
+        return new HashMap<>() {{
+            put(ComplainData.ComplainStatus.class, obj -> "\"" + obj.toString() + "\"");
+            put(ComplainData.ComplainDecision.class, obj -> "\"" + obj.toString() + "\"");
+            put(UnbanData.UnbanStatus.class, obj -> "\"" + obj.toString() + "\"");
+            put(UnbanData.UnbanDecision.class, obj -> "\"" + obj.toString() + "\"");
+            put(BugsData.BugStatus.class, obj -> "\"" + obj.toString() + "\"");
+        }};
+    }
+
+    @Override
+    public HashMap<Class<?>, LambdaExecutor> getDeserializeMap() {
+        return new HashMap<>() {{
+            put(ComplainData.ComplainStatus.class, obj -> ComplainData.ComplainStatus.valueOf(obj.toString()));
+            put(ComplainData.ComplainDecision.class, obj -> ComplainData.ComplainDecision.valueOf(obj.toString()));
+            put(UnbanData.UnbanStatus.class, obj -> UnbanData.UnbanStatus.valueOf(obj.toString()));
+            put(UnbanData.UnbanDecision.class, obj -> UnbanData.UnbanDecision.valueOf(obj.toString()));
+            put(BugsData.BugStatus.class, obj -> BugsData.BugStatus.valueOf(obj.toString()));
+        }};
     }
 
 

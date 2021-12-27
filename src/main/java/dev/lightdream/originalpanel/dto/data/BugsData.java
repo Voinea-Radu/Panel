@@ -8,15 +8,13 @@ public class BugsData {
     @SuppressWarnings("unused")
     public enum BugStatus {
 
-        OPEN("Awaiting staff review"),
-        CLOSED("Closed");
+        OPEN("Awaiting staff review"), CLOSED("Closed");
 
-        public String message;
+        public final String message;
 
         BugStatus(String message) {
             this.message = message;
         }
-
     }
 
     @AllArgsConstructor

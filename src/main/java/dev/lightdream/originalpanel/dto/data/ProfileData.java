@@ -10,6 +10,7 @@ public class ProfileData {
 
     public String cookie;
 
+    @SuppressWarnings("unused")
     public String extractUsername() {
         return new Gson().fromJson(this.cookie, LoginData.class).username;
     }

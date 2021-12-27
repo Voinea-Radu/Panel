@@ -2,12 +2,12 @@ package dev.lightdream.originalpanel;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.gson.Gson;
+import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.*;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
-import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,31 +20,11 @@ import java.util.List;
 @RestController()
 public class RestEndPoints {
 
-    public List<String> bugsStaff = Arrays.asList(
-            "h-manager",
-            "owner"
-    );
+    public List<String> bugsStaff = Arrays.asList("h-manager", "owner");
 
-    public List<String> complainStaff = Arrays.asList(
-            "admin",
-            "sradmin",
-            "operator",
-            "supervizor",
-            "manager",
-            "h-manager",
-            "owner"
-    );
+    public List<String> complainStaff = Arrays.asList("admin", "sradmin", "operator", "supervizor", "manager", "h-manager", "owner");
 
-    public List<String> unbanStaff = Arrays.asList(
-            "srmod",
-            "admin",
-            "sradmin",
-            "operator",
-            "supervizor",
-            "manager",
-            "h-manager",
-            "owner"
-    );
+    public List<String> unbanStaff = Arrays.asList("srmod", "admin", "sradmin", "operator", "supervizor", "manager", "h-manager", "owner");
 
     public RestEndPoints() {
 
@@ -105,7 +85,9 @@ public class RestEndPoints {
         data.targetResponse = "";
         data.timestamp = System.currentTimeMillis();
 
-        Main.instance.databaseManager.saveComplain(data);
+        new Complain(data).save();
+
+        //Main.instance.databaseManager.saveComplain(data);
         return Response.OK_200();
     }
 
@@ -134,16 +116,16 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Main.instance.databaseManager.setTargetMessageComplain(data);
+        complain.targetResponse = data.targetResponse;
+        complain.status = ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL;
+
+        complain.save();
 
         return Response.OK_200();
     }
 
     public boolean checkPassword(String username, String password) {
-        return BCrypt.verifyer().verify(
-                password.getBytes(StandardCharsets.UTF_8),
-                Main.instance.databaseManager.getAuthMePassword(username).getBytes(StandardCharsets.UTF_8)
-        ).verified;
+        return BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), Main.instance.databaseManager.getAuthMePassword(username).getBytes(StandardCharsets.UTF_8)).verified;
     }
 
     public boolean checkPassword(LoginData data) {
@@ -204,7 +186,10 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Main.instance.databaseManager.setComplainDecision(data);
+
+        complain.status = ComplainData.ComplainStatus.CLOSED;
+        complain.decision = ComplainData.ComplainDecision.valueOf(data.decision);
+        complain.save();
 
         return Response.OK_200();
     }
@@ -224,7 +209,8 @@ public class RestEndPoints {
         data.status = UnbanData.UnbanStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
 
-        Main.instance.databaseManager.saveUnban(data);
+        new UnbanRequest(data).save();
+
         return Response.OK_200();
     }
 
@@ -241,9 +227,9 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        UnbanRequest complain = Main.instance.databaseManager.getUnbanRequest(data.id);
+        UnbanRequest unban = Main.instance.databaseManager.getUnbanRequest(data.id);
 
-        if (complain == null) {
+        if (unban == null) {
             return Response.INVALID_ENTRY_422();
         }
 
@@ -251,7 +237,9 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Main.instance.databaseManager.setUnbanDecision(data);
+        unban.status = UnbanData.UnbanStatus.CLOSED;
+        unban.decision = UnbanData.UnbanDecision.valueOf(data.decision);
+        unban.save();
 
         return Response.OK_200();
     }
@@ -267,7 +255,8 @@ public class RestEndPoints {
         data.status = BugsData.BugStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
 
-        Main.instance.databaseManager.saveBug(data);
+        new Bug(data).save();
+
         return Response.OK_200();
     }
 
@@ -284,9 +273,9 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Bug complain = Main.instance.databaseManager.getBug(data.id);
+        Bug bug = Main.instance.databaseManager.getBug(data.id);
 
-        if (complain == null) {
+        if (bug == null) {
             return Response.INVALID_ENTRY_422();
         }
 
@@ -294,7 +283,8 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        Main.instance.databaseManager.closeBug(data);
+        bug.status = BugsData.BugStatus.CLOSED;
+        bug.save();
 
         return Response.OK_200();
     }

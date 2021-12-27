@@ -1,10 +1,10 @@
 package dev.lightdream.originalpanel;
 
+import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.dto.data.PlayerProfile;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
-import dev.lightdream.originalpanel.utils.Debugger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

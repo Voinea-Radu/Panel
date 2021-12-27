@@ -7,10 +7,9 @@ public class UnbanData {
 
     public enum UnbanStatus {
 
-        OPEN("Awaiting staff response"),
-        CLOSED("Closed");
+        OPEN("Awaiting staff response"), @SuppressWarnings("unused") CLOSED("Closed");
 
-        public String message;
+        public final String message;
 
         UnbanStatus(String message) {
             this.message = message;
@@ -21,9 +20,7 @@ public class UnbanData {
     @SuppressWarnings("unused")
     public enum UnbanDecision {
 
-        UNANSWERED,
-        APPROVED,
-        DENIED
+        UNANSWERED, APPROVED, DENIED
 
     }
 

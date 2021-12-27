@@ -7,14 +7,12 @@ public class ComplainData {
 
     public enum ComplainStatus {
 
-        OPEN_AWAITING_TARGET_RESPONSE("Awaiting target response"),
-        OPEN_AWAITING_STAFF_APPROVAL("Awaiting staff approval"),
-        CLOSED("Closed");
+        OPEN_AWAITING_TARGET_RESPONSE("Awaiting target response"), OPEN_AWAITING_STAFF_APPROVAL("Awaiting staff approval"), @SuppressWarnings("unused") CLOSED("Closed");
 
-        public String message;
+        public final String message;
 
-        ComplainStatus(String message){
-            this.message=message;
+        ComplainStatus(String message) {
+            this.message = message;
         }
 
     }
@@ -22,9 +20,7 @@ public class ComplainData {
     @SuppressWarnings("unused")
     public enum ComplainDecision {
 
-        UNANSWERED,
-        APPROVED,
-        DENIED;
+        UNANSWERED, APPROVED, DENIED
 
     }
 
@@ -46,7 +42,7 @@ public class ComplainData {
 
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class ComplainTargetResponseData{
+    public static class ComplainTargetResponseData {
 
         public String cookie;
         public int id;

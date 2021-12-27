@@ -16,37 +16,22 @@ public class Response {
         this.messageRo = messageRo;
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static Response BAD_CREDENTIALS_401() {
-        return new Response(
-                "401",
-                "Bad Credentials",
-                "Credentiale Invalide"
-        );
+        return new Response("401", "Bad Credentials", "Credentiale Invalide");
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     public static Response INVALID_ENTRY_422() {
-        return new Response(
-                "422",
-                "Invalid entry",
-                "Intrare invalida"
-        );
+        return new Response("422", "Invalid entry", "Intrare invalida");
     }
 
     public static Response OK_200(String data) {
-        return new Response(
-                "200",
-                "OK",
-                "OK",
-                data
-        );
+        return new Response("200", "OK", "OK", data);
     }
 
     public static Response OK_200() {
-        return new Response(
-                "200",
-                "OK",
-                "OK"
-        );
+        return new Response("200", "OK", "OK");
     }
 }
 

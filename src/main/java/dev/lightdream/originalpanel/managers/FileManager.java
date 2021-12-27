@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import dev.lightdream.logger.Logger;
 import dev.lightdream.originalpanel.Main;
-import dev.lightdream.originalpanel.utils.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -143,8 +143,7 @@ public class FileManager {
 
     public enum PersistType {
 
-        YAML(".yml", new YAMLFactory()),
-        JSON(".json", new JsonFactory());
+        YAML(".yml", new YAMLFactory()), JSON(".json", new JsonFactory());
 
         private final String extension;
         private final JsonFactory factory;

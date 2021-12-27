@@ -1,23 +1,33 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-
+import dev.lightdream.databasehandler.annotations.database.DatabaseField;
+import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
+import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
-import lombok.NoArgsConstructor;
+import dev.lightdream.originalpanel.utils.Utils;
 
-@NoArgsConstructor
+@DatabaseTable(table = "complains")
 public class Complain extends FrontEndData {
 
+    @DatabaseField(columnName = "target")
     public String target;
+    @DatabaseField(columnName = "section")
     public String section;
+    @DatabaseField(columnName = "date_and_time")
     public String dateAndTime;
+    @DatabaseField(columnName = "description")
     public String description;
+    @DatabaseField(columnName = "proof")
     public String proof;
+    @DatabaseField(columnName = "status")
     public ComplainData.ComplainStatus status;
     public String targetResponse;
+    @DatabaseField(columnName = "decision")
     public ComplainData.ComplainDecision decision;
 
-    public Complain(int id, Long timestamp, String user, String target, String section, String dateAndTime, String description, String proof, ComplainData.ComplainStatus status, String targetResponse, ComplainData.ComplainDecision decision) {
-        super("complain", id, timestamp, user);
+
+    public Complain(String user, Long timestamp, String target, String section, String dateAndTime, String description, String proof, ComplainData.ComplainStatus status, String targetResponse, ComplainData.ComplainDecision decision) {
+        super(Main.instance, user, "complain", timestamp);
         this.target = target;
         this.section = section;
         this.dateAndTime = dateAndTime;
@@ -26,5 +36,21 @@ public class Complain extends FrontEndData {
         this.status = status;
         this.targetResponse = targetResponse;
         this.decision = decision;
+    }
+
+    public Complain(ComplainData.ComplainCreateData data) {
+        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), "complain", data.timestamp);
+        this.target = data.target;
+        this.section = data.section;
+        this.dateAndTime = data.dateAndTime;
+        this.description = data.description;
+        this.proof = data.proof;
+        this.status = data.status;
+        this.targetResponse = data.targetResponse;
+        this.decision = ComplainData.ComplainDecision.UNANSWERED;
+    }
+
+    public Complain() {
+        super();
     }
 }

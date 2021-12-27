@@ -1,5 +1,8 @@
 package dev.lightdream.originalpanel.utils;
 
+import com.google.gson.Gson;
+import dev.lightdream.originalpanel.dto.data.LoginData;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +24,17 @@ public class Utils {
         seconds = seconds % 60;
 
         return hours + "h " + minutes + "m " + seconds + "s";
+    }
+
+    public static String getUsernameFromCookie(String cookie) {
+        LoginData loginData;
+
+        try {
+            loginData = new Gson().fromJson(cookie, LoginData.class);
+        } catch (Throwable t) {
+            return "";
+        }
+        return loginData.username;
     }
 
 }
