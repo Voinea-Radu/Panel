@@ -9,9 +9,10 @@ public abstract class FrontEndData extends DatabaseEntry {
 
     @DatabaseField(columnName = "user")
     public String user;
+    @DatabaseField(columnName = "timestamp")
+    public Long timestamp;
 
     public String url;
-    public Long timestamp;
 
     public FrontEndData(DatabaseMain main, String user, String url, Long timestamp) {
         super(main);

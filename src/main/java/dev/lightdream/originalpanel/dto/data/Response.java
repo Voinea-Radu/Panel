@@ -30,6 +30,11 @@ public class Response {
         return new Response("200", "OK", "OK", data);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
+    public static Response RATE_LIMITED_429() {
+        return new Response("429", "Rate Limited", "Prea multe incercari");
+    }
+
     public static Response OK_200() {
         return new Response("200", "OK", "OK");
     }

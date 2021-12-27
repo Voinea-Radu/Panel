@@ -572,6 +572,12 @@ function setSiteLanguage() {
     if (submit !== null) {
         submit.innerText = "Trimite";
     }
+
+    var argument = document.getElementById("argument");
+    if (argument !== null) {
+        argument.innerText = "De ce ar trebui sa primesti unban?";
+    }
+
     var rulesBody = document.getElementById("rules-body");
     if (rulesBody !== null) {
         rulesBody.innerHTML = "" +
@@ -594,9 +600,9 @@ function setSiteLanguage() {
     if (rulesTable !== null) {
         rulesTable.innerHTML = "<table>\n" +
             "                        <tr>\n" +
-            "                            <th style=\"text-align: center\">Offence</th>\n" +
-            "                            <th style=\"text-align: center\">Description</th>\n" +
-            "                            <th style=\"text-align: center\">Sanction</th>\n" +
+            "                            <th style=\"text-align: center\">Incalcare</th>\n" +
+            "                            <th style=\"text-align: center\">Descriere</th>\n" +
+            "                            <th style=\"text-align: center\">Sanctiune</th>\n" +
             "                        </tr>\n" +
             "                        <tr>\n" +
             "                            <td>Spam</td>\n" +

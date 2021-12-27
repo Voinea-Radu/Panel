@@ -8,6 +8,7 @@ import dev.lightdream.originalpanel.dto.data.*;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
+import dev.lightdream.originalpanel.utils.Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,6 +34,8 @@ public class RestEndPoints {
     @PostMapping("/api/login/v2")
     public @ResponseBody
     Response login(@RequestBody String dataStream) {
+        Debugger.info("Login attempt with dataStream: " + dataStream);
+
         LoginData data;
 
         try {
@@ -41,7 +44,15 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        if (data == null || !checkPassword(data)) {
+        if (data == null) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        if(!Main.instance.rateLimiter.attemptLogin(data.username)){
+            return Response.RATE_LIMITED_429();
+        }
+
+        if(!checkPassword(data)){
             return Response.BAD_CREDENTIALS_401();
         }
 
@@ -72,6 +83,10 @@ public class RestEndPoints {
     Response complain(@RequestBody ComplainData.ComplainCreateData data) {
 
         Debugger.info("Received complain");
+
+        if(Main.instance.databaseManager.getRecentComplaints(Utils.getUsernameFromCookie(data.cookie)).size()!=0){
+            return Response.RATE_LIMITED_429();
+        }
 
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
@@ -198,6 +213,10 @@ public class RestEndPoints {
     public @ResponseBody
     Response unban(@RequestBody UnbanData.UnbanCreateData data) {
 
+        if(Main.instance.databaseManager.getRecentUnbanRequests(Utils.getUsernameFromCookie(data.cookie)).size()!=0){
+            return Response.RATE_LIMITED_429();
+        }
+
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
         }
@@ -247,6 +266,10 @@ public class RestEndPoints {
     @PostMapping("/api/form/bugs")
     public @ResponseBody
     Response bugs(@RequestBody BugsData.BugCreateData data) {
+
+        if(Main.instance.databaseManager.getRecentBugs(Utils.getUsernameFromCookie(data.cookie)).size()!=0) {
+            return Response.RATE_LIMITED_429();
+        }
 
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();

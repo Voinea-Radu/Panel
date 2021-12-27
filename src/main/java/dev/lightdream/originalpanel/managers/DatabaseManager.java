@@ -57,9 +57,7 @@ public class DatabaseManager extends HikariDatabaseManager {
     @SneakyThrows
     public String getAuthMePassword(String username) {
         String sql = "SELECT password FROM `authme`.`authme` WHERE username=? OR realname=?";
-        ResultSet r = executeQuery(sql, Arrays.asList(
-                username, username
-        ));
+        ResultSet r = executeQuery(sql, Arrays.asList(username, username));
         if (r.next()) {
             return r.getString(1);
         }
@@ -69,20 +67,7 @@ public class DatabaseManager extends HikariDatabaseManager {
     @SneakyThrows
     public List<Staff> getStaff() {
 
-        List<String> staffRanks = Arrays.asList(
-                "owner",
-                "h-manager",
-                "manager",
-                "supervizor",
-                "operator",
-                "sradmin",
-                "admin",
-                "srmod",
-                "mod",
-                "jrmod",
-                "helper",
-                "trainee"
-        );
+        List<String> staffRanks = Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee");
 
         String args1 = "";
         String args2 = "";
@@ -235,30 +220,7 @@ public class DatabaseManager extends HikariDatabaseManager {
 
         Debugger.info(ranks);
 
-        List<String> definedRanks = new ArrayList<>(Arrays.asList(
-                "owner",
-                "h-manager",
-                "manager",
-                "supervizor",
-                "operator",
-                "sradmin",
-                "admin",
-                "srmod",
-                "mod",
-                "jrmod",
-                "helper",
-                "trainee",
-                "sponsor",
-                "original",
-                "eternal",
-                "platinum",
-                "legendary",
-                "god",
-                "xenon",
-                "heda",
-                "suprem",
-                "alpha"
-        ));
+        List<String> definedRanks = new ArrayList<>(Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee", "sponsor", "original", "eternal", "platinum", "legendary", "god", "xenon", "heda", "suprem", "alpha"));
 
         for (String rank : definedRanks) {
             if (ranks.contains(rank)) {
@@ -417,5 +379,25 @@ public class DatabaseManager extends HikariDatabaseManager {
         }};
     }
 
+    public List<Bug> getRecentBugs(String user) {
+        return get(Bug.class, new HashMap<>() {{
+            put("user", user);
+            put("<timestamp", System.currentTimeMillis() - 30 * 60 * 1000L);
+        }});
+    }
+
+    public List<UnbanRequest> getRecentUnbanRequests(String user) {
+        return get(UnbanRequest.class, new HashMap<>() {{
+            put("user", user);
+            put("<timestamp", System.currentTimeMillis() - 7 * 25 * 60 * 60 * 1000L);
+        }});
+    }
+
+    public List<Complain> getRecentComplaints(String user) {
+        return get(Complain.class, new HashMap<>() {{
+            put("user", user);
+            put("<timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
+        }});
+    }
 
 }

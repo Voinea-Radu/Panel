@@ -9,6 +9,7 @@ import dev.lightdream.logger.Logger;
 import dev.lightdream.originalpanel.managers.CacheManager;
 import dev.lightdream.originalpanel.managers.DatabaseManager;
 import dev.lightdream.originalpanel.managers.FileManager;
+import dev.lightdream.originalpanel.managers.RateLimiter;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -23,6 +24,7 @@ public class Main implements DatabaseMain, LoggableMain {
     public DatabaseManager databaseManager;
     public CacheManager cacheManager;
     public RestEndPoints restEndPoints;
+    public RateLimiter rateLimiter;
     public JDA bot;
 
     @SneakyThrows
@@ -37,6 +39,7 @@ public class Main implements DatabaseMain, LoggableMain {
         this.cacheManager = new CacheManager(this);
         this.restEndPoints = new RestEndPoints();
         this.bot = JDABuilder.createDefault("OTAyNTgxODA2NTE4MzcwMzE0.YXggzw.tllpHKmKFul4mYgDG7Ihmv84mxk").build();
+        this.rateLimiter=new RateLimiter();
         Logger.good("Application started");
     }
 
