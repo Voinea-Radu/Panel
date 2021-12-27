@@ -152,7 +152,7 @@ async function login() {
 }
 
 async function isLoggedIn() {
-    if (getCookie("login_data") === null || getCookie("login_data") === undefined) {
+    if (getCookie("login_data") === null || getCookie("login_data") === undefined || getCookie("login_data") === "") {
         return false;
     }
     verifier = await verifyCookie(getCookie("login_data"))
