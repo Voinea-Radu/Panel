@@ -26,7 +26,7 @@ if (cancel !== null) {
 //Dashboard sanitization
 dashBoard();
 
-async function dashBoard(){
+async function dashBoard() {
     logged = await isLoggedIn();
     if (!logged) {
         console.log(2)
@@ -118,6 +118,11 @@ function profile(name) {
 }
 
 function loginTemplate() {
+    if (isLoggedIn()) {
+        redirect("/401");
+        return;
+    }
+
     document.getElementById('username').addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             login();
@@ -552,7 +557,7 @@ function setSiteLanguage() {
     if (unbanTitle !== null) {
         unbanTitle.innerText = "Cerere Unban";
     }
-    
+
     var reasonLabel = document.getElementById("reason-label");
     if (reasonLabel !== null) {
         reasonLabel.innerText = "Motiv";
@@ -709,12 +714,12 @@ function setSiteLanguage() {
             "                        </tr>\n" +
             "                        <tr>\n" +
             "                            <td>Abuz Helpop</td>\n" +
-            "                            <td>Orice tip de spam sau injurator pe Helpop</td>\n" +
+            "                            <td>Orice tip de spam sau injuraturi pe Helpop</td>\n" +
             "                            <td>Warn</td>\n" +
             "                        </tr>\n" +
             "                        <tr>\n" +
             "                            <td>Nume indecent</td>\n" +
-            "                            <td>-</td>\n" +
+            "                            <td>Atunci cand un jucator foloseste un nume indecent / inadecvat</td>\n" +
             "                            <td>Ban Permanent</td>\n" +
             "                        </tr>\n" +
             "                        <tr>\n" +
@@ -725,8 +730,6 @@ function setSiteLanguage() {
             "\n" +
             "                    </table>";
     }
-
-
 
 
 }
@@ -883,4 +886,15 @@ async function closeBug() {
     }, () => {
         window.location.reload();
     });
+}
+
+function entriesTemplate() {
+    callAPI(`/api/check/staff?user=${user.username}&useCase=any`, {},
+        () => {
+        }, () => {
+        }, () => {
+            redirect("/401")
+        }, () => {
+            redirect("/401")
+        })
 }
