@@ -89,7 +89,7 @@ function getCookie(name) {
 }
 
 async function loginCookie() {
-    if (getCookie("login_data") !== null) {
+    if (getCookie("login_data") !== null && getCookie("login_data") !== "" && getCookie("login_data") !== undefined) {
 
         try {
             if ((await verifyCookie()).code !== "200") {
@@ -117,12 +117,11 @@ function profile(name) {
     window.location.replace(`/profile/?user=${name}`);
 }
 
-function loginTemplate() {
-    if (isLoggedIn()) {
+async function loginTemplate() {
+    loggedStatus = await isLoggedIn();
+    if (loggedStatus) {
         redirect("/401");
-        return;
     }
-
     document.getElementById('username').addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             login();
@@ -160,8 +159,9 @@ async function isLoggedIn() {
     return verifier.code == 200
 }
 
-function checkLoggedStatus() {
-    if (!isLoggedIn()) {
+async function checkLoggedStatus() {
+    loggedStatus = await isLoggedIn();
+    if (!loggedStatus) {
         redirect("/401");
     }
 }
