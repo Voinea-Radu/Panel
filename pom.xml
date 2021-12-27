@@ -10,11 +10,12 @@
     </parent>
     <groupId>dev.lightdream</groupId>
     <artifactId>OriginalPanel</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <name>OriginalPanel</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Original Panel</description>
+
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <repositories>
@@ -37,6 +38,10 @@
         <repository>
             <id>bycript</id>
             <url>https://mvnrepository.com/artifact/org.mindrot.bcrypt/bcrypt</url>
+        </repository>
+        <repository>
+            <id>lightdream-repo</id>
+            <url>https://repo.lightdream.dev/repository/LightDream-API/</url>
         </repository>
     </repositories>
 
@@ -157,19 +162,21 @@
             <version>1.6</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>dev.lightdream.originalpanel.OriginalPanelApplication</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
