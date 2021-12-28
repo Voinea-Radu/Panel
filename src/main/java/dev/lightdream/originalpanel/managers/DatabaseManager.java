@@ -383,21 +383,21 @@ public class DatabaseManager extends HikariDatabaseManager {
     public List<Bug> getRecentBugs(String user) {
         return get(Bug.class, new HashMap<>() {{
             put("user", user);
-            put("<timestamp", System.currentTimeMillis() - 30 * 60 * 1000L);
+            put(">timestamp", System.currentTimeMillis() - 30 * 60 * 1000L);
         }});
     }
 
     public List<UnbanRequest> getRecentUnbanRequests(String user) {
         return get(UnbanRequest.class, new HashMap<>() {{
             put("user", user);
-            put("<timestamp", System.currentTimeMillis() - 7 * 25 * 60 * 60 * 1000L);
+            put(">timestamp", System.currentTimeMillis() - 7 * 25 * 60 * 60 * 1000L);
         }});
     }
 
     public List<Complain> getRecentComplaints(String user) {
         return get(Complain.class, new HashMap<>() {{
             put("user", user);
-            put("<timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
+            put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
         }});
     }
 
