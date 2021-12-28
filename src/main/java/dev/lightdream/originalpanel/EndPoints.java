@@ -78,6 +78,13 @@ public class EndPoints {
         }
 
         PlayerProfile profile = new PlayerProfile(user);
+
+        //TODO EE
+        if (profile.username.equals("VibmxGaming")) {
+            profile.originalCoins = 666;
+            profile.playTime= "∞";
+        }
+
         model.addAttribute("profile", profile);
         Debugger.info(profile);
         return "user.html";
