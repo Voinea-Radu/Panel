@@ -162,6 +162,10 @@ public class RestEndPoints {
     @PostMapping("/api/check/staff")
     public Response checkStaff(String user, String useCase) {
 
+        if(!Main.instance.isEnabled()){
+            return Response.INVALID_ENTRY_422();
+        }
+
         @SuppressWarnings("unchecked") List<Staff> staffs = (List<Staff>) Main.instance.cacheManager.staffs.get();
 
         if (staffs.stream().anyMatch(staff -> {

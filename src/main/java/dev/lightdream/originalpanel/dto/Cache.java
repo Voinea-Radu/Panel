@@ -1,38 +1,44 @@
 package dev.lightdream.originalpanel.dto;
 
+import dev.lightdream.logger.Debugger;
+
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
 public class Cache {
 
-    public long updateDelay;
+    public long updatePeriod;
     public Object value;
     public Consumer<Cache> updater;
 
-    public Cache(Consumer<Cache> updater, long updateDelay) {
+    public Cache(Consumer<Cache> updater, long updatePeriod) {
         this.updater = updater;
-        this.updateDelay = updateDelay;
+        this.updatePeriod = updatePeriod;
         registerUpdater();
         update();
     }
 
     public void update() {
+        Debugger.info("Initializing update");
         this.updater.accept(this);
     }
 
     public void update(Object value) {
+        Debugger.info("Updating cache to " + value);
         this.value = value;
     }
 
     public void registerUpdater() {
-        Timer timer = new Timer("Update timer");
-
-        timer.schedule(new TimerTask() {
+        Debugger.info("Registering updater with delay of " + updatePeriod);
+        TimerTask task = new TimerTask() {
             public void run() {
                 update();
             }
-        }, updateDelay);
+        };
+        Timer timer = new Timer();
+
+        timer.schedule(task, 0, updatePeriod);
     }
 
     public Object get() {

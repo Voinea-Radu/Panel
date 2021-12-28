@@ -1,6 +1,5 @@
 package dev.lightdream.originalpanel.managers;
 
-import dev.lightdream.logger.Debugger;
 import dev.lightdream.logger.Logger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Cache;

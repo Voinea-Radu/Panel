@@ -26,6 +26,8 @@ public class Main implements DatabaseMain, LoggableMain {
     public RestEndPoints restEndPoints;
     public RateLimiter rateLimiter;
     public JDA bot;
+    @SuppressWarnings("FieldMayBeFinal")
+    private boolean enabled;
 
     @SneakyThrows
     public Main() {
@@ -33,7 +35,7 @@ public class Main implements DatabaseMain, LoggableMain {
         Logger.init(this);
         Main.instance = this;
 
-        Logger.good("Starting Panel version 1.4");
+        Logger.good("Starting Panel version 1.7");
 
         this.fileManager = new FileManager(this, FileManager.PersistType.YAML);
         loadConfigs();
@@ -43,6 +45,13 @@ public class Main implements DatabaseMain, LoggableMain {
         this.bot = JDABuilder.createDefault("OTAyNTgxODA2NTE4MzcwMzE0.YXggzw.tllpHKmKFul4mYgDG7Ihmv84mxk").build();
         this.rateLimiter=new RateLimiter();
         Logger.good("Application started");
+
+        enabled = true;
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public boolean isEnabled(){
+        return enabled;
     }
 
     public void loadConfigs() {

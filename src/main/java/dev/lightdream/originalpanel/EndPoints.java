@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class EndPoints {
     @GetMapping("/")
     public String indexWithMessage(Model model, String message) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
 
         model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
         model.addAttribute("registered_count", Main.instance.cacheManager.registeredPlayersCount.get());
@@ -25,11 +28,19 @@ public class EndPoints {
 
     @GetMapping("/login")
     public String login() {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         return "login.html";
     }
 
     @GetMapping("/staff")
     public String staff(Model model) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         model.addAttribute("staffs", Main.instance.cacheManager.staffs.get());
         return "staff.html";
     }
@@ -41,6 +52,10 @@ public class EndPoints {
 
     @GetMapping("/complain")
     public String complain(Model model, Integer id) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         if (id == null) {
             return "complaints.html";
         }
@@ -58,6 +73,10 @@ public class EndPoints {
 
     @GetMapping("/profile")
     public String profile(Model model, String user) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         PlayerProfile profile = new PlayerProfile(user);
         model.addAttribute("profile", profile);
         Debugger.info(profile);
@@ -66,26 +85,45 @@ public class EndPoints {
 
     @GetMapping("/unauthorised")
     public String unauthorised() {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         return "401.html";
     }
 
     @GetMapping("/401")
     public String unauthorised_401() {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         return "401.html";
     }
 
     @GetMapping("/notfound")
     public String notFound() {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         return "404.html";
     }
 
     @GetMapping("/404")
     public String notFound_404() {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         return "404.html";
     }
 
     @GetMapping("/entries")
     public String entries(Model model) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
 
         model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
         model.addAttribute("unbans", Main.instance.databaseManager.getUnbans());
@@ -96,6 +134,10 @@ public class EndPoints {
 
     @GetMapping("/unban")
     public String unban(Model model, Integer id) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         if (id == null) {
             return "unban.html";
         }
@@ -113,6 +155,10 @@ public class EndPoints {
 
     @GetMapping("/bug")
     public String bugs(Model model, Integer id) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
         if (id == null) {
             return "bug.html";
         }
