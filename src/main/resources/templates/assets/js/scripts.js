@@ -121,6 +121,8 @@ async function loginTemplate() {
     if (loggedStatus) {
         redirect("/401");
     }
+
+    /*
     document.getElementById('username').addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             login();
@@ -131,6 +133,8 @@ async function loginTemplate() {
             login();
         }
     });
+    */
+
     document.getElementById('login-submit').addEventListener('click', function () {
         login()
     });
@@ -168,6 +172,7 @@ async function checkLoggedStatus() {
 function complainsTemplate() {
     checkLoggedStatus();
 
+    /*
     document.getElementById("target").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             complain();
@@ -193,6 +198,7 @@ function complainsTemplate() {
             complain();
         }
     });
+    */
 
     document.getElementById('complain-submit').addEventListener('click', function f() {
         complain()
@@ -420,6 +426,7 @@ async function complainRespond() {
 function unbanTemplate() {
     checkLoggedStatus();
 
+    /*
     document.getElementById("staff-user").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             unban();
@@ -445,6 +452,7 @@ function unbanTemplate() {
             unban();
         }
     });
+    */
 
     document.getElementById('submit').addEventListener('click', function f() {
         unban();
@@ -515,6 +523,7 @@ async function denyUnban() {
 function bugsTemplate() {
     checkLoggedStatus();
 
+    /*
     document.getElementById("section").addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
             bug();
@@ -525,6 +534,7 @@ function bugsTemplate() {
             bug();
         }
     });
+    */
 
     document.getElementById('submit').addEventListener('click', function f() {
         bug();
@@ -594,6 +604,14 @@ function profileTemplate() {
 }
 
 async function applyTemplate(){
+    checkLoggedStatus();
+
+    document.getElementById('submit').addEventListener('click', function f() {
+        apply();
+    });
+}
+
+function apply(){
     callAPI("/api/form/apply", {
         cookie: getCookie("login_data"),
         age: document.getElementById("age").value,

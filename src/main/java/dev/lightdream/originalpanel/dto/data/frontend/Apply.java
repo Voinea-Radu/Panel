@@ -33,10 +33,12 @@ public class Apply extends FrontEndData {
     public int warns;
     @DatabaseField(columnName = "mutes")
     public int mutes;
+    @DatabaseField(columnName = "play_time")
+    public String playTime;
 
-    public Apply(ApplyData.ApplyCreateData data){
+    public Apply(ApplyData.ApplyCreateData data) {
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
-        this.age= data.age;
+        this.age = data.age;
         this.section = data.section;
         this.discordID = data.discordID;
         this.english = data.english;
@@ -48,9 +50,10 @@ public class Apply extends FrontEndData {
         this.kicks = data.kicks;
         this.warns = data.warns;
         this.mutes = data.mutes;
+        this.playTime = data.playTime;
     }
 
-    public Apply(){
+    public Apply() {
 
     }
 
@@ -59,7 +62,7 @@ public class Apply extends FrontEndData {
         return "apply";
     }
 
-    public String getDiscordTag(){
+    public String getDiscordTag() {
         return "";
     }
 

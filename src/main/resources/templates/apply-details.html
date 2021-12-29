@@ -66,26 +66,10 @@
         <h1 class="panel-title" id="unban-title">Trainee Application</h1>
 
         <h3 id="error">Error message here</h3>
+        <h2 class="approved" id="approved" th:if="${apply.decision.toString() == 'APPROVED'}">Approved</h2>
+        <h2 class="denied" id="denied" th:if="${apply.decision.toString() =='DENIED'}">Denied</h2>
 
         <h3>You must have your discord DMs open until you receive the response from our discord bot!</h3>
-
-        <!--
-    public ApplyData.ApplyStatus status;
-    @DatabaseField(columnName = "decision")
-    public ApplyData.ApplyDecision decision;
-    @DatabaseField(columnName = "bans")
-    public int bans;
-    @DatabaseField(columnName = "kicks")
-    public int kicks;
-    @DatabaseField(columnName = "warns")
-    public int warns;
-    @DatabaseField(columnName = "mutes")
-    public int mutes;
-    @DatabaseField(columnName = "timestamp")
-    public Long timestamp;
-
-
-        -->
 
         <div class="panel-form">
           <form>
@@ -122,44 +106,29 @@
               <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${apply.argument}" hidden="hidden"></textarea>
             </div>
             <div class="form-group">
-              <label for="discord" id="discord-label">Discord</label>
-              <input class="form-control" id="discord" type="text" readonly="readonly" th:value="${apply.getDiscordTag}">
+              <label for="kicks" id="kicks-label">English</label>
+              <input class="form-control" id="kicks" readonly="readonly" type="text" th:value="${apply.kicks}">
+            </div>
+            <div class="form-group">
+              <label for="bans" id="bans-label">English</label>
+              <input class="form-control" id="bans" readonly="readonly" type="text" th:value="${apply.bans}">
+            </div>
+            <div class="form-group">
+              <label for="mutes" id="mutes-label">English</label>
+              <input class="form-control" id="mutes" readonly="readonly" type="text" th:value="${apply.mutes}">
+            </div>
+            <div class="form-group">
+              <label for="warns" id="warns-label">English</label>
+              <input class="form-control" id="warns" readonly="readonly" type="text" th:value="${apply.warns}">
+            </div>
+            <div class="form-group">
+              <label for="status" id="status-label" hidden="hidden">Status</label>
+              <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${apply.status}" hidden="hidden"></textarea>
             </div>
 
             <div class="form-buttons">
               <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve</button>
               <button class="form-button deny" id="deny" type="button"  hidden="hidden">Deny</button>
-            </div>
-          </form>
-
-          <form id="form-id">
-            <div class="form-group">
-              <label for="age" id="age-label">Age</label>
-              <input class="form-control" id="age" type="number">
-            </div>
-            <div class="form-group">
-              <label for="section" id="section-label">Section</label>
-              <input class="form-control" id="section" type="text">
-            </div>
-            <div class="form-group">
-              <label for="english-check" id="english-label">English Knowledge</label>
-              <select class="form-control" id="english-check" name="Level">
-                <option value="none">None</option>
-                <option value="decent">Decent</option>
-                <option value="fluent">Fluent</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="commands" id="commands-label">Name some important commands used in the selected section</label>
-              <textarea class="form-control vertical-text" id="commands"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="why" id="why-label">Why do you consider that you should be accepted?</label>
-              <textarea class="form-control vertical-text" id="why"></textarea>
-            </div>
-            <div class="form-buttons">
-              <button class="form-button submit" id="submit" type="button">Submit</button>
-              <button class="form-button cancel" id="cancel">Cancel</button>
             </div>
           </form>
         </div>
