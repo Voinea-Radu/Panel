@@ -583,7 +583,7 @@ function entriesTemplate() {
 }
 
 async function applyTemplate(){
-    callAPI("/api/form/apply    ", {
+    callAPI("/api/form/apply", {
         cookie: getCookie("login_data"),
         section: document.getElementById("section").value,
         description: document.getElementById("description").value,
