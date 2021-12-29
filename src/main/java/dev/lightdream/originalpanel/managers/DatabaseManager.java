@@ -1,5 +1,6 @@
 package dev.lightdream.originalpanel.managers;
 
+import com.mysql.cj.protocol.Resultset;
 import dev.lightdream.databasehandler.OrderByType;
 import dev.lightdream.databasehandler.database.HikariDatabaseManager;
 import dev.lightdream.databasehandler.dto.LambdaExecutor;
@@ -233,6 +234,62 @@ public class DatabaseManager extends HikariDatabaseManager {
     }
 
     @SneakyThrows
+    public int getPlayerBanCount(String uuid) {
+        String sql = "SELECT COUNT(*) FROM 'litebans'.'bans' WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        int output = 0;
+
+        while (r.next()) {
+            output = r.getInt(1);
+        }
+
+        return output;
+    }
+
+    @SneakyThrows
+    public int getPlayerKickCount(String uuid) {
+        String sql = "SELECT COUNT(*) FROM 'litebans'.'kicks' WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        int output = 0;
+
+        while (r.next()) {
+            output = r.getInt(1);
+        }
+
+        return output;
+    }
+
+    @SneakyThrows
+    public int getPlayerMuteCount(String uuid) {
+        String sql = "SELECT COUNT(*) FROM 'litebans'.'mutes' WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        int output = 0;
+
+        while (r.next()) {
+            output = r.getInt(1);
+        }
+
+        return output;
+    }
+
+    @SneakyThrows
+    public int getPlayerWarningCount(String uuid) {
+        String sql = "SELECT COUNT(*) FROM 'litebans'.'warnings' WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+
+        int output = 0;
+
+        while (r.next()) {
+            output = r.getInt(1);
+        }
+
+        return output;
+    }
+
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public Long getJoinDate(String username) {
         String sql = "SELECT regdate FROM `authme`.`authme` WHERE  username=?";
@@ -400,5 +457,6 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
         }});
     }
+
 
 }
