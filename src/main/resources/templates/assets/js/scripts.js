@@ -497,14 +497,6 @@ async function unbanDetails() {
         })
 
     }
-
-    var foo = "" +
-        "                <span class='label default'>Bans: ${profile.bans}</span>\n" +
-        "                <span class='label default'>Kicks: ${profile.kicks}</span>\n" +
-        "                <span class='label default'>Mutes: ${profile.mutes}</span>\n" +
-        "                <span class='label default'>Warnings: ${profile.warns}</span>";
-
-    document.getElementById("sanctions-2").innerHTML = foo;
 }
 
 async function approveUnban() {
@@ -636,5 +628,9 @@ function apply(){
 }
 
 async function applyDeatils(){
-
+    document.getElementById("sanctions-2").innerHTML = "" +
+        "                <span class='label default'>Bans: ${profile.bans}</span>\n" +
+        "                <span class='label default'>Kicks: ${profile.kicks}</span>\n" +
+        "                <span class='label default'>Mutes: ${profile.mutes}</span>\n" +
+        "                <span class='label default'>Warnings: ${profile.warns}</span>";
 }

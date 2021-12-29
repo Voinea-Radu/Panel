@@ -720,6 +720,10 @@ body {
     resize: vertical;
 }
 
+.none-text{
+    resize: none;
+}
+
 .language-chose{
     width: 32px;
     margin-right: 30px;
