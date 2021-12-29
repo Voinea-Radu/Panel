@@ -35,9 +35,9 @@ public class ApplyData {
         public int hours;
         public String discord;
         public Sanctions sanctions;
-        public String englishCheck;
-        public String importantCommands;
-        public String whyArguments;
+        public String english;
+        public String commands;
+        public String why;
         public Long timestamp;
         public ApplyStatus status;
 

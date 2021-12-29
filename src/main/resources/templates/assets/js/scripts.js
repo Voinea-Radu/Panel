@@ -581,3 +581,15 @@ function entriesTemplate() {
             redirect("/401")
         })
 }
+
+async function applyTemplate(){
+    callAPI("/api/form/apply    ", {
+        cookie: getCookie("login_data"),
+        section: document.getElementById("section").value,
+        description: document.getElementById("description").value,
+    }, () => {
+        redirect("/?message=Bug report sent successfully");
+    }, () => {
+        redirect("/?message=Bug-ul a fost raportat cu succes");
+    })
+}
