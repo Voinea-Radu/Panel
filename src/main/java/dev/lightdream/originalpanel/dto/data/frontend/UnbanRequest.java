@@ -24,19 +24,6 @@ public class UnbanRequest extends FrontEndData {
     @DatabaseField(columnName = "decision")
     public UnbanData.UnbanDecision decision;
 
-
-    @SuppressWarnings("unused")
-    public UnbanRequest(String user, Long timestamp, String staff, String reason, String dateAndTime, String ban, String argument, UnbanData.UnbanStatus status, UnbanData.UnbanDecision decision) {
-        super(Main.instance, user, timestamp);
-        this.staff = staff;
-        this.reason = reason;
-        this.dateAndTime = dateAndTime;
-        this.ban = ban;
-        this.argument = argument;
-        this.status = status;
-        this.decision = decision;
-    }
-
     public UnbanRequest(UnbanData.UnbanCreateData data) {
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.staff = data.staff;

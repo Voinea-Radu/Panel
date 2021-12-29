@@ -1,6 +1,5 @@
 package dev.lightdream.originalpanel.dto.data;
 
-import dev.lightdream.originalpanel.dto.Sanctions;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -42,8 +41,8 @@ public class ApplyData {
         public ApplyStatus status;
         public int warns;
         public int bans;
-        public int warns;
-        public int warns;
+        public int mutes;
+        public int kicks;
 
     }
 

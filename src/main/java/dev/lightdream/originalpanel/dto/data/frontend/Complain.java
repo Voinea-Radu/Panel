@@ -25,19 +25,6 @@ public class Complain extends FrontEndData {
     @DatabaseField(columnName = "decision")
     public ComplainData.ComplainDecision decision;
 
-
-    public Complain(String user, Long timestamp, String target, String section, String dateAndTime, String description, String proof, ComplainData.ComplainStatus status, String targetResponse, ComplainData.ComplainDecision decision) {
-        super(Main.instance, user, timestamp);
-        this.target = target;
-        this.section = section;
-        this.dateAndTime = dateAndTime;
-        this.description = description;
-        this.proof = proof;
-        this.status = status;
-        this.targetResponse = targetResponse;
-        this.decision = decision;
-    }
-
     public Complain(ComplainData.ComplainCreateData data) {
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.target = data.target;

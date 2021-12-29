@@ -192,13 +192,13 @@ public class EndPoints {
             return "apply.html";
         }
 
-        //Bug bug = Main.instance.databaseManager.getBug(id);
+        Apply apply = Main.instance.databaseManager.getApplication(id);
 
-        //if (bug == null) {
-        //    return "404.html";
-        //}
+        if (apply == null) {
+            return "404.html";
+        }
 
-        //model.addAttribute("apply", bug);
+        model.addAttribute("apply", apply);
 
         return "apply-details.html";
     }

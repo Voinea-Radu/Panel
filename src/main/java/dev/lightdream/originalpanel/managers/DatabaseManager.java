@@ -6,6 +6,7 @@ import dev.lightdream.databasehandler.dto.LambdaExecutor;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Staff;
+import dev.lightdream.originalpanel.dto.data.ApplyData;
 import dev.lightdream.originalpanel.dto.data.BugsData;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.UnbanData;
@@ -405,6 +406,8 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(UnbanData.UnbanStatus.class, "TEXT");
             put(UnbanData.UnbanDecision.class, "TEXT");
             put(BugsData.BugStatus.class, "TEXT");
+            put(ApplyData.ApplyDecision.class, "TEXT");
+            put(ApplyData.ApplyStatus.class, "TEXT");
         }};
     }
 
@@ -416,6 +419,8 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(UnbanData.UnbanStatus.class, obj -> "\"" + obj.toString() + "\"");
             put(UnbanData.UnbanDecision.class, obj -> "\"" + obj.toString() + "\"");
             put(BugsData.BugStatus.class, obj -> "\"" + obj.toString() + "\"");
+            put(ApplyData.ApplyDecision.class,obj -> "\"" + obj.toString() + "\"");
+            put(ApplyData.ApplyStatus.class, obj -> "\"" + obj.toString() + "\"");
         }};
     }
 
@@ -427,6 +432,8 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(UnbanData.UnbanStatus.class, obj -> UnbanData.UnbanStatus.valueOf(obj.toString()));
             put(UnbanData.UnbanDecision.class, obj -> UnbanData.UnbanDecision.valueOf(obj.toString()));
             put(BugsData.BugStatus.class, obj -> BugsData.BugStatus.valueOf(obj.toString()));
+            put(ApplyData.ApplyDecision.class, obj -> ApplyData.ApplyDecision.valueOf(obj.toString()));
+            put(ApplyData.ApplyStatus.class, obj -> ApplyData.ApplyStatus.valueOf(obj.toString()));
         }};
     }
 
@@ -456,6 +463,12 @@ public class DatabaseManager extends HikariDatabaseManager {
             put("user", user);
             put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
         }});
+    }
+
+    public Apply getApplication(int id){
+        return get(Apply.class, new HashMap<>() {{
+            put("id", id);
+        }}).stream().findFirst().orElse(null);
     }
 
 

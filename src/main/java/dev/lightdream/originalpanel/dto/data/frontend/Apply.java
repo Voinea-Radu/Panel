@@ -14,45 +14,53 @@ public class Apply extends FrontEndData {
     @DatabaseField(columnName = "section")
     public String section;
     @DatabaseField(columnName = "discord")
-    public String discord;
+    public Long discordID;
     @DatabaseField(columnName = "english")
     public String english;
     @DatabaseField(columnName = "commands")
     public String commands;
     @DatabaseField(columnName = "argument")
-    public String why;
+    public String argument;
     @DatabaseField(columnName = "status")
     public ApplyData.ApplyStatus status;
     @DatabaseField(columnName = "decision")
     public ApplyData.ApplyDecision decision;
-
-    public Apply(String user, Long timestamp, int age, String section, String discord, String english, String commands, String why, ApplyData.ApplyStatus status, ApplyData.ApplyDecision decision) {
-        super(Main.instance, user, timestamp);
-        this.age = age;
-        this.section = section;
-        this.discord = discord;
-        this.english = english;
-        this.commands = commands;
-        this.why = why;
-        this.status = status;
-        this.decision = decision;
-    }
+    @DatabaseField(columnName = "bans")
+    public int bans;
+    @DatabaseField(columnName = "kicks")
+    public int kicks;
+    @DatabaseField(columnName = "warns")
+    public int warns;
+    @DatabaseField(columnName = "mutes")
+    public int mutes;
 
     public Apply(ApplyData.ApplyCreateData data){
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.age= data.age;
         this.section = data.section;
-        this.discord = data.discordID;
+        this.discordID = data.discordID;
         this.english = data.english;
         this.commands = data.commands;
-        this.why = data.why;
+        this.argument = data.why;
         this.status = data.status;
         this.decision = ApplyData.ApplyDecision.UNANSWERED;
+        this.bans = data.bans;
+        this.kicks = data.kicks;
+        this.warns = data.warns;
+        this.mutes = data.mutes;
+    }
+
+    public Apply(){
+
     }
 
     @Override
     public String getBaseUrl() {
         return "apply";
+    }
+
+    public String getDiscordTag(){
+        return "";
     }
 
 }

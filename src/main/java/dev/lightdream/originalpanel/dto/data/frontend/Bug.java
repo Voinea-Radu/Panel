@@ -16,13 +16,6 @@ public class Bug extends FrontEndData {
     @DatabaseField(columnName = "status")
     public BugsData.BugStatus status;
 
-    public Bug(String user, Long timestamp, String section, String description, BugsData.BugStatus status) {
-        super(Main.instance, user, timestamp);
-        this.section = section;
-        this.description = description;
-        this.status = status;
-    }
-
     public Bug() {
         super(Main.instance, "", 0L);
     }

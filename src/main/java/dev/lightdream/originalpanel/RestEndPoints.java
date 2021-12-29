@@ -342,7 +342,10 @@ public class RestEndPoints {
         data.timestamp = System.currentTimeMillis();
         data.playTime = profile.playTime;
         data.discordID = profile.discordID;
-        //todo get sanctions
+        data.bans = profile.bans;
+        data.kicks = profile.kicks;
+        data.mutes = profile.mutes;
+        data.warns = profile.warns;
 
         new Apply(data).save();
 

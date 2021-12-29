@@ -607,3 +607,7 @@ async function applyTemplate(){
         redirect("/?message=Aplicatia ta a fost trimisa cu succes");
     })
 }
+
+async function applyDeatils(){
+
+}
