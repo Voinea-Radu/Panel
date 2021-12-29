@@ -235,7 +235,7 @@ public class DatabaseManager extends HikariDatabaseManager {
 
     @SneakyThrows
     public int getPlayerBanCount(String uuid) {
-        String sql = "SELECT COUNT(*) FROM 'litebans'.'bans' WHERE uuid=?";
+        String sql = "SELECT COUNT(*) FROM `litebans`.`bans` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
         int output = 0;
@@ -249,7 +249,7 @@ public class DatabaseManager extends HikariDatabaseManager {
 
     @SneakyThrows
     public int getPlayerKickCount(String uuid) {
-        String sql = "SELECT COUNT(*) FROM 'litebans'.'kicks' WHERE uuid=?";
+        String sql = "SELECT COUNT(*) FROM `litebans`.`kicks` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
         int output = 0;
@@ -263,7 +263,7 @@ public class DatabaseManager extends HikariDatabaseManager {
 
     @SneakyThrows
     public int getPlayerMuteCount(String uuid) {
-        String sql = "SELECT COUNT(*) FROM 'litebans'.'mutes' WHERE uuid=?";
+        String sql = "SELECT COUNT(*) FROM `litebans`.`mutes` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
         int output = 0;
@@ -277,7 +277,7 @@ public class DatabaseManager extends HikariDatabaseManager {
 
     @SneakyThrows
     public int getPlayerWarningCount(String uuid) {
-        String sql = "SELECT COUNT(*) FROM 'litebans'.'warnings' WHERE uuid=?";
+        String sql = "SELECT COUNT(*) FROM `litebans`.`warnings` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
         int output = 0;
