@@ -404,8 +404,9 @@ async function callAPI(api, data, callbackEn, callbackRo, failCallbackEn, failCa
                 } else {
                     failCallbackEn();
                 }
+            } else {
+                failCallbackRo();
             }
-            failCallbackRo();
         }
     }
 }
