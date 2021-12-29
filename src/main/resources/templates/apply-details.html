@@ -102,24 +102,32 @@
               <textarea class="form-control vertical-text" id="commands" readonly="readonly" th:text="${apply.commands}"></textarea>
             </div>
             <div class="form-group">
-              <label for="argument" id="argument-label" hidden="hidden">Argument</label>
+              <label for="argument" id="argument-label">Argument</label>
               <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${apply.argument}" hidden="hidden"></textarea>
             </div>
             <div class="form-group">
-              <label for="kicks" id="kicks-label">English</label>
+              <label for="kicks" id="kicks-label">Kicks</label>
               <input class="form-control" id="kicks" readonly="readonly" type="text" th:value="${apply.kicks}">
             </div>
             <div class="form-group">
-              <label for="bans" id="bans-label">English</label>
+              <label for="bans" id="bans-label">Bans</label>
               <input class="form-control" id="bans" readonly="readonly" type="text" th:value="${apply.bans}">
             </div>
             <div class="form-group">
-              <label for="mutes" id="mutes-label">English</label>
+              <label for="mutes" id="mutes-label">Mutes</label>
               <input class="form-control" id="mutes" readonly="readonly" type="text" th:value="${apply.mutes}">
             </div>
             <div class="form-group">
-              <label for="warns" id="warns-label">English</label>
+              <label for="warns" id="warns-label">Warns</label>
               <input class="form-control" id="warns" readonly="readonly" type="text" th:value="${apply.warns}">
+            </div>
+            <div class="form-group">
+              <label for="sanctions-1" id="sanctions-1-label">Sanctions</label>
+              <input class="form-control" id="sanctions-1" readonly="readonly" type="text" th:value="|Bans: ${apply.bans} Kicks: ${apply.kicks} Mutes: ${apply.mutes} Warnings: ${apply.warns}|">
+            </div>
+            <div class="form-group">
+              <label for="sanctions-2" id="sanctions-2-label">Sanctions</label>
+              <input class="form-control" id="sanctions-2" readonly="readonly" type="text">
             </div>
             <div class="form-group">
               <label for="status" id="status-label" hidden="hidden">Status</label>
