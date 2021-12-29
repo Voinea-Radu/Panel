@@ -176,12 +176,15 @@ translate();
 
 function translate(){
     if (getCookie("lang") === "en") {
+        console.log("Not Translated")
         return;
     }
 
     for(const key in translateMap) {
+        console.log("Trying key "+ key)
         const field = document.getElementById(key);
         if (field !== null) {
+            console.log("Translating key "+ key)
             rulesTable.innerHTML = translateMap[key];
 
         }
