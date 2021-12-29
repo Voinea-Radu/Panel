@@ -13,7 +13,6 @@ if (getCookie("lang") == null) {
 
 //Login
 loginCookie();
-setSiteLanguage();
 
 //Cancel button
 const cancel = document.getElementById('cancel');
