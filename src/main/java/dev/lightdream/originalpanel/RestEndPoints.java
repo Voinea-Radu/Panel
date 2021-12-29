@@ -144,9 +144,9 @@ public class RestEndPoints {
         if (username == null || username.equals("") || password == null || password.equals("")) {
             return false;
         }
-        try{
+        try {
             return BCrypt.verifyer().verify(password.getBytes(StandardCharsets.UTF_8), Main.instance.databaseManager.getAuthMePassword(username).getBytes(StandardCharsets.UTF_8)).verified;
-        }catch (Throwable t){
+        } catch (Throwable t) {
             return false;
         }
     }
@@ -163,7 +163,7 @@ public class RestEndPoints {
     @PostMapping("/api/check/staff")
     public Response checkStaff(String user, String useCase) {
 
-        if(!Main.instance.isEnabled()){
+        if (!Main.instance.isEnabled()) {
             return Response.INVALID_ENTRY_422();
         }
 
@@ -336,8 +336,13 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
+        PlayerProfile profile = new PlayerProfile(Utils.getUsernameFromCookie(data.cookie));
+
         data.status = ApplyData.ApplyStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
+        data.playTime = profile.playTime;
+        data.discordID = profile.discordID;
+        //todo get sanctions
 
         new Apply(data).save();
 

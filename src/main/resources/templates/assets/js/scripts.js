@@ -585,11 +585,14 @@ function entriesTemplate() {
 async function applyTemplate(){
     callAPI("/api/form/apply", {
         cookie: getCookie("login_data"),
+        age: document.getElementById("age").value,
         section: document.getElementById("section").value,
-        description: document.getElementById("description").value,
+        english: document.getElementById("english").value,
+        commands: document.getElementById("commands").value,
+        why: document.getElementById("why").value,
     }, () => {
-        redirect("/?message=Bug report sent successfully");
+        redirect("/?message=You application was sent successfully");
     }, () => {
-        redirect("/?message=Bug-ul a fost raportat cu succes");
+        redirect("/?message=Aplicatia ta a fost trimisa cu succes");
     })
 }

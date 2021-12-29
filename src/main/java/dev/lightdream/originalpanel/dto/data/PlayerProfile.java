@@ -25,7 +25,10 @@ public class PlayerProfile {
     public Long discordID;
     public List<Complain> complaints;
     public List<UnbanRequest> unbanRequests;
-    public List<String> sanctions;
+    public int bans;
+    public int kicks;
+    public int warns;
+    public int mutes;
 
     public PlayerProfile(String username) {
         this.username = username;
@@ -55,14 +58,13 @@ public class PlayerProfile {
         }
         this.complaints = Main.instance.databaseManager.getComplains(username);
         this.unbanRequests = Main.instance.databaseManager.getUnbanRequests(username);
-        this.sanctions = List.of("Bans: " + Main.instance.databaseManager.getPlayerBanCount(uuid),
-                "Kicks: " + Main.instance.databaseManager.getPlayerKickCount(uuid),
-                "Mutes: " + Main.instance.databaseManager.getPlayerMuteCount(uuid),
-                "Warnings: " + Main.instance.databaseManager.getPlayerWarningCount(uuid));
-
-        int cycles = 0;
+        this.bans = Main.instance.databaseManager.getBanCount(uuid);
+        this.kicks = Main.instance.databaseManager.getKickCount(uuid);
+        this.mutes = Main.instance.databaseManager.getMuteCount(uuid);
+        this.warns = Main.instance.databaseManager.getWarningCount(uuid);
 
         //Awaiting the discord username to be retrieved from discord API
+        int cycles = 0;
         while (this.discordName == null) {
             cycles++;
             if (cycles > 200000000) {

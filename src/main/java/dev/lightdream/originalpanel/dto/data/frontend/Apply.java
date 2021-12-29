@@ -1,11 +1,9 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-import dev.lightdream.databasehandler.DatabaseMain;
 import dev.lightdream.databasehandler.annotations.database.DatabaseField;
 import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.ApplyData;
-import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.utils.Utils;
 
 @DatabaseTable(table = "applies")
@@ -44,7 +42,7 @@ public class Apply extends FrontEndData {
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
         this.age= data.age;
         this.section = data.section;
-        this.discord = data.discord;
+        this.discord = data.discordID;
         this.english = data.english;
         this.commands = data.commands;
         this.why = data.why;

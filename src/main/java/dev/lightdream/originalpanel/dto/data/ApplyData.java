@@ -32,14 +32,18 @@ public class ApplyData {
         public String cookie;
         public int age;
         public String section;
-        public int hours;
-        public String discord;
-        public Sanctions sanctions;
+        public String playTime;
+        public Long discordID;
+        public String sanctions;
         public String english;
         public String commands;
         public String why;
         public Long timestamp;
         public ApplyStatus status;
+        public int warns;
+        public int bans;
+        public int warns;
+        public int warns;
 
     }
 
