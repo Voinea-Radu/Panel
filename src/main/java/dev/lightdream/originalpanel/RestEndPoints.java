@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.*;
+import dev.lightdream.originalpanel.dto.data.frontend.Apply;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
@@ -319,6 +320,26 @@ public class RestEndPoints {
 
         bug.status = BugsData.BugStatus.CLOSED;
         bug.save();
+
+        return Response.OK_200();
+    }
+
+    @PostMapping("/api/form/apply")
+    public @ResponseBody
+    Response apply(@RequestBody ApplyData.ApplyCreateData data) {
+
+        if (Main.instance.databaseManager.getRecentApplications(Utils.getUsernameFromCookie(data.cookie)).size() != 0) {
+            return Response.RATE_LIMITED_429();
+        }
+
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        data.status = ApplyData.ApplyStatus.OPEN;
+        data.timestamp = System.currentTimeMillis();
+
+        new Apply(data).save();
 
         return Response.OK_200();
     }

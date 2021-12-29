@@ -1,6 +1,5 @@
 package dev.lightdream.originalpanel.managers;
 
-import com.mysql.cj.protocol.Resultset;
 import dev.lightdream.databasehandler.OrderByType;
 import dev.lightdream.databasehandler.database.HikariDatabaseManager;
 import dev.lightdream.databasehandler.dto.LambdaExecutor;
@@ -10,6 +9,7 @@ import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.BugsData;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.UnbanData;
+import dev.lightdream.originalpanel.dto.data.frontend.Apply;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
@@ -33,6 +33,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         createTable(Complain.class);
         createTable(UnbanRequest.class);
         createTable(Bug.class);
+        createTable(Apply.class);
     }
 
     @SneakyThrows
@@ -234,59 +235,51 @@ public class DatabaseManager extends HikariDatabaseManager {
     }
 
     @SneakyThrows
-    public int getPlayerBanCount(String uuid) {
+    public int getBanCount(String uuid) {
         String sql = "SELECT COUNT(*) FROM `litebans`.`bans` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-        int output = 0;
-
-        while (r.next()) {
-            output = r.getInt(1);
+        if (r.next()) {
+            return r.getInt(1);
         }
 
-        return output;
+        return 0;
     }
 
     @SneakyThrows
-    public int getPlayerKickCount(String uuid) {
+    public int getKickCount(String uuid) {
         String sql = "SELECT COUNT(*) FROM `litebans`.`kicks` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-        int output = 0;
-
-        while (r.next()) {
-            output = r.getInt(1);
+        if (r.next()) {
+            return r.getInt(1);
         }
 
-        return output;
+        return 0;
     }
 
     @SneakyThrows
-    public int getPlayerMuteCount(String uuid) {
+    public int getMuteCount(String uuid) {
         String sql = "SELECT COUNT(*) FROM `litebans`.`mutes` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-        int output = 0;
-
-        while (r.next()) {
-            output = r.getInt(1);
+        if (r.next()) {
+            return r.getInt(1);
         }
 
-        return output;
+        return 0;
     }
 
     @SneakyThrows
-    public int getPlayerWarningCount(String uuid) {
+    public int getWarningCount(String uuid) {
         String sql = "SELECT COUNT(*) FROM `litebans`.`warnings` WHERE uuid=?";
         ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-        int output = 0;
-
-        while (r.next()) {
-            output = r.getInt(1);
+        if (r.next()) {
+            return r.getInt(1);
         }
 
-        return output;
+        return 0;
     }
 
     @SneakyThrows
@@ -457,6 +450,15 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
         }});
     }
+
+    public List<Apply> getRecentApplications(String user) {
+        return get(Apply.class, new HashMap<>() {{
+            put("user", user);
+            put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
+        }});
+    }
+
+
 
 
 }
