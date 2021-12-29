@@ -1,4 +1,4 @@
-rulesBody =  "" +
+rulesBody =  "%innerHtml%" +
     "                    <ul>\n" +
     "                        <li> Nu aveti voie sa dezvaluiti informatii confidentiale </li>\n" +
     "                        <li> Membrii Staff sunt obligati sa raspunda la intrebarile jucatorilor chiar daca acestia incalca regulametul (De exemplu, daca un player spameaza o intrebare, trebuie sa le raspunzi dupa ce sunt sanctionati) </li>\n" +
@@ -12,7 +12,7 @@ rulesBody =  "" +
     "                        <li> Membrii Staff nu au voie sa abuzeze de puterea lor => Incalcand automat regulile de mai sus. </li>\n" +
     "\n" +
     "                    </ul>";
-rulesTable = "" +
+rulesTable = "%innerHtml%" +
     "                    <table>\n" +
     "                        <tr>\n" +
     "                            <th style=\"text-align: center\">Incalcare</th>\n" +
@@ -185,8 +185,13 @@ function translate(){
         const field = document.getElementById(key);
         if (field !== null) {
             console.log("Translating key "+ key)
-            rulesTable.innerHTML = translateMap[key];
-
+            var value  = translateMap[key];
+            if(value.contains("%innerHtml%")){
+                value = value.replaceAll("%innerHtml%", "");
+                rulesTable.innerHTML = value;
+            } else {
+                rulesTable.innerText = value;
+            }
         }
     }
 
