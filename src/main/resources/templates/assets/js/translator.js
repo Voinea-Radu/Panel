@@ -188,9 +188,9 @@ function translate(){
             var value  = translateMap[key];
             if(value.contains("%innerHtml%")){
                 value = value.replaceAll("%innerHtml%", "");
-                rulesTable.innerHTML = value;
+                field.innerHTML = value;
             } else {
-                rulesTable.innerText = value;
+                field.innerText = value;
             }
         }
     }
