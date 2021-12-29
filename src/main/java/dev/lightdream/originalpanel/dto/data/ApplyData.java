@@ -1,13 +1,12 @@
 package dev.lightdream.originalpanel.dto.data;
 
-import dev.lightdream.originalpanel.dto.Sanctity;
+import dev.lightdream.originalpanel.dto.Sanctions;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 public class ApplyData {
 
     public enum ApplyStatus {
-
         OPEN("Awaiting staff response"),
         CLOSED("Closed");
 
@@ -16,19 +15,14 @@ public class ApplyData {
         ApplyStatus(String message) {
             this.message = message;
         }
-
     }
 
     public enum EnglishKnowledge {
-
         NONE, DECENT, FLUENT
-
     }
 
     public enum ApplyDecision {
-
         UNANSWERED, APPROVED, DENIED
-
     }
 
     @AllArgsConstructor
@@ -40,7 +34,7 @@ public class ApplyData {
         public String section;
         public int hours;
         public String discord;
-        public Sanctity sanctity;
+        public Sanctions sanctions;
         public String englishCheck;
         public String importantCommands;
         public String whyArguments;

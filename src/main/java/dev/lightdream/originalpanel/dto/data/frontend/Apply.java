@@ -1,5 +1,6 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
+import dev.lightdream.databasehandler.DatabaseMain;
 import dev.lightdream.databasehandler.annotations.database.DatabaseField;
 import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
 import dev.lightdream.originalpanel.Main;
@@ -15,27 +16,27 @@ public class Apply extends FrontEndData {
     public String section;
     @DatabaseField(columnName = "discord")
     public String discord;
-    @DatabaseField(columnName = "english_check")
+    @DatabaseField(columnName = "english")
     public String english;
-    @DatabaseField(columnName = "important_commands")
+    @DatabaseField(columnName = "commands")
     public String commands;
-    @DatabaseField(columnName = "why_argument")
+    @DatabaseField(columnName = "argument")
     public String why;
     @DatabaseField(columnName = "status")
     public ApplyData.ApplyStatus status;
     @DatabaseField(columnName = "decision")
     public ApplyData.ApplyDecision decision;
 
-    public Apply(ApplyData.ApplyCreateData data) {
-        super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
-        this.age = data.age;
-        this.section = data.section;
-        this.discord = data.discord;
-        this.english = data.englishCheck;
-        this.commands = data.importantCommands;
-        this.why = data.whyArguments;
-        this.status = data.status;
-        this.decision = ApplyData.ApplyDecision.UNANSWERED;
+    public Apply(String user, Long timestamp, int age, String section, String discord, String english, String commands, String why, ApplyData.ApplyStatus status, ApplyData.ApplyDecision decision) {
+        super(Main.instance, user, timestamp);
+        this.age = age;
+        this.section = section;
+        this.discord = discord;
+        this.english = english;
+        this.commands = commands;
+        this.why = why;
+        this.status = status;
+        this.decision = decision;
     }
 
     @Override

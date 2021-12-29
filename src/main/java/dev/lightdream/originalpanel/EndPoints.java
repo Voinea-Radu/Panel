@@ -180,6 +180,27 @@ public class EndPoints {
 
         return "bug-details.html";
     }
+
+    @GetMapping("/apply")
+    public String apply(Model model, Integer id) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+
+        if (id == null) {
+            return "apply.html";
+        }
+
+        //Bug bug = Main.instance.databaseManager.getBug(id);
+
+        //if (bug == null) {
+        //    return "404.html";
+        //}
+
+        //model.addAttribute("apply", bug);
+
+        return "apply-details.html";
+    }
 }
 
 
