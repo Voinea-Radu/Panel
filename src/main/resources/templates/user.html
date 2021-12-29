@@ -136,8 +136,13 @@
                                 <td style="text-align:right;"><span class="label default" th:text="${profile.originalCoins}">0</span></td>
                             </tr>
                             <tr>
-                                <td class="row-name">Sanctions</td>
-                                <td style="text-align:right;"></td>
+                                <td class="row-name" id="sanctions-row">Sanctions</td>
+                                <td style="text-align:right;">
+                                    <span class="label default" th:text="|Bans: ${profile.bans}|">Unknown</span>
+                                    <span class="label default" th:text="|Kicks: ${profile.kicks}|">Unknown</span>
+                                    <span class="label default" th:text="|Mutes: ${profile.mutes}|">Unknown</span>
+                                    <span class="label default" th:text="|Warnings: ${profile.warns}|">Unknown</span>
+                                </td>
                             </tr>
                         </table>
                     </div>

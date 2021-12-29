@@ -2,6 +2,7 @@ package dev.lightdream.originalpanel;
 
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.dto.data.PlayerProfile;
+import dev.lightdream.originalpanel.dto.data.frontend.Apply;
 import dev.lightdream.originalpanel.dto.data.frontend.Bug;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
