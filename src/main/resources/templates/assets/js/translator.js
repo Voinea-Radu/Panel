@@ -186,7 +186,7 @@ function translate(){
         if (field !== null) {
             console.log("Translating key "+ key)
             var value  = translateMap[key];
-            if(value.contains("%innerHtml%")){
+            if(value.includes("%innerHtml%")){
                 value = value.replaceAll("%innerHtml%", "");
                 field.innerHTML = value;
             } else {
