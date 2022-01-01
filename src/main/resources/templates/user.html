@@ -186,6 +186,21 @@
                         </tr>
                     </table>
                 </div>
+                <h2><strong>Application</strong></h2>
+                <div class="panel-table">
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Status</th>
+                            <th>Creation Date</th>
+                        </tr>
+                        <tr th:each="apply : ${profile.applications}" th:data-arg1="${apply.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                            <td th:text="${apply.id}" class="no-decorate-url">Unknown</td>
+                            <td th:text="${apply.status.message}">Unknown</td>
+                            <td th:text="${apply.getTimestampDate}">Unknown</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -196,6 +211,7 @@
 
 <script src="https://js.original.gg/scripts.js"></script>
 <script src="https://js.original.gg/translator.js"></script>
+<script src="https://js.original.gg/profile.js"></script>
 <script>
     profileTemplate();
 </script>

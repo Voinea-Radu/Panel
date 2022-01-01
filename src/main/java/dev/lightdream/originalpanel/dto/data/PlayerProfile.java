@@ -2,6 +2,7 @@ package dev.lightdream.originalpanel.dto.data;
 
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
+import dev.lightdream.originalpanel.dto.data.frontend.Apply;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
 import dev.lightdream.originalpanel.utils.Utils;
@@ -25,6 +26,7 @@ public class PlayerProfile {
     public Long discordID;
     public List<Complain> complaints;
     public List<UnbanRequest> unbanRequests;
+    public List<Apply> applications;
     public int bans;
     public int kicks;
     public int warns;
@@ -58,6 +60,7 @@ public class PlayerProfile {
         }
         this.complaints = Main.instance.databaseManager.getComplains(username);
         this.unbanRequests = Main.instance.databaseManager.getUnbanRequests(username);
+        this.applications = Main.instance.databaseManager.getApplications(username);
         this.bans = Main.instance.databaseManager.getBanCount(uuid);
         this.kicks = Main.instance.databaseManager.getKickCount(uuid);
         this.mutes = Main.instance.databaseManager.getMuteCount(uuid);

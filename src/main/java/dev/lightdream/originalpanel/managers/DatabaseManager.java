@@ -471,6 +471,11 @@ public class DatabaseManager extends HikariDatabaseManager {
         }}).stream().findFirst().orElse(null);
     }
 
+    public List<Apply> getApplications(String username) {
+        return get(Apply.class, new HashMap<>() {{
+            put("user", username);
+        }}, "id", 10, OrderByType.DESCENDENT);
+    }
 
 
 

@@ -857,7 +857,7 @@ body {
 }
 
 .apply-sanction{
-    background: #282a32;
-    color: #848ba3;
+    background: #282a32 !important;
+    color: #848ba3 !important;
 }
 
