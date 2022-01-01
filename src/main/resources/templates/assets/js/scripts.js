@@ -211,38 +211,3 @@ async function callAPI(api, data, callbackEn, callbackRo, failCallbackEn, failCa
         }
     }
 }
-
-async function applyTemplate(){
-    checkLoggedStatus();
-
-    document.getElementById('submit').addEventListener('click', function f() {
-        apply();
-    });
-}
-
-function apply(){
-    callAPI("/api/form/apply", {
-        cookie: getCookie("login_data"),
-        age: document.getElementById("age").value,
-        section: document.getElementById("section").value,
-        english: document.getElementById("english").value,
-        commands: document.getElementById("commands").value,
-        why: document.getElementById("why").value,
-    }, () => {
-        redirect("/?message=You application was sent successfully");
-    }, () => {
-        redirect("/?message=Aplicatia ta a fost trimisa cu succes");
-    })
-}
-
-async function applyDeatils(){
-    bans = document.getElementById("bans").value;
-    warns = document.getElementById("warns").value;
-    kicks = document.getElementById("kicks").value;
-    mutes = document.getElementById("mutes").value;
-    document.getElementById("sanctions-2").innerHTML = "" +
-        "                <span class='label default'>Bans: " + bans + "</span>\n" +
-        "                <span class='label default'>Kicks: " + kicks + "</span>\n" +
-        "                <span class='label default'>Mutes: " + mutes + "</span>\n" +
-        "                <span class='label default'>Warnings: " + warns + "</span>";
-}

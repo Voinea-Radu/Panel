@@ -103,7 +103,7 @@
             </div>
             <div class="form-group">
               <label for="argument" id="argument-label">Argument</label>
-              <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${apply.argument}" hidden="hidden"></textarea>
+              <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${apply.argument}"></textarea>
             </div>
             <div class="form-group">
               <label for="kicks" id="kicks-label">Kicks</label>
@@ -122,12 +122,8 @@
               <input class="form-control" id="warns" readonly="readonly" type="text" th:value="${apply.warns}">
             </div>
             <div class="form-group">
-              <label for="sanctions-1" id="sanctions-1-label">Sanctions</label>
-              <input class="form-control" id="sanctions-1" readonly="readonly" type="text" th:value="|Bans: ${apply.bans} Kicks: ${apply.kicks} Mutes: ${apply.mutes} Warnings: ${apply.warns}|">
-            </div>
-            <div class="form-group">
-              <label for="sanctions-2" id="sanctions-2-label">Sanctions</label>
-              <div class="form-control" id="sanctions-2"></div>
+              <label for="sanctions" id="sanctions-label">Sanctions</label>
+              <div class="form-control" id="sanctions"></div>
             </div>
             <div class="form-group">
               <label for="status" id="status-label" hidden="hidden">Status</label>
@@ -151,7 +147,7 @@
 <script src="https://js.original.gg/translator.js"></script>
 <script src="https://js.original.gg/apply.js"></script>
 <script>
-  applyDeatils();
+  applyDetails();
 </script>
 
 </body>
