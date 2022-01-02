@@ -22,9 +22,7 @@ function apply(){
     })
 }
 
-async function applyDetails(){
-
-
+async function applyDetails() {
 
     bans = document.getElementById("bans").value;
     warns = document.getElementById("warns").value;
@@ -36,5 +34,45 @@ async function applyDetails(){
         "                <span class='label default apply-sanction'>Mutes: " + mutes + "</span>\n" +
         "                <span class='label default apply-sanction'>Warnings: " + warns + "</span>";
 
+    var status = document.getElementById("status").value;
 
+    if (status === "OPEN") {
+        var user = JSON.parse(getCookie("login_data"));
+
+        callAPI(`/api/check/staff?user=${user.username}&useCase=unban`, {}, () => {
+            document.getElementById("approve").hidden = false;
+            document.getElementById("deny").hidden = false;
+
+            document.getElementById('approve').addEventListener('click', function f() {
+                approveApplication();
+            });
+
+            document.getElementById('deny').addEventListener('click', function f() {
+                denyApplication();
+            });
+        })
+
+    }
+}
+
+async function approveApplication() {
+    callAPI("/api/update/form/apply", {
+        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
+    }, () => {
+        window.location.reload();
+    }, () => {
+        window.location.reload();
+    });
+}
+
+async function denyApplication() {
+    callAPI("/api/update/form/apply", {
+        cookie: getCookie("login_data"), decision: "DENIED", id: document.getElementById("id").value
+    }, () => {
+        console.log("sent")
+        window.location.reload();
+    }, () => {
+        console.log("trimis")
+        window.location.reload();
+    })
 }

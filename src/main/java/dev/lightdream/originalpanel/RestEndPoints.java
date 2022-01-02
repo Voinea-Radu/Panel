@@ -352,5 +352,34 @@ public class RestEndPoints {
         return Response.OK_200();
     }
 
+    @PostMapping("/api/update/form/apply")
+    public Response changeApplyStatus(@RequestBody ApplyData.ApplyDecisionData data) {
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        Apply apply = Main.instance.databaseManager.getApplication(data.id);
+
+        if (apply == null) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (loginData == null || !checkStaff(loginData.username, "unban").code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        apply.status = ApplyData.ApplyStatus.CLOSED;
+        apply.decision = ApplyData.ApplyDecision.valueOf(data.decision);
+        apply.save();
+
+        return Response.OK_200();
+    }
 
 }
