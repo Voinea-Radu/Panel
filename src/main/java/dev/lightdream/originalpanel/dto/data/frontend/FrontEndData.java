@@ -11,11 +11,14 @@ public abstract class FrontEndData extends DatabaseEntry {
     public String user;
     @DatabaseField(columnName = "timestamp")
     public Long timestamp;
+    @DatabaseField(columnName = "notify")
+    public boolean notify;
 
     public FrontEndData(DatabaseMain main, String user, Long timestamp) {
         super(main);
         this.user = user;
         this.timestamp = timestamp;
+        this.notify=false;
     }
 
     public FrontEndData() {

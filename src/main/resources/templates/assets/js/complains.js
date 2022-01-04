@@ -24,6 +24,13 @@ async function complain() {
 
 async function complaintsDetails() {
 
+    checkLoggedStatus();
+
+    callPutAPI("/api/read?type=complain", {
+        cookie: getCookie("login_data"),
+        id: document.getElementById("id").value
+    });
+
     var status = document.getElementById("status").value;
 
     if (status === "OPEN_AWAITING_TARGET_RESPONSE") {
@@ -43,7 +50,6 @@ async function complaintsDetails() {
             document.getElementById("target-response").readOnly = true;
 
             if (by !== user.username) {
-                console.log(2)
                 redirect("/unauthorised");
                 return;
             }
@@ -112,10 +118,8 @@ async function approveComplain() {
     callAPI("/api/update/form/complain", {
         cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
     }, () => {
-        console.log("sent")
         window.location.reload();
     }, () => {
-        console.log("trimis")
         window.location.reload();
     });
 }
@@ -124,10 +128,8 @@ async function denyComplain() {
     callAPI("/api/update/form/complain", {
         cookie: getCookie("login_data"), decision: "DENY", id: status = document.getElementById("id").value
     }, () => {
-        console.log("sent")
         window.location.reload();
     }, () => {
-        console.log("trimis")
         window.location.reload();
     })
 }

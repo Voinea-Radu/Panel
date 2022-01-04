@@ -1,7 +1,7 @@
 rulesBody =  "%innerHtml%" +
     "                    <ul>\n" +
     "                        <li> Nu aveti voie sa dezvaluiti informatii confidentiale </li>\n" +
-    "                        <li> Membrii Staff sunt obligati sa raspunda la intrebarile jucatorilor chiar daca acestia incalca regulametul (De exemplu, daca un player spameaza o intrebare, trebuie sa le raspunzi dupa ce sunt sanctionati) </li>\n" +
+    "                        <li> Membrii Staff sunt obligati sa raspunda la intrebarile jucatorilor chiar daca acestia incalca regulametul (De exemplu, daca un player spameaza o intrebare, trebuie sa le raspunzi dupa care sunt sanctionati) </li>\n" +
     "                        <li> Membrii Staff nu au voie sa ramana AFK pe sectiuni, datoria lor este sa fie atenti la ceea ce se intampla pe sectiune. </li>\n" +
     "                        <li> Membrii Staff cu functia de Moderator -> HManager nu au voie sa participe la top </li>\n" +
     "                        <li> Membrii Staff nu sunt responsabili de itemele pierdute prin orice metoda, dar pot sanctiona in functie de situatie. Spre exemplu: Constructii in aproprierea protectiei, Trap tpa + kill, /ah scam, etc. (Majoritatea acestor situatii vor fi sanctionate cu WARN) </li>\n" +
@@ -170,21 +170,26 @@ translateMap = {
     "unban-argument": "De ce ar trebui sa primesti unban?",
     "rules-body": rulesBody,
     "rules-table": rulesTable,
+    "by": "Raportat de",
+    "by-1": "Raportat de",
+    "by-2": "Raportat de",
+    "section": "Sectiune",
+    "description": "Descriere",
+    "creation_date": "Data creeri",
+    "creation_date-1": "Data creeri",
+    "creation_date-2": "Data creeri",
 }
 
 translate();
 
 function translate(){
     if (getCookie("lang") === "en") {
-        console.log("Not Translated")
         return;
     }
 
     for(const key in translateMap) {
-        console.log("Trying key "+ key)
         const field = document.getElementById(key);
         if (field !== null) {
-            console.log("Translating key "+ key)
             var value  = translateMap[key];
             if(value.includes("%innerHtml%")){
                 value = value.replaceAll("%innerHtml%", "");

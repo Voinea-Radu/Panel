@@ -10,10 +10,7 @@ import dev.lightdream.originalpanel.dto.data.ApplyData;
 import dev.lightdream.originalpanel.dto.data.BugsData;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.UnbanData;
-import dev.lightdream.originalpanel.dto.data.frontend.Apply;
-import dev.lightdream.originalpanel.dto.data.frontend.Bug;
-import dev.lightdream.originalpanel.dto.data.frontend.Complain;
-import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
+import dev.lightdream.originalpanel.dto.data.frontend.*;
 import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
@@ -82,7 +79,7 @@ public class DatabaseManager extends HikariDatabaseManager {
             //noinspection StringConcatenationInLoop
             args2 += "primary_group=\"" + staffRank + "\" OR ";
         }
-        args1 += "OR";
+        args1 += "OR";https://code-with-me.jetbrains.com/EEOhOkE24y6jbQ2Dq5_CqQ#p=IU&fp=0341A6B48D73F9E7B4414518B0F6951A64857DFDACF4BB7644D82C21BCFB5BD7
         args1 = args1.replace("OR OR", "");
         args2 += "OR";
         args2 = args2.replace("OR OR", "");
@@ -340,10 +337,14 @@ public class DatabaseManager extends HikariDatabaseManager {
 
     @SneakyThrows
     public List<Complain> getComplains(String username) {
-        return get(Complain.class, new HashMap<>() {{
+        List<Complain> output = get(Complain.class, new HashMap<>() {{
             put("user", username);
-            put("target", username);
         }}, "id", 10, OrderByType.DESCENDENT);
+        output.addAll(get(Complain.class, new HashMap<>() {{
+            put("target", username);
+        }}, "id", 10, OrderByType.DESCENDENT));
+
+        return output;
     }
 
 
@@ -419,7 +420,7 @@ public class DatabaseManager extends HikariDatabaseManager {
             put(UnbanData.UnbanStatus.class, obj -> "\"" + obj.toString() + "\"");
             put(UnbanData.UnbanDecision.class, obj -> "\"" + obj.toString() + "\"");
             put(BugsData.BugStatus.class, obj -> "\"" + obj.toString() + "\"");
-            put(ApplyData.ApplyDecision.class,obj -> "\"" + obj.toString() + "\"");
+            put(ApplyData.ApplyDecision.class, obj -> "\"" + obj.toString() + "\"");
             put(ApplyData.ApplyStatus.class, obj -> "\"" + obj.toString() + "\"");
         }};
     }
@@ -465,7 +466,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         }});
     }
 
-    public Apply getApplication(int id){
+    public Apply getApplication(int id) {
         return get(Apply.class, new HashMap<>() {{
             put("id", id);
         }}).stream().findFirst().orElse(null);
@@ -477,6 +478,43 @@ public class DatabaseManager extends HikariDatabaseManager {
         }}, "id", 10, OrderByType.DESCENDENT);
     }
 
+    public List<Notification> getNotifications(String username) {
+        List<Notification> notifications = new ArrayList<>();
+
+        get(Apply.class, new HashMap<>() {{
+            put("notify", 1);
+            put("user", username);
+        }}, "id", 10, OrderByType.DESCENDENT)
+                .forEach(apply -> notifications.add(Notification.of(apply)));
+
+        get(Bug.class, new HashMap<>() {{
+            put("notify", 1);
+            put("user", username);
+        }}, "id", 10, OrderByType.DESCENDENT)
+                .forEach(bug -> notifications.add(Notification.of(bug)));
+
+        get(Complain.class, new HashMap<>() {{
+            put("notify", 1);
+            put("target", username);
+        }}, "id", 10, OrderByType.DESCENDENT)
+                .forEach(complain -> notifications.add(Notification.of(complain, true)));
+
+        get(Complain.class, new HashMap<>() {{
+            put("notify", 1);
+            put("user", username);
+        }}, "id", 10, OrderByType.DESCENDENT)
+                .forEach(complain -> notifications.add(Notification.of(complain, false)));
+
+        get(UnbanRequest.class, new HashMap<>() {{
+            put("notify", 1);
+            put("user", username);
+        }}, "id", 10, OrderByType.DESCENDENT)
+                .forEach(unban -> notifications.add(Notification.of(unban)));
+
+        return notifications;
+
+    }
 
 
 }
+

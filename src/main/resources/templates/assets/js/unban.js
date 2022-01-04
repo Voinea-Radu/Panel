@@ -24,6 +24,13 @@ async function unban() {
 
 async function unbanDetails() {
 
+    checkLoggedStatus();
+
+    callPutAPI("/api/read?type=unban", {
+        cookie: getCookie("login_data"),
+        id: document.getElementById("id").value
+    });
+
     var status = document.getElementById("status").value;
 
     if (status === "OPEN") {
@@ -59,10 +66,8 @@ async function denyUnban() {
     callAPI("/api/update/form/unban", {
         cookie: getCookie("login_data"), decision: "DENIED", id: document.getElementById("id").value
     }, () => {
-        console.log("sent")
         window.location.reload();
     }, () => {
-        console.log("trimis")
         window.location.reload();
     })
 }

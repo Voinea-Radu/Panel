@@ -21,6 +21,7 @@ public class Complain extends FrontEndData {
     public String proof;
     @DatabaseField(columnName = "status")
     public ComplainData.ComplainStatus status;
+    @DatabaseField(columnName = "target_response")
     public String targetResponse;
     @DatabaseField(columnName = "decision")
     public ComplainData.ComplainDecision decision;

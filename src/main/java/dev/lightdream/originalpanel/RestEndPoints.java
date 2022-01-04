@@ -5,10 +5,7 @@ import com.google.gson.Gson;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.dto.Staff;
 import dev.lightdream.originalpanel.dto.data.*;
-import dev.lightdream.originalpanel.dto.data.frontend.Apply;
-import dev.lightdream.originalpanel.dto.data.frontend.Bug;
-import dev.lightdream.originalpanel.dto.data.frontend.Complain;
-import dev.lightdream.originalpanel.dto.data.frontend.UnbanRequest;
+import dev.lightdream.originalpanel.dto.data.frontend.*;
 import dev.lightdream.originalpanel.utils.Utils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -169,18 +166,21 @@ public class RestEndPoints {
 
         @SuppressWarnings("unchecked") List<Staff> staffs = (List<Staff>) Main.instance.cacheManager.staffs.get();
 
+
         if (staffs.stream().anyMatch(staff -> {
-            if (useCase.equals("complain")) {
-                return staff.username.equalsIgnoreCase(user) && complainStaff.contains(staff.rank);
-            }
-            if (useCase.equals("unban")) {
-                return staff.username.equalsIgnoreCase(user) && unbanStaff.contains(staff.rank);
-            }
-            if (useCase.equals("bug")) {
-                return staff.username.equalsIgnoreCase(user) && bugsStaff.contains(staff.rank);
-            }
-            if (useCase.equals("any")) {
-                return staff.username.equalsIgnoreCase(user);
+            if (staff.username.equalsIgnoreCase(user)) {
+                Debugger.info(staff.rank);
+
+                if (useCase.equals("complain")) {
+                    return complainStaff.contains(staff.rank);
+                }
+                if (useCase.equals("unban")) {
+                    return unbanStaff.contains(staff.rank);
+                }
+                if (useCase.equals("bug")) {
+                    return bugsStaff.contains(staff.rank);
+                }
+                return true;
             }
             return false;
         })) {
@@ -378,6 +378,64 @@ public class RestEndPoints {
         apply.status = ApplyData.ApplyStatus.CLOSED;
         apply.decision = ApplyData.ApplyDecision.valueOf(data.decision);
         apply.save();
+
+        return Response.OK_200();
+    }
+
+    @PostMapping("/api/getNotifications")
+    public List<Notification> getNotifications(String username) {
+        return Main.instance.databaseManager.getNotifications(username);
+    }
+
+    @PostMapping("/api/read")
+    public Response readNotification(String type, @RequestBody ReadData data) {
+        return switch (type) {
+            case "apply" -> readNotification(Apply.class, data);
+            case "bug" -> readNotification(Bug.class, data);
+            case "complain" -> readNotification(Complain.class, data);
+            case "unban" -> readNotification(UnbanRequest.class, data);
+            default -> Response.INVALID_ENTRY_422();
+        };
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends FrontEndData> Response readNotification(Class<T> clazz, ReadData data) {
+
+        T item;
+        if (Bug.class.equals(clazz)) {
+            item = (T) Main.instance.databaseManager.getBug(data.id);
+        } else if (Apply.class.equals(clazz)) {
+            item = (T) Main.instance.databaseManager.getApplication(data.id);
+        } else if (Complain.class.equals(clazz)) {
+            item = (T) Main.instance.databaseManager.getComplain(data.id);
+        } else if (UnbanRequest.class.equals(clazz)) {
+            item = (T) Main.instance.databaseManager.getUnbanRequest(data.id);
+        } else {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        if (!item.notify) {
+            return Response.NOT_FOUND_404();
+        }
+
+        if (!validateCookie(data.cookie).code.equals("200")) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        LoginData loginData;
+        try {
+            loginData = new Gson().fromJson(data.cookie, LoginData.class);
+        } catch (Throwable t) {
+            return Response.BAD_CREDENTIALS_401();
+        }
+
+        if (!item.user.equals(loginData.username)) {
+            return Response.INVALID_ENTRY_422();
+        }
+
+        item.notify = false;
+        item.save();
 
         return Response.OK_200();
     }

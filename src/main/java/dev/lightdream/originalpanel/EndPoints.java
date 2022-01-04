@@ -10,11 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.Arrays;
+import java.util.List;
+
 @SuppressWarnings("SpringMVCViewInspection")
 @Controller
 public class EndPoints {
     @GetMapping("/")
-    public String indexWithMessage(Model model, String message) {
+    public String index(Model model, String message) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -202,6 +205,7 @@ public class EndPoints {
 
         return "apply-details.html";
     }
+
 }
 
 

@@ -1,5 +1,4 @@
-
-async function applyTemplate(){
+async function applyTemplate() {
     checkLoggedStatus();
 
     document.getElementById('submit').addEventListener('click', function f() {
@@ -7,7 +6,7 @@ async function applyTemplate(){
     });
 }
 
-function apply(){
+function apply() {
     callAPI("/api/form/apply", {
         cookie: getCookie("login_data"),
         age: document.getElementById("age").value,
@@ -23,6 +22,12 @@ function apply(){
 }
 
 async function applyDetails() {
+    checkLoggedStatus();
+
+    callPutAPI("/api/read?type=apply", {
+        cookie: getCookie("login_data"),
+        id: document.getElementById("id").value
+    });
 
     bans = document.getElementById("bans").value;
     warns = document.getElementById("warns").value;
@@ -57,7 +62,7 @@ async function applyDetails() {
 
 async function approveApplication() {
     callAPI("/api/update/form/apply", {
-        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "APPROVED", id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
@@ -69,10 +74,8 @@ async function denyApplication() {
     callAPI("/api/update/form/apply", {
         cookie: getCookie("login_data"), decision: "DENIED", id: document.getElementById("id").value
     }, () => {
-        console.log("sent")
         window.location.reload();
     }, () => {
-        console.log("trimis")
         window.location.reload();
     })
 }

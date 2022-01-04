@@ -28,7 +28,6 @@ dashBoard();
 async function dashBoard() {
     logged = await isLoggedIn();
     if (!logged) {
-        console.log(2)
         document.getElementById("entries-item").hidden = true;
         document.getElementById("complaints-item").hidden = true;
         document.getElementById("unban-item").hidden = true;
@@ -144,6 +143,14 @@ function changeLanguage(language) {
 
 function redirect(path) {
     window.location.replace(path);
+}
+
+async function callPutAPI(api, data){
+    await fetch(api, {
+        method: 'post', headers: {
+            'Accept': 'application/json', 'Content-Type': 'application/json'
+        }, body: JSON.stringify(data)
+    });
 }
 
 async function callAPI(api, data, callbackEn, callbackRo, failCallbackEn, failCallbackRo) {

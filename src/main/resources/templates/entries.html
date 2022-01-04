@@ -70,9 +70,9 @@
                         <table>
                             <tr>
                                 <th>ID</th>
-                                <th>By</th>
-                                <th>Target</th>
-                                <th>Creation Date</th>
+                                <th id="by">By</th>
+                                <th id="target">Target</th>
+                                <th id="creation_date">Creation Date</th>
                             </tr>
                             <tr th:each="complain : ${complaints}" th:data-arg1="${complain.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
                                 <td th:text="${complain.id}" class="no-decorate-url">Unknown</td>
@@ -90,9 +90,9 @@
                         <table>
                             <tr>
                                 <th>ID</th>
-                                <th>By</th>
+                                <th id="by-1">By</th>
                                 <th>Staff</th>
-                                <th>Creation Date</th>
+                                <th id="creation_date-1">Creation Date</th>
                             </tr>
                             <tr th:each="unban : ${unbans}" th:data-arg1="${unban.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
                                 <td th:text="${unban.id}" class="no-decorate-url">Unknown</td>
@@ -110,10 +110,10 @@
                         <table>
                             <tr>
                                 <th>ID</th>
-                                <th>By</th>
-                                <th>Section</th>
-                                <th>Description</th>
-                                <th>Creation Date</th>
+                                <th id="by-2">By</th>
+                                <th id="section">Section</th>
+                                <th id="description">Description</th>
+                                <th id="creation_date-2">Creation Date</th>
                             </tr>
                             <tr th:each="bug : ${bugs}" th:data-arg1="${bug.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
                                 <td th:text="${bug.id}" class="no-decorate-url">Unknown</td>

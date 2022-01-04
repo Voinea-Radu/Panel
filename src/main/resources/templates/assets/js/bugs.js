@@ -7,6 +7,8 @@ function bugsTemplate() {
 }
 
 async function bug() {
+    checkLoggedStatus();
+
     callAPI("/api/form/bugs", {
         cookie: getCookie("login_data"),
         section: document.getElementById("section").value,
@@ -19,6 +21,12 @@ async function bug() {
 }
 
 async function bugDetails() {
+    checkLoggedStatus();
+
+    callPutAPI("/api/read?type=bug", {
+        cookie: getCookie("login_data"),
+        id: document.getElementById("id").value
+    });
 
     var status = document.getElementById("status").value;
 
@@ -31,6 +39,9 @@ async function bugDetails() {
             document.getElementById('close').addEventListener('click', function f() {
                 closeBug();
             });
+        }, () => {
+        }, () => {
+            redirect("/401");
         })
 
     }

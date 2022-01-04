@@ -27,7 +27,6 @@ public class ApplyData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ApplyCreateData {
-
         public String cookie;
         public int age;
         public String section;
@@ -43,18 +42,17 @@ public class ApplyData {
         public int bans;
         public int mutes;
         public int kicks;
-
     }
 
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ApplyDecisionData {
-
         public String cookie;
         public String decision;
         public int id;
-
     }
+
+
 
 
 }

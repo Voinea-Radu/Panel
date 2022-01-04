@@ -861,3 +861,18 @@ body {
     color: #848ba3 !important;
 }
 
+.notification{
+    background-color: red;
+    color: black;
+    border-radius: 10px !important;
+    padding-left: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 22px;
+}
+
+.notification-wrap{
+    padding-top: 30px !important;
+    padding-left: 50px !important;
+    padding-right: 50px !important;
+}

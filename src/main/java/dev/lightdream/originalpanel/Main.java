@@ -59,7 +59,7 @@ public class Main implements DatabaseMain, LoggableMain {
     }
 
     public boolean debug() {
-        return false; //todo configure
+        return true; //todo configure
     }
 
     public void log(String log) {
