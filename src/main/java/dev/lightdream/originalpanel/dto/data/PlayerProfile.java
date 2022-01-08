@@ -72,7 +72,7 @@ public class PlayerProfile {
             cycles++;
             if (cycles > 400000000) {
                 Debugger.info("Break because of timeout");
-                this.discordName = "Not Loaded";
+                this.discordName = discordID.toString();
                 break;
             }
         }

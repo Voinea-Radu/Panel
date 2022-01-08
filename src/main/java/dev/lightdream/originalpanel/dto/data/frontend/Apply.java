@@ -2,9 +2,12 @@ package dev.lightdream.originalpanel.dto.data.frontend;
 
 import dev.lightdream.databasehandler.annotations.database.DatabaseField;
 import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
+import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.ApplyData;
 import dev.lightdream.originalpanel.utils.Utils;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 @DatabaseTable(table = "applies")
 public class Apply extends FrontEndData {
@@ -63,6 +66,29 @@ public class Apply extends FrontEndData {
     }
 
     public String getDiscordTag() {
-        return "";
+        AtomicReference<String> tag = new AtomicReference<>(null);
+        if (discordID == 0L) {
+            tag.set("Not Linked");
+        } else {
+            Main.instance.bot.retrieveUserById(discordID).queue(user -> {
+                if (user == null) {
+                    tag.set("Not Linked");
+                    return;
+                }
+                tag.set(user.getAsTag());
+            });
+        }
+
+        //Awaiting the discord username to be retrieved from discord API
+        int cycles = 0;
+        while (tag.get() == null) {
+            cycles++;
+            if (cycles > 400000000) {
+                Debugger.info("Break because of timeout");
+                tag.set("Not Loaded");
+                break;
+            }
+        }
+        return tag.get() == null ? discordID.toString() : tag.get();
     }
 }
