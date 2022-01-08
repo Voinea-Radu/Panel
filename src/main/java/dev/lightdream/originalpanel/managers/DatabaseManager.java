@@ -393,6 +393,13 @@ public class DatabaseManager extends HikariDatabaseManager {
     }
 
     @SneakyThrows
+    public List<Apply> getApplications() {
+        return get(Apply.class, new HashMap<>() {{
+            put("status", BugsData.BugStatus.OPEN.toString());
+        }}, "id", 20, OrderByType.ASCENDANT);
+    }
+
+    @SneakyThrows
     public Bug getBug(int id) {
         return get(Bug.class, new HashMap<>() {{
             put("id", id);

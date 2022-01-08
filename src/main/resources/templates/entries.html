@@ -125,6 +125,27 @@
                         </table>
                     </div>
                 </div>
+                <br><br>
+                <div style="display: block">
+                    <h2><strong>Applies</strong></h2>
+                    <div class="panel-table">
+                        <table>
+                            <tr>
+                                <th>ID</th>
+                                <th id="by-3">By</th>
+                                <th id="section-2">Section</th>
+                                <th id="creation_date-3">Creation Date</th>
+                            </tr>
+                            <tr th:each="apply : ${applies}" th:data-arg1="${apply.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
+                                <td th:text="${apply.id}" class="no-decorate-url">Unknown</td>
+                                <td th:text="${apply.user}">Unknown</td>
+                                <td th:text="${apply.section}">Unknown</td>
+                                <td th:text="${apply.getTimestampDate}">Unknown</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
 
             </div>
         </div>

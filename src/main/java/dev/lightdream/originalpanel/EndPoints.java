@@ -136,6 +136,7 @@ public class EndPoints {
         model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
         model.addAttribute("unbans", Main.instance.databaseManager.getUnbans());
         model.addAttribute("bugs", Main.instance.databaseManager.getBugs());
+        model.addAttribute("applies", Main.instance.databaseManager.getApplications());
 
         return "entries.html";
     }

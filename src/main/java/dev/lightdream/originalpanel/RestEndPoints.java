@@ -216,6 +216,7 @@ public class RestEndPoints {
 
         complain.status = ComplainData.ComplainStatus.CLOSED;
         complain.decision = ComplainData.ComplainDecision.valueOf(data.decision);
+        complain.notify = true;
         complain.save();
 
         return Response.OK_200();
@@ -270,6 +271,7 @@ public class RestEndPoints {
 
         unban.status = UnbanData.UnbanStatus.CLOSED;
         unban.decision = UnbanData.UnbanDecision.valueOf(data.decision);
+        unban.notify = true;
         unban.save();
 
         return Response.OK_200();
@@ -319,6 +321,7 @@ public class RestEndPoints {
         }
 
         bug.status = BugsData.BugStatus.CLOSED;
+        bug.notify = true;
         bug.save();
 
         return Response.OK_200();
@@ -377,6 +380,7 @@ public class RestEndPoints {
 
         apply.status = ApplyData.ApplyStatus.CLOSED;
         apply.decision = ApplyData.ApplyDecision.valueOf(data.decision);
+        apply.notify = true;
         apply.save();
 
         return Response.OK_200();
