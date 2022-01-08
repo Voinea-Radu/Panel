@@ -10,9 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Arrays;
-import java.util.List;
-
 @SuppressWarnings("SpringMVCViewInspection")
 @Controller
 public class EndPoints {
@@ -86,7 +83,7 @@ public class EndPoints {
         //TODO EE
         if (profile.username.equals("VibmxGaming")) {
             profile.originalCoins = 666;
-            profile.playTime= "∞";
+            profile.playTime = "∞";
         }
 
         model.addAttribute("profile", profile);

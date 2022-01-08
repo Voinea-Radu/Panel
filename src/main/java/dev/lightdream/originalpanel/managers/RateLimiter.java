@@ -9,11 +9,11 @@ import java.util.HashMap;
 @NoArgsConstructor
 public class RateLimiter {
 
-    public HashMap<String, Requests> loginAttempts=new HashMap<>();
+    public HashMap<String, Requests> loginAttempts = new HashMap<>();
 
-    public RateLimit loginAttemptRateLimit = new RateLimit(3, 60*1000L);
+    public RateLimit loginAttemptRateLimit = new RateLimit(3, 60 * 1000L);
 
-    public boolean attemptLogin(String user){
+    public boolean attemptLogin(String user) {
         Requests requests = loginAttempts.getOrDefault(user, new Requests());
         requests.requests.add(System.currentTimeMillis());
         loginAttempts.put(user, requests);

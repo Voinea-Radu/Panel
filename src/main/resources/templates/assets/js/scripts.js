@@ -145,7 +145,7 @@ function redirect(path) {
     window.location.replace(path);
 }
 
-async function callPutAPI(api, data){
+async function callPutAPI(api, data) {
     await fetch(api, {
         method: 'post', headers: {
             'Accept': 'application/json', 'Content-Type': 'application/json'

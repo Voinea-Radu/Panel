@@ -65,27 +65,4 @@ public class Apply extends FrontEndData {
     public String getDiscordTag() {
         return "";
     }
-
-    @Override
-    public String toString() {
-        return "Apply{" +
-                "age=" + age +
-                ", section='" + section + '\'' +
-                ", discordID=" + discordID +
-                ", english='" + english + '\'' +
-                ", commands='" + commands + '\'' +
-                ", argument='" + argument + '\'' +
-                ", status=" + status +
-                ", decision=" + decision +
-                ", bans=" + bans +
-                ", kicks=" + kicks +
-                ", warns=" + warns +
-                ", mutes=" + mutes +
-                ", playTime='" + playTime + '\'' +
-                ", user='" + user + '\'' +
-                ", timestamp=" + timestamp +
-                ", notify=" + notify +
-                ", id=" + id +
-                '}';
-    }
 }

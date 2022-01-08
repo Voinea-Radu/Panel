@@ -79,7 +79,7 @@ public class DatabaseManager extends HikariDatabaseManager {
             //noinspection StringConcatenationInLoop
             args2 += "primary_group=\"" + staffRank + "\" OR ";
         }
-        args1 += "OR";https://code-with-me.jetbrains.com/EEOhOkE24y6jbQ2Dq5_CqQ#p=IU&fp=0341A6B48D73F9E7B4414518B0F6951A64857DFDACF4BB7644D82C21BCFB5BD7
+        args1 += "OR";
         args1 = args1.replace("OR OR", "");
         args2 += "OR";
         args2 = args2.replace("OR OR", "");

@@ -1,4 +1,6 @@
-rulesBody =  "%innerHtml%" +
+// noinspection JSUnfilteredForInLoop
+
+rulesBody = "%innerHtml%" +
     "                    <ul>\n" +
     "                        <li> Nu aveti voie sa dezvaluiti informatii confidentiale </li>\n" +
     "                        <li> Membrii Staff sunt obligati sa raspunda la intrebarile jucatorilor chiar daca acestia incalca regulametul (De exemplu, daca un player spameaza o intrebare, trebuie sa le raspunzi dupa care sunt sanctionati) </li>\n" +
@@ -182,16 +184,16 @@ translateMap = {
 
 translate();
 
-function translate(){
+function translate() {
     if (getCookie("lang") === "en") {
         return;
     }
 
-    for(const key in translateMap) {
+    for (const key in translateMap) {
         const field = document.getElementById(key);
         if (field !== null) {
-            var value  = translateMap[key];
-            if(value.includes("%innerHtml%")){
+            var value = translateMap[key];
+            if (value.includes("%innerHtml%")) {
                 value = value.replaceAll("%innerHtml%", "");
                 field.innerHTML = value;
             } else {

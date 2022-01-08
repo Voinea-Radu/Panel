@@ -42,15 +42,16 @@ public class Main implements DatabaseMain, LoggableMain {
         this.databaseManager = new DatabaseManager();
         this.cacheManager = new CacheManager(this);
         this.restEndPoints = new RestEndPoints();
-        this.bot = JDABuilder.createDefault("OTAyNTgxODA2NTE4MzcwMzE0.YXggzw.tllpHKmKFul4mYgDG7Ihmv84mxk").build();
-        this.rateLimiter=new RateLimiter();
+        this.bot = JDABuilder.createDefault("OTI4ODExNjUzNzA3OTk3MjM0.YdeNQg.my4IrZuUjMjWTaUygb1Qqz21dlg").build();
+
+        this.rateLimiter = new RateLimiter();
         Logger.good("Application started");
 
         enabled = true;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return enabled;
     }
 
@@ -59,7 +60,7 @@ public class Main implements DatabaseMain, LoggableMain {
     }
 
     public boolean debug() {
-        return true; //todo configure
+        return false; //todo configure
     }
 
     public void log(String log) {

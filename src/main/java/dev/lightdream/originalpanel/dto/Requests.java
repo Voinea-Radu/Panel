@@ -1,6 +1,5 @@
 package dev.lightdream.originalpanel.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;

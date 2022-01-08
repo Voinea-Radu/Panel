@@ -39,7 +39,7 @@ public class Response {
         return new Response("200", "OK", "OK");
     }
 
-    public static Response NOT_FOUND_404(){
+    public static Response NOT_FOUND_404() {
         return new Response("404", "Not Found", "Ne gasit");
     }
 }

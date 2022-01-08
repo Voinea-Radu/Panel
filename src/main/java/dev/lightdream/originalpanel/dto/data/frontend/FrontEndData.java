@@ -18,7 +18,7 @@ public abstract class FrontEndData extends DatabaseEntry {
         super(main);
         this.user = user;
         this.timestamp = timestamp;
-        this.notify=false;
+        this.notify = false;
     }
 
     public FrontEndData() {

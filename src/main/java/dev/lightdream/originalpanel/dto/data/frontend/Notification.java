@@ -12,11 +12,7 @@ public class Notification {
     public int id;
     public String baseURL;
 
-    public String getURL() {
-        return "/" + baseURL + "?id=" + id;
-    }
-
-    public static Notification of(Apply apply){
+    public static Notification of(Apply apply) {
         return new Notification(
                 "Your application status has been changed",
                 "Statusul aplicatiei tale a fost modificat",
@@ -25,7 +21,7 @@ public class Notification {
         );
     }
 
-    public static Notification of(Bug bug){
+    public static Notification of(Bug bug) {
         return new Notification(
                 "Your bug report has been closed",
                 "Raportul bugului tau a fost inchis",
@@ -34,8 +30,8 @@ public class Notification {
         );
     }
 
-    public static Notification of(Complain complain, boolean self){
-        if(self){
+    public static Notification of(Complain complain, boolean self) {
+        if (self) {
             return new Notification(
                     "You have a new complain you need to respond to",
                     "Ai o noua plangere asupra careia trebuie sa raspunzi",
@@ -51,7 +47,7 @@ public class Notification {
         );
     }
 
-    public static Notification of(UnbanRequest unban){
+    public static Notification of(UnbanRequest unban) {
         return new Notification(
                 "Your unban request status has been updated",
                 "Statusul cererii tale de unban a fost modificat",
@@ -60,6 +56,9 @@ public class Notification {
         );
     }
 
+    public String getURL() {
+        return "/" + baseURL + "?id=" + id;
+    }
 
 
 }
