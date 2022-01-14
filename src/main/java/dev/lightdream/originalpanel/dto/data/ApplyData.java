@@ -42,6 +42,12 @@ public class ApplyData {
         public int bans;
         public int mutes;
         public int kicks;
+
+        public void clean() {
+            playTime = playTime.replace("\"", "");
+            english = english.replace("\"", "");
+            why = why.replace("\"", "");
+        }
     }
 
     @AllArgsConstructor

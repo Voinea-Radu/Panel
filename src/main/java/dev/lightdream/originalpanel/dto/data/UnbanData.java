@@ -37,6 +37,14 @@ public class UnbanData {
         public UnbanStatus status;
         public Long timestamp;
 
+        public void clean() {
+            staff = staff.replace("\"", "");
+            reason = reason.replace("\"", "");
+            dateAndTime = dateAndTime.replace("\"", "");
+            ban = ban.replace("\"", "");
+            argument = argument.replace("\"", "");
+        }
+
     }
 
     @AllArgsConstructor

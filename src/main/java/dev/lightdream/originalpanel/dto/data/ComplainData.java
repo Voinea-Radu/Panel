@@ -38,6 +38,14 @@ public class ComplainData {
         public String targetResponse;
         public Long timestamp;
 
+        public void clean() {
+            target = target.replace("\"", "");
+            section = section.replace("\"", "");
+            dateAndTime = dateAndTime.replace("\"", "");
+            proof = proof.replace("\"", "");
+            targetResponse = targetResponse.replace("\"", "");
+        }
+
     }
 
     @AllArgsConstructor

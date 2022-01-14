@@ -27,6 +27,11 @@ public class BugsData {
         public Long timestamp;
         public BugStatus status;
 
+        public void clean() {
+            section = section.replace("\"", "");
+            description = description.replace("\"", "");
+        }
+
     }
 
     @AllArgsConstructor

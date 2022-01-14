@@ -126,7 +126,7 @@ async function approveComplain() {
 
 async function denyComplain() {
     callAPI("/api/update/form/complain", {
-        cookie: getCookie("login_data"), decision: "DENY", id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"), decision: "DENIED", id: status = document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {

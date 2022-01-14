@@ -97,6 +97,7 @@ public class RestEndPoints {
         data.status = ComplainData.ComplainStatus.OPEN_AWAITING_TARGET_RESPONSE;
         data.targetResponse = "";
         data.timestamp = System.currentTimeMillis();
+        data.clean();
 
         new Complain(data).save();
 
@@ -240,6 +241,7 @@ public class RestEndPoints {
 
         data.status = UnbanData.UnbanStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
+        data.clean();
 
         new UnbanRequest(data).save();
 
@@ -291,6 +293,7 @@ public class RestEndPoints {
 
         data.status = BugsData.BugStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
+        data.clean();
 
         new Bug(data).save();
 
@@ -323,7 +326,6 @@ public class RestEndPoints {
         bug.status = BugsData.BugStatus.CLOSED;
         bug.notify = true;
         bug.save();
-
         return Response.OK_200();
     }
 
@@ -349,6 +351,8 @@ public class RestEndPoints {
         data.kicks = profile.kicks;
         data.mutes = profile.mutes;
         data.warns = profile.warns;
+
+        data.clean();
 
         new Apply(data).save();
 
