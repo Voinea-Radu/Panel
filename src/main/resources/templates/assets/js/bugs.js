@@ -1,5 +1,5 @@
-function bugsTemplate() {
-    checkLoggedStatus();
+async function bugsTemplate() {
+    await checkLoggedStatus();
 
     document.getElementById('submit').addEventListener('click', function f() {
         bug();
@@ -7,8 +7,6 @@ function bugsTemplate() {
 }
 
 async function bug() {
-    checkLoggedStatus();
-
     callAPI("/api/form/bugs", {
         cookie: getCookie("login_data"),
         section: document.getElementById("section").value,
@@ -21,30 +19,33 @@ async function bug() {
 }
 
 async function bugDetails() {
-    checkLoggedStatus();
-
-    callPutAPI("/api/read?type=bug", {
-        cookie: getCookie("login_data"),
-        id: document.getElementById("id").value
-    });
+    await checkLoggedStatus();
 
     var status = document.getElementById("status").value;
+    var creator = document.getElementById("user").value;
+    var user = JSON.parse(getCookie("login_data"));
 
-    if (status === "OPEN") {
-        var user = JSON.parse(getCookie("login_data"));
+    if (user.username !== creator) {
+        document.getElementById("logged-in-required").style.visibility = "hidden";
+    } else {
+        callPutAPI("/api/read?type=bug", {
+            cookie: getCookie("login_data"),
+            id: document.getElementById("id").value
+        });
+        return;
+    }
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+    callAPI2(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+        if (status === "OPEN") {
             document.getElementById("close").hidden = false;
 
             document.getElementById('close').addEventListener('click', function f() {
                 closeBug();
             });
-        }, () => {
-        }, () => {
-            redirect("/401");
-        })
-
-    }
+        }
+    }, () => {
+        redirect("/401");
+    })
 }
 
 async function closeBug() {

@@ -1,5 +1,5 @@
-function unbanTemplate() {
-    checkLoggedStatus();
+async function unbanTemplate() {
+    await checkLoggedStatus();
 
     document.getElementById('submit').addEventListener('click', function f() {
         unban();
@@ -7,7 +7,6 @@ function unbanTemplate() {
 }
 
 async function unban() {
-
     callAPI("/api/form/unban", {
         cookie: getCookie("login_data"),
         staff: document.getElementById("staff-user").value,
@@ -24,19 +23,25 @@ async function unban() {
 
 async function unbanDetails() {
 
-    checkLoggedStatus();
 
-    callPutAPI("/api/read?type=unban", {
-        cookie: getCookie("login_data"),
-        id: document.getElementById("id").value
-    });
+    await checkLoggedStatus();
 
     var status = document.getElementById("status").value;
+    var creator = document.getElementById("user").value;
+    var user = JSON.parse(getCookie("login_data"));
 
-    if (status === "OPEN") {
-        var user = JSON.parse(getCookie("login_data"));
+    if (user.username !== creator) {
+        document.getElementById("logged-in-required").style.visibility = "hidden";
+    } else {
+        callPutAPI("/api/read?type=unban", {
+            cookie: getCookie("login_data"),
+            id: document.getElementById("id").value
+        });
+        return;
+    }
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=unban`, {}, () => {
+    callAPI2(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+        if (status === "OPEN") {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
 
@@ -47,10 +52,12 @@ async function unbanDetails() {
             document.getElementById('deny').addEventListener('click', function f() {
                 denyUnban();
             });
-        })
-
-    }
+        }
+    }, () => {
+        redirect("/401");
+    })
 }
+
 
 async function approveUnban() {
     callAPI("/api/update/form/unban", {

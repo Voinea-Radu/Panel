@@ -32,12 +32,11 @@
                 <ul>
                     <li class="active"><a href="/"><i class="mdi mdi-home"></i> <span class="text" id="home">Home</span></a></li>
                     <li><a href="/staff"><i class="mdi mdi-shield"></i> <span class="text" id="staff">Staff</span></a></li>
-                    <li id="complaints-item"><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span class="text" id="complaints">Complaints</span></a></li>
-                    <li id="unban-item"><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text" id="unban">Unban Requests</span></a></li>
-                    <li id="bugs-item"><a href="/bug"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
+                    <li id="complaints-item" hidden><a href="/complain"><i class="mdi mdi-alert-circle"></i> <span class="text" id="complaints">Complaints</span></a></li>
+                    <li id="unban-item" hidden><a href="/unban"><i class="mdi mdi-ticket"></i> <span class="text" id="unban">Unban Requests</span></a></li>
+                    <li id="bugs-item" hidden><a href="/bug"><i class="mdi mdi-bug-outline"></i> <span class="text" id="bugs">Bugs</span></a></li>
                     <li><a href="/rules"><i class="mdi mdi-book-open-variant"></i> <span class="text" id="rules">Rules</span></a></li>
-                    <li id="entries-item"><a href="/entries"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
-
+                    <li id="entries-item" hidden><a href="/entries"><i class="mdi mdi-clipboard-list"></i> <span class="text" id="entries">Entries <!--(Staff Applications, Complains, Unbans, Bugs)--></span></a></li>
                 </ul>
             </div>
         </div>
@@ -62,7 +61,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-wrap">
+        <div class="content-wrap" id="logged-in-required">
             <div class="container">
                 <h1 class="panel-title">Complain</h1>
 
@@ -100,24 +99,24 @@
                             <textarea class="form-control vertical-text" id="proof" readonly="readonly" th:text="${complain.proof}"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="target-response" id="target-response-label">Target Response</label>
-                            <textarea class="form-control vertical-text" id="target-response"></textarea>
+                            <label for="target-response" id="target-response-label" hidden>Target Response</label>
+                            <textarea class="form-control vertical-text" id="target-response" hidden></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="target-response-db" id="target-response-db-label" hidden="hidden">Target Response</label>
-                            <textarea class="form-control vertical-text" id="target-response-db" hidden="hidden" th:text="${complain.targetResponse}"></textarea>
+                            <label for="target-response-db" id="target-response-db-label" hidden>Target Response</label>
+                            <textarea class="form-control vertical-text" id="target-response-db" hidden th:text="${complain.targetResponse}"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="status" id="status-label" hidden="hidden">Status</label>
                             <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${complain.status}" hidden="hidden"></textarea>
                         </div>
                         <div class="form-buttons">
-                            <button class="form-button submit" id="complain-submit" type="button">Submit</button>
-                            <button class="form-button cancel" id="cancel">Cancel</button>
+                            <button class="form-button submit" id="complain-submit" type="button" hidden>Submit</button>
+                            <button class="form-button cancel" id="cancel" hidden>Cancel</button>
                         </div>
                         <div class="form-buttons">
-                            <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve</button>
-                            <button class="form-button deny" id="deny" type="button"  hidden="hidden">Deny</button>
+                            <button class="form-button approve" id="approve" type="button" hidden>Approve</button>
+                            <button class="form-button deny" id="deny" type="button"  hidden>Deny</button>
                         </div>
                     </form>
                 </div>

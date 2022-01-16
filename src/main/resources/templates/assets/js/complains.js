@@ -1,13 +1,12 @@
-function complainsTemplate() {
-    checkLoggedStatus();
+async function complainsTemplate() {
+    await checkLoggedStatus();
 
     document.getElementById('complain-submit').addEventListener('click', function f() {
         complain()
     });
 }
 
-async function complain() {
-
+function complain() {
     callAPI("/api/form/complain", {
         cookie: getCookie("login_data"),
         target: document.getElementById("target").value,
@@ -23,65 +22,43 @@ async function complain() {
 }
 
 async function complaintsDetails() {
-
-    checkLoggedStatus();
-
-    callPutAPI("/api/read?type=complain", {
-        cookie: getCookie("login_data"),
-        id: document.getElementById("id").value
-    });
+    await checkLoggedStatus();
 
     var status = document.getElementById("status").value;
+    var creator = document.getElementById("user").value;
+    var target = document.getElementById("target").value;
+    var user = JSON.parse(getCookie("login_data"));
+
+    if (user.username.toLowerCase() !== creator.toLowerCase() && user.username.toLowerCase() !== target.toLowerCase()) {
+        document.getElementById("logged-in-required").style.visibility = "hidden";
+    } else {
+        callPutAPI("/api/read?type=complain", {
+            cookie: getCookie("login_data"),
+            id: document.getElementById("id").value
+        });
+    }
 
     if (status === "OPEN_AWAITING_TARGET_RESPONSE") {
-        var target = document.getElementById("target").value;
-        var by = document.getElementById("user").value;
-        // noinspection JSDuplicatedDeclaration
-        var user = JSON.parse(getCookie("login_data"))
+        if (target.toLowerCase() === user.username.toLowerCase()) {
+            document.getElementById("complain-submit").hidden = false;
+            document.getElementById("cancel").hidden = false;
+            document.getElementById("target-response").hidden = false;
+            document.getElementById("target-response-label").hidden = false;
+            document.getElementById("target-response").readOnly = false;
 
-        if (user === null) {
-            redirect("/unauthorised");
-            return;
+            document.getElementById('complain-submit').addEventListener('click', function f() {
+                complainRespond()
+            });
+        } else {
+            document.getElementById("target-response-db").hidden = false;
+            document.getElementById("target-response-db-label").hidden = false;
         }
-
-        if (target !== user.username) {
-            document.getElementById("complain-submit").hidden = true;
-            document.getElementById("cancel").hidden = true;
-            document.getElementById("target-response").readOnly = true;
-
-            if (by !== user.username) {
-                redirect("/unauthorised");
-                return;
-            }
-        }
-
-
-        document.getElementById("target-response").addEventListener("keydown", function (e) {
-            if (e.key === "Enter") {
-                complainRespond();
-            }
-        });
-
-        document.getElementById('complain-submit').addEventListener('click', function f() {
-            complainRespond()
-        });
-
-
-    } else {
-        document.getElementById("target-response").hidden = true;
-        document.getElementById("target-response-label").hidden = true;
-        document.getElementById("complain-submit").hidden = true;
-        document.getElementById("cancel").hidden = true;
-
-        document.getElementById("target-response-db").hidden = false;
-        document.getElementById("target-response-db-label").hidden = false;
-
+        return;
     }
-    if (status === "OPEN_AWAITING_STAFF_APPROVAL") {
-        // noinspection JSDuplicatedDeclaration
-        var user = JSON.parse(getCookie("login_data"));
+    await callAPI2(`/api/check/staff?user=${user.username}&useCase=complain`, {}, () => {
+        document.getElementById("logged-in-required").style.visibility = "visible";
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=complain`, {}, () => {
+        if (status === "OPEN_AWAITING_STAFF_APPROVAL") {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
 
@@ -92,15 +69,15 @@ async function complaintsDetails() {
             document.getElementById('deny').addEventListener('click', function f() {
                 denyComplain();
             });
-        })
-
-    }
+        }
+    }, ()=>{
+        if (document.getElementById("logged-in-required").style.visibility === "hidden") {
+            redirect("/401");
+        }
+    });
     if (status === "CLOSED") {
-        document.getElementById("complain-submit").hidden = true;
-        document.getElementById("cancel").hidden = true;
         document.getElementById("target-response").readOnly = true;
-        document.getElementById("target-response-db").hidden = true;
-        document.getElementById("target-response-db-label").hidden = true;
+
         let approved = document.getElementById("approved");
         if (approved !== null) {
             approved.hidden = false;
@@ -109,7 +86,6 @@ async function complaintsDetails() {
         if (denied !== null) {
             denied.hidden = false;
         }
-
     }
 
 }

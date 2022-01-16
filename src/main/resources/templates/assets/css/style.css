@@ -876,3 +876,7 @@ body {
     padding-left: 50px !important;
     padding-right: 50px !important;
 }
+
+#logged-in-required{
+    visibility: hidden;
+}

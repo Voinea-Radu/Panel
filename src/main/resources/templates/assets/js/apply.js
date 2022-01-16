@@ -1,5 +1,5 @@
 async function applyTemplate() {
-    checkLoggedStatus();
+    await checkLoggedStatus();
 
     document.getElementById('submit').addEventListener('click', function f() {
         apply();
@@ -22,12 +22,7 @@ function apply() {
 }
 
 async function applyDetails() {
-    checkLoggedStatus();
-
-    callPutAPI("/api/read?type=apply", {
-        cookie: getCookie("login_data"),
-        id: document.getElementById("id").value
-    });
+    await checkLoggedStatus();
 
     bans = document.getElementById("bans").value;
     warns = document.getElementById("warns").value;
@@ -40,11 +35,21 @@ async function applyDetails() {
         "                <span class='label default apply-sanction'>Warnings: " + warns + "</span>";
 
     var status = document.getElementById("status").value;
+    var creator = document.getElementById("user").value;
+    var user = JSON.parse(getCookie("login_data"));
 
-    if (status === "OPEN") {
-        var user = JSON.parse(getCookie("login_data"));
+    if (user.username !== creator) {
+        document.getElementById("logged-in-required").style.visibility = "hidden";
+    } else {
+        callPutAPI("/api/read?type=apply", {
+            cookie: getCookie("login_data"),
+            id: document.getElementById("id").value
+        });
+        return;
+    }
 
-        callAPI(`/api/check/staff?user=${user.username}&useCase=unban`, {}, () => {
+    callAPI2(`/api/check/staff?user=${user.username}&useCase=apply`, {}, () => {
+        if (status === "OPEN") {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
 
@@ -55,9 +60,10 @@ async function applyDetails() {
             document.getElementById('deny').addEventListener('click', function f() {
                 denyApplication();
             });
-        })
-
-    }
+        }
+    }, () => {
+        redirect("/401");
+    })
 }
 
 async function approveApplication() {
