@@ -36,6 +36,7 @@ async function bugDetails() {
     }
 
     callAPI2(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+        document.getElementById("logged-in-required").style.visibility = "visible";
         if (status === "OPEN") {
             document.getElementById("close").hidden = false;
 
