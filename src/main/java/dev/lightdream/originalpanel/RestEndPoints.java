@@ -158,6 +158,7 @@ public class RestEndPoints {
         return checkPassword(data.username, data.password);
     }
 
+    @SuppressWarnings("RedundantIfStatement")
     @PostMapping("/api/check/staff")
     public Response checkStaff(String user, String useCase) {
 
@@ -170,8 +171,6 @@ public class RestEndPoints {
 
         if (staffs.stream().anyMatch(staff -> {
             if (staff.username.equalsIgnoreCase(user)) {
-                Debugger.info(staff.rank);
-
                 if (useCase.equals("complain")) {
                     return complainStaff.contains(staff.rank);
                 }
@@ -181,7 +180,11 @@ public class RestEndPoints {
                 if (useCase.equals("bug")) {
                     return bugsStaff.contains(staff.rank);
                 }
-                return true;
+                if(useCase.equals("any")){
+                    return true;
+                }
+
+                return false;
             }
             return false;
         })) {
