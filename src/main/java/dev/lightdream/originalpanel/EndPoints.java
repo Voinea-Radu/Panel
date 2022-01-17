@@ -22,6 +22,9 @@ public class EndPoints {
         model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
         model.addAttribute("registered_count", Main.instance.cacheManager.registeredPlayersCount.get());
         model.addAttribute("online_players_count", Main.instance.cacheManager.onlinePlayers.get());
+        model.addAttribute("donations_goal", Main.instance.cacheManager.donationsGoal.get());
+        model.addAttribute("top_donator_name", Main.instance.cacheManager.topDonator.get().toString().split("\\|\\|\\|")[0]);
+        model.addAttribute("top_donator_amount", Main.instance.cacheManager.topDonator.get().toString().split("\\|\\|\\|")[1]);
         model.addAttribute("message", message);
 
         return "index.html";

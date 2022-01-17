@@ -880,3 +880,12 @@ body {
 #logged-in-required{
     visibility: hidden;
 }
+
+
+.progress {
+    width: 100px;
+    height: 16px;
+    position: relative;
+    top: 5px;
+    background: #282f37;
+}
