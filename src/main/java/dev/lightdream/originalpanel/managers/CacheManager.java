@@ -135,10 +135,6 @@ public class CacheManager {
             amountData = amountData.replace("Donated", "");
             amountData = amountData.replace("<divclass=\"amount\">\n", "");
 
-
-            System.out.println(nameData);
-            System.out.println(amountData);
-
             cache.update(nameData+"|||"+amountData);
         }, 3600000L);
 

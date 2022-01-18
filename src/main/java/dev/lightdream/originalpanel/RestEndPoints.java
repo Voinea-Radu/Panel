@@ -25,6 +25,8 @@ public class RestEndPoints {
 
     public List<String> unbanStaff = Arrays.asList("srmod", "admin", "sradmin", "operator", "supervizor", "manager", "h-manager", "owner");
 
+    public List<String> applyStaff = Arrays.asList("manager", "h-manager", "owner");
+
     public RestEndPoints() {
 
     }
@@ -179,6 +181,9 @@ public class RestEndPoints {
                 }
                 if (useCase.equals("bug")) {
                     return bugsStaff.contains(staff.rank);
+                }
+                if(useCase.equals("apply")){
+                    return applyStaff.contains(staff.rank);
                 }
                 if(useCase.equals("any")){
                     return true;

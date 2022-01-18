@@ -49,6 +49,8 @@ async function applyDetails() {
     }
 
     callAPI2(`/api/check/staff?user=${user.username}&useCase=apply`, {}, () => {
+        document.getElementById("logged-in-required").style.visibility = "visible";
+
         if (status === "OPEN") {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
