@@ -144,7 +144,6 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <!--suppress MavenPackageUpdate -->
             <version>30.0-android</version>
         </dependency>
         <dependency>
