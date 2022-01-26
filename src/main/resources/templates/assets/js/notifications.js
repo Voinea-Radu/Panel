@@ -4,7 +4,7 @@ async function loadNotifications() {
 
     notifications.forEach(notification => {
         var el = document.createElement("div");
-        el.innerHTML = notification.textEn;
+        el.innerText = notification.textEn;
         el.onclick = function () {
             redirect(notification.url);
         };
