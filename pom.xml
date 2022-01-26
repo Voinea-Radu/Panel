@@ -145,7 +145,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <!--suppress MavenPackageUpdate -->
-            <version>20.0</version>
+            <version>30.0-android</version>
         </dependency>
         <dependency>
             <groupId>at.favre.lib</groupId>
