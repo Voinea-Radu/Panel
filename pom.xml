@@ -44,6 +44,10 @@
             <id>lightdream-repo</id>
             <url>https://repo.lightdream.dev/repository/LightDream-API/</url>
         </repository>
+        <repository>
+            <id>spring-thymeleaf</id>
+            <url>https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf-spring5</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -73,6 +77,15 @@
             <artifactId>spring-boot-starter-web</artifactId>
             <version>2.6.3</version>
         </dependency>
+        <!--
+        INCOMPATIBLE
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring5</artifactId>
+            <version>3.0.13.RELEASE</version>
+        </dependency>
+        -->
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
