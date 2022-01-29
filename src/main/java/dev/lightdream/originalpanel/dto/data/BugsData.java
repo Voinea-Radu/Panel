@@ -37,7 +37,6 @@ public class BugsData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class BugCloseData {
-
         public String cookie;
         public int id;
 

@@ -50,7 +50,6 @@ public class UnbanData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class UnbanDecisionData {
-
         public String cookie;
         public String decision;
         public int id;

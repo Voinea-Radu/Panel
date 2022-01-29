@@ -1,7 +1,7 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-import dev.lightdream.databasehandler.annotations.database.DatabaseField;
-import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
+import dev.lightdream.databasemanager.annotations.database.DatabaseField;
+import dev.lightdream.databasemanager.annotations.database.DatabaseTable;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.ApplyData;
@@ -56,6 +56,7 @@ public class Apply extends FrontEndData {
         this.playTime = data.playTime;
     }
 
+    @SuppressWarnings("unused")
     public Apply() {
 
     }
@@ -65,6 +66,7 @@ public class Apply extends FrontEndData {
         return "apply";
     }
 
+    @SuppressWarnings("unused")
     public String getDiscordTag() {
         AtomicReference<String> tag = new AtomicReference<>(null);
         if (discordID == 0L) {

@@ -1,8 +1,8 @@
 package dev.lightdream.originalpanel.managers;
 
-import dev.lightdream.databasehandler.OrderByType;
-import dev.lightdream.databasehandler.database.HikariDatabaseManager;
-import dev.lightdream.databasehandler.dto.LambdaExecutor;
+import dev.lightdream.databasemanager.OrderByType;
+import dev.lightdream.databasemanager.database.HikariDatabaseManager;
+import dev.lightdream.databasemanager.dto.LambdaExecutor;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Staff;
@@ -365,6 +365,13 @@ public class DatabaseManager extends HikariDatabaseManager {
     }
 
     @SneakyThrows
+    public Complain getLastComplain() {
+        return get(Complain.class, new HashMap<>() {{
+            put(">id", 0);
+        }}, "id", 1, OrderByType.DESCENDENT).stream().findFirst().orElse(null);
+    }
+
+    @SneakyThrows
     public UnbanRequest getUnbanRequest(int id) {
         return get(UnbanRequest.class, new HashMap<>() {{
             put("id", id);
@@ -404,19 +411,6 @@ public class DatabaseManager extends HikariDatabaseManager {
         return get(Bug.class, new HashMap<>() {{
             put("id", id);
         }}).stream().findFirst().orElse(null);
-    }
-
-    @Override
-    public HashMap<Class<?>, String> getDataTypes() {
-        return new HashMap<>() {{
-            put(ComplainData.ComplainStatus.class, "TEXT");
-            put(ComplainData.ComplainDecision.class, "TEXT");
-            put(UnbanData.UnbanStatus.class, "TEXT");
-            put(UnbanData.UnbanDecision.class, "TEXT");
-            put(BugsData.BugStatus.class, "TEXT");
-            put(ApplyData.ApplyDecision.class, "TEXT");
-            put(ApplyData.ApplyStatus.class, "TEXT");
-        }};
     }
 
     @Override

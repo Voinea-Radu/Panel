@@ -23,19 +23,25 @@ function complain() {
 
 async function complaintsDetails() {
     await checkLoggedStatus();
+    document.getElementById("logged-in-required").style.visibility = "visible";
 
     var status = document.getElementById("status").value;
     var creator = document.getElementById("user").value;
     var target = document.getElementById("target").value;
     var user = JSON.parse(getCookie("login_data"));
 
-    if (user.username.toLowerCase() !== creator.toLowerCase() && user.username.toLowerCase() !== target.toLowerCase()) {
-        document.getElementById("logged-in-required").style.visibility = "hidden";
-    } else {
-        callPutAPI("/api/read?type=complain", {
+    if (user.username.toLowerCase() === creator.toLowerCase()) {
+        callPutAPI("/api/read?type=complain-user", {
             cookie: getCookie("login_data"),
             id: document.getElementById("id").value
         });
+    } else if (user.username.toLowerCase() === target.toLowerCase()) {
+        callPutAPI("/api/read?type=complain-target", {
+            cookie: getCookie("login_data"),
+            id: document.getElementById("id").value
+        });
+    } else {
+        document.getElementById("logged-in-required").style.visibility = "hidden";
     }
 
     if (status === "OPEN_AWAITING_TARGET_RESPONSE") {
@@ -70,7 +76,7 @@ async function complaintsDetails() {
                 denyComplain();
             });
         }
-    }, ()=>{
+    }, () => {
         if (document.getElementById("logged-in-required").style.visibility === "hidden") {
             redirect("/401");
         }
@@ -92,7 +98,10 @@ async function complaintsDetails() {
 
 async function approveComplain() {
     callAPI("/api/update/form/complain", {
-        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "APPROVED",
+        id: status = document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
@@ -102,7 +111,10 @@ async function approveComplain() {
 
 async function denyComplain() {
     callAPI("/api/update/form/complain", {
-        cookie: getCookie("login_data"), decision: "DENIED", id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "DENIED",
+        id: status = document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {

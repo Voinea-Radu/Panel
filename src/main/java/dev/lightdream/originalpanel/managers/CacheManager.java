@@ -52,7 +52,8 @@ public class CacheManager {
             // 7 days
             if (System.currentTimeMillis() > complain.timestamp + 604800000L &&
                     complain.status == ComplainData.ComplainStatus.OPEN_AWAITING_TARGET_RESPONSE) {
-                complain.notify = true;
+                Main.instance.notificationManager.notifyUser(complain, complain.user);
+                Main.instance.notificationManager.notifyUser(complain, complain.target, true);
                 complain.status = ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL;
                 complain.save();
             }
@@ -99,7 +100,7 @@ public class CacheManager {
 
         }, 3600000L); //1 hour
 
-        topDonator = new Cache(cache->{
+        topDonator = new Cache(cache -> {
             StringBuilder storeScrape = new StringBuilder();
 
             URLConnection connection;
@@ -129,13 +130,13 @@ public class CacheManager {
             String amountData = rawData.substring(rawData.indexOf("<div class=\"amount\">"), rawData.indexOf("<small>EUR</small>"));
 
             nameData = nameData.replace("<div class=\"ign\">", "");
-            nameData=nameData.replace("\n" +
+            nameData = nameData.replace("\n" +
                     "<div class=\"amount\">", "");
             amountData = amountData.replace(" ", "");
             amountData = amountData.replace("Donated", "");
             amountData = amountData.replace("<divclass=\"amount\">\n", "");
 
-            cache.update(nameData+"|||"+amountData);
+            cache.update(nameData + "|||" + amountData);
         }, 3600000L);
 
         Logger.good("Caching data finished");

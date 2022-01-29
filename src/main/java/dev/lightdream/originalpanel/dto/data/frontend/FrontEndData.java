@@ -1,8 +1,9 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-import dev.lightdream.databasehandler.DatabaseMain;
-import dev.lightdream.databasehandler.annotations.database.DatabaseField;
-import dev.lightdream.databasehandler.dto.DatabaseEntry;
+import dev.lightdream.databasemanager.DatabaseMain;
+import dev.lightdream.databasemanager.annotations.database.DatabaseField;
+import dev.lightdream.databasemanager.dto.DatabaseEntry;
+import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.utils.Utils;
 
 public abstract class FrontEndData extends DatabaseEntry {
@@ -35,5 +36,24 @@ public abstract class FrontEndData extends DatabaseEntry {
         return "/" + getBaseUrl() + "?id=" + id;
     }
 
+    public String getFullURL() {
+        return Main.instance.config.baseURL + "/" + getBaseUrl() + "?id=" + id;
+    }
+
     public abstract String getBaseUrl();
+
+    public void sendNotification() {
+        this.notify = true;
+        save();
+    }
+
+    public void readNotification() {
+        this.notify = false;
+        save();
+    }
+
+    public boolean hasNotification() {
+        return notify;
+    }
+
 }

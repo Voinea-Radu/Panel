@@ -51,7 +51,9 @@ async function bugDetails() {
 
 async function closeBug() {
     callAPI("/api/update/form/bug", {
-        cookie: getCookie("login_data"), id: document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {

@@ -61,7 +61,10 @@ async function unbanDetails() {
 
 async function approveUnban() {
     callAPI("/api/update/form/unban", {
-        cookie: getCookie("login_data"), decision: "APPROVED", id: status = document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "APPROVED",
+        id: status = document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
@@ -71,7 +74,10 @@ async function approveUnban() {
 
 async function denyUnban() {
     callAPI("/api/update/form/unban", {
-        cookie: getCookie("login_data"), decision: "DENIED", id: document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "DENIED",
+        id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {

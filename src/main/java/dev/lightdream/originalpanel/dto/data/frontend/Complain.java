@@ -1,7 +1,7 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-import dev.lightdream.databasehandler.annotations.database.DatabaseField;
-import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
+import dev.lightdream.databasemanager.annotations.database.DatabaseField;
+import dev.lightdream.databasemanager.annotations.database.DatabaseTable;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.utils.Utils;
@@ -25,6 +25,8 @@ public class Complain extends FrontEndData {
     public String targetResponse;
     @DatabaseField(columnName = "decision")
     public ComplainData.ComplainDecision decision;
+    @DatabaseField(columnName = "target_notification")
+    public boolean targetNotification;
 
     public Complain(ComplainData.ComplainCreateData data) {
         super(Main.instance, Utils.getUsernameFromCookie(data.cookie), data.timestamp);
@@ -36,6 +38,7 @@ public class Complain extends FrontEndData {
         this.status = data.status;
         this.targetResponse = data.targetResponse;
         this.decision = ComplainData.ComplainDecision.UNANSWERED;
+        this.targetNotification = false;
     }
 
     public Complain() {
@@ -45,5 +48,20 @@ public class Complain extends FrontEndData {
     @Override
     public String getBaseUrl() {
         return "complain";
+    }
+
+    public void sendTargetNotification() {
+        this.targetNotification = true;
+        save();
+    }
+
+    public void readTargetNotification() {
+        this.targetNotification = false;
+        save();
+    }
+
+    @SuppressWarnings("unused")
+    public boolean hasTargetNotification() {
+        return targetNotification;
     }
 }

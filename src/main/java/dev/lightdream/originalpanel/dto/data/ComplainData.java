@@ -62,7 +62,6 @@ public class ComplainData {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ComplainDecisionData {
-
         public String cookie;
         public String decision;
         public int id;

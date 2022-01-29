@@ -37,7 +37,7 @@ async function dashBoard() {
             () => {
                 document.getElementById("entries-item").hidden = false;
             }, () => {
-
+                document.getElementById("entries-item").hidden = false;
             }, () => {
 
             }, () => {
@@ -69,7 +69,8 @@ async function verifyCookie() {
     */
 
     blob = await fetch("/api/login/validate", {
-        method: "post", body: getCookie("login_data")
+        method: "post",
+        body: getCookie("login_data")
     }).then(response => response.blob());
 
     return JSON.parse(await blob.text());
@@ -152,17 +153,23 @@ function redirect(path) {
 
 async function callPutAPI(api, data) {
     await fetch(api, {
-        method: 'post', headers: {
-            'Accept': 'application/json', 'Content-Type': 'application/json'
-        }, body: JSON.stringify(data)
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     });
 }
 
 async function callAPI(api, data, callbackEn, callbackRo, failCallbackEn, failCallbackRo) {
     var blob = await fetch(api, {
-        method: 'post', headers: {
-            'Accept': 'application/json', 'Content-Type': 'application/json'
-        }, body: JSON.stringify(data)
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
     }).then(response => response.blob());
 
     json = await blob.text();

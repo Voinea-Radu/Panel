@@ -101,16 +101,33 @@ public class RestEndPoints {
         data.timestamp = System.currentTimeMillis();
         data.clean();
 
-        new Complain(data).save();
+        Complain complain = new Complain(data);
+        complain.save();
 
-        //Main.instance.databaseManager.saveComplain(data);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        Main.instance.notificationManager.notifyUser(Main.instance.databaseManager.getLastComplain(), data.target, true);
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        System.out.println();
+
         return Response.OK_200();
     }
 
     @PostMapping("/api/form/complain-target-responde")
     public @ResponseBody
     Response complainTargetRespond(@RequestBody ComplainData.ComplainTargetResponseData data) {
-
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
         }
@@ -128,7 +145,7 @@ public class RestEndPoints {
             return Response.INVALID_ENTRY_422();
         }
 
-        if (loginData == null || !loginData.username.equals(complain.target)) {
+        if (loginData == null || !loginData.username.equalsIgnoreCase(complain.target)) {
             return Response.BAD_CREDENTIALS_401();
         }
 
@@ -136,6 +153,8 @@ public class RestEndPoints {
         complain.status = ComplainData.ComplainStatus.OPEN_AWAITING_STAFF_APPROVAL;
 
         complain.save();
+
+        Main.instance.notificationManager.notifyUser(complain, loginData.username);
 
         return Response.OK_200();
     }
@@ -182,10 +201,10 @@ public class RestEndPoints {
                 if (useCase.equals("bug")) {
                     return bugsStaff.contains(staff.rank);
                 }
-                if(useCase.equals("apply")){
+                if (useCase.equals("apply")) {
                     return applyStaff.contains(staff.rank);
                 }
-                if(useCase.equals("any")){
+                if (useCase.equals("any")) {
                     return true;
                 }
 
@@ -225,8 +244,9 @@ public class RestEndPoints {
 
         complain.status = ComplainData.ComplainStatus.CLOSED;
         complain.decision = ComplainData.ComplainDecision.valueOf(data.decision);
-        complain.notify = true;
-        complain.save();
+
+        Main.instance.notificationManager.notifyUser(complain, complain.user);
+        Main.instance.notificationManager.notifyUser(complain, complain.target, true);
 
         return Response.OK_200();
     }
@@ -281,8 +301,7 @@ public class RestEndPoints {
 
         unban.status = UnbanData.UnbanStatus.CLOSED;
         unban.decision = UnbanData.UnbanDecision.valueOf(data.decision);
-        unban.notify = true;
-        unban.save();
+        Main.instance.notificationManager.notifyUser(unban, loginData.username);
 
         return Response.OK_200();
     }
@@ -332,8 +351,7 @@ public class RestEndPoints {
         }
 
         bug.status = BugsData.BugStatus.CLOSED;
-        bug.notify = true;
-        bug.save();
+        Main.instance.notificationManager.notifyUser(bug, loginData.username);
         return Response.OK_200();
     }
 
@@ -392,7 +410,7 @@ public class RestEndPoints {
 
         apply.status = ApplyData.ApplyStatus.CLOSED;
         apply.decision = ApplyData.ApplyDecision.valueOf(data.decision);
-        apply.notify = true;
+        Main.instance.notificationManager.notifyUser(apply, loginData.username);
         apply.save();
 
         return Response.OK_200();
@@ -408,15 +426,20 @@ public class RestEndPoints {
         return switch (type) {
             case "apply" -> readNotification(Apply.class, data);
             case "bug" -> readNotification(Bug.class, data);
-            case "complain" -> readNotification(Complain.class, data);
+            case "complain-target" -> readNotification(Complain.class, data, true);
+            case "complain-user" -> readNotification(Complain.class, data, false);
             case "unban" -> readNotification(UnbanRequest.class, data);
             default -> Response.INVALID_ENTRY_422();
         };
 
     }
 
-    @SuppressWarnings("unchecked")
     private <T extends FrontEndData> Response readNotification(Class<T> clazz, ReadData data) {
+        return readNotification(clazz, data, false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends FrontEndData> Response readNotification(Class<T> clazz, ReadData data, boolean target) {
 
         T item;
         if (Bug.class.equals(clazz)) {
@@ -431,7 +454,7 @@ public class RestEndPoints {
             return Response.INVALID_ENTRY_422();
         }
 
-        if (!item.notify) {
+        if (!item.hasNotification()) {
             return Response.NOT_FOUND_404();
         }
 
@@ -450,10 +473,14 @@ public class RestEndPoints {
             return Response.INVALID_ENTRY_422();
         }
 
-        item.notify = false;
-        item.save();
+        if (target && Complain.class.equals(clazz)) {
+            ((Complain) item).readTargetNotification();
+        } else {
+            item.readNotification();
+        }
 
         return Response.OK_200();
     }
+
 
 }

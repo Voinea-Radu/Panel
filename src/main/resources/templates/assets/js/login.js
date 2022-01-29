@@ -11,10 +11,12 @@ async function loginTemplate() {
 
 async function login() {
     callAPI("/api/login/v2", {
-        username: document.getElementById('username').value, password: document.getElementById('password').value
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value
     }, () => {
         cookie = {
-            username: document.getElementById('username').value, password: obj.data
+            username: document.getElementById('username').value,
+            password: obj.data
         }
 
         setCookie("login_data", JSON.stringify(cookie), 30)

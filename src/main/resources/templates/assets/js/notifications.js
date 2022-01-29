@@ -20,8 +20,10 @@ async function getNotifications() {
     var user = JSON.parse(getCookie("login_data"));
 
     var blob = await fetch("/api/getNotifications?username=" + user.username, {
-        method: 'post', headers: {
-            'Accept': 'application/json', 'Content-Type': 'application/json'
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
     }).then(response => response.blob());
 

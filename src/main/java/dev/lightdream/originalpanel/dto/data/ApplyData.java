@@ -16,10 +16,12 @@ public class ApplyData {
         }
     }
 
+    @SuppressWarnings("unused")
     public enum EnglishKnowledge {
         NONE, DECENT, FLUENT
     }
 
+    @SuppressWarnings("unused")
     public enum ApplyDecision {
         UNANSWERED, APPROVED, DENIED
     }

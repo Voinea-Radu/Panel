@@ -1,7 +1,7 @@
 package dev.lightdream.originalpanel.dto.data.frontend;
 
-import dev.lightdream.databasehandler.annotations.database.DatabaseField;
-import dev.lightdream.databasehandler.annotations.database.DatabaseTable;
+import dev.lightdream.databasemanager.annotations.database.DatabaseField;
+import dev.lightdream.databasemanager.annotations.database.DatabaseTable;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.data.UnbanData;
 import dev.lightdream.originalpanel.utils.Utils;

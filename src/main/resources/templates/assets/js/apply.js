@@ -70,7 +70,10 @@ async function applyDetails() {
 
 async function approveApplication() {
     callAPI("/api/update/form/apply", {
-        cookie: getCookie("login_data"), decision: "APPROVED", id: document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "APPROVED",
+        id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
@@ -80,7 +83,10 @@ async function approveApplication() {
 
 async function denyApplication() {
     callAPI("/api/update/form/apply", {
-        cookie: getCookie("login_data"), decision: "DENIED", id: document.getElementById("id").value
+        cookie: getCookie("login_data"),
+        lang: getCookie("lang"),
+        decision: "DENIED",
+        id: document.getElementById("id").value
     }, () => {
         window.location.reload();
     }, () => {
