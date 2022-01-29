@@ -50,7 +50,7 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
         this.notificationManager = new NotificationManager();
 
         this.restEndPoints = new RestEndPoints();
-        this.bot = JDABuilder.createDefault("OTI4ODExNjUzNzA3OTk3MjM0.YdeNQg.my4IrZuUjMjWTaUygb1Qqz21dlg").build();
+        this.bot = JDABuilder.createDefault(config.botToken).build();
 
         this.rateLimiter = new RateLimiter();
         Logger.good("Application started");
@@ -78,7 +78,7 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
     }
 
     public File getDataFolder() {
-        return new File(System.getProperty("user.dir"));
+        return new File(System.getProperty("user.dir") + "/config");
     }
 
     @Override
