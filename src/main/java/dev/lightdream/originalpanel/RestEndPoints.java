@@ -103,24 +103,7 @@ public class RestEndPoints {
 
         Complain complain = new Complain(data);
         complain.save();
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
         Main.instance.notificationManager.notifyUser(Main.instance.databaseManager.getLastComplain(), data.target, true);
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println();
 
         return Response.OK_200();
     }
@@ -301,7 +284,8 @@ public class RestEndPoints {
 
         unban.status = UnbanData.UnbanStatus.CLOSED;
         unban.decision = UnbanData.UnbanDecision.valueOf(data.decision);
-        Main.instance.notificationManager.notifyUser(unban, loginData.username);
+        unban.save();
+        Main.instance.notificationManager.notifyUser(unban, unban.user);
 
         return Response.OK_200();
     }

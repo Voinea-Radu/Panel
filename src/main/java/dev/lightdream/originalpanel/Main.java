@@ -45,14 +45,15 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
         this.fileManager = new FileManager(this, FileManager.PersistType.YAML);
         loadConfigs();
         this.databaseManager = new DatabaseManager();
-        this.cacheManager = new CacheManager(this);
-        this.discordManager = new DiscordManager();
         this.notificationManager = new NotificationManager();
 
-        this.restEndPoints = new RestEndPoints();
         this.bot = JDABuilder.createDefault(config.botToken).build();
+        this.discordManager = new DiscordManager();
 
+        this.cacheManager = new CacheManager(this);
+        this.restEndPoints = new RestEndPoints();
         this.rateLimiter = new RateLimiter();
+
         Logger.good("Application started");
 
         enabled = true;

@@ -13,7 +13,7 @@ async function unban() {
         reason: document.getElementById("reason").value,
         dateAndTime: document.getElementById("date_and_time").value,
         ban: document.getElementById("ban").value,
-        argument: document.getElementById("argument").value
+        argument: document.getElementById("unban-argument").value
     }, () => {
         redirect("/?message=Unban request sent successfully");
     }, () => {
@@ -41,6 +41,7 @@ async function unbanDetails() {
     }
 
     callAPI2(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+        document.getElementById("logged-in-required").style.visibility = "visible";
         if (status === "OPEN") {
             document.getElementById("approve").hidden = false;
             document.getElementById("deny").hidden = false;
