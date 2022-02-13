@@ -12,6 +12,7 @@ rulesBody = "%innerHtml%" +
     "                        <li> Punem accent pe flexebilitate / transparenta / diplomatie. </li>\n" +
     "                        <li> Membrii Staff sunt nevoiti sa respecte si sa ajute jucatorii. </li>\n" +
     "                        <li> Membrii Staff nu au voie sa abuzeze de puterea lor => Incalcand automat regulile de mai sus. </li>\n" +
+    "                        <li> Nu aveti voie sa contactati nici un membru staff in legatura cu aplicatia voastra. In caz contrar veti aplicatia va fi respinsa automat. </li>\n" +
     "\n" +
     "                    </ul>";
 rulesTable = "%innerHtml%" +
