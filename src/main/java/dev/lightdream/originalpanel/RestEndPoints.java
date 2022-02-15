@@ -99,6 +99,8 @@ public class RestEndPoints {
         data.status = ComplainData.ComplainStatus.OPEN_AWAITING_TARGET_RESPONSE;
         data.targetResponse = "";
         data.timestamp = System.currentTimeMillis();
+        data.description = data.description.replace("\"", "")
+                .replace("'", "");
         data.clean();
 
         Complain complain = new Complain(data);

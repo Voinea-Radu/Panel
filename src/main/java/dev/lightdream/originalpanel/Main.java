@@ -2,14 +2,15 @@ package dev.lightdream.originalpanel;
 
 import dev.lightdream.databasemanager.DatabaseMain;
 import dev.lightdream.databasemanager.database.IDatabaseManager;
+import dev.lightdream.databasemanager.dto.SQLConfig;
 import dev.lightdream.filemanager.FileManager;
 import dev.lightdream.filemanager.FileManagerMain;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.logger.LoggableMain;
 import dev.lightdream.logger.Logger;
 import dev.lightdream.originalpanel.dto.Config;
+import dev.lightdream.originalpanel.dto.DriverConfig;
 import dev.lightdream.originalpanel.dto.JDAConfig;
-import dev.lightdream.originalpanel.dto.SQLConfig;
 import dev.lightdream.originalpanel.managers.*;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
@@ -31,6 +32,7 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
     public NotificationManager notificationManager;
     public Config config;
     public JDAConfig jdaConfig;
+    public DriverConfig driverConfig;
     @SuppressWarnings("FieldMayBeFinal")
     private boolean enabled;
 
@@ -68,6 +70,7 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
         sqlConfig = fileManager.load(SQLConfig.class);
         config = fileManager.load(Config.class);
         jdaConfig = fileManager.load(JDAConfig.class);
+        driverConfig=fileManager.load(DriverConfig.class);
     }
 
     public boolean debug() {
@@ -85,6 +88,11 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
     @Override
     public SQLConfig getSqlConfig() {
         return sqlConfig;
+    }
+
+    @Override
+    public DriverConfig getDriverConfig() {
+        return driverConfig;
     }
 
     @Override

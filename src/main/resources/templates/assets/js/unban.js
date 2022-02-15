@@ -40,7 +40,7 @@ async function unbanDetails() {
         return;
     }
 
-    callAPI2(`/api/check/staff?user=${user.username}&useCase=bug`, {}, () => {
+    callAPI2(`/api/check/staff?user=${user.username}&useCase=unban`, {}, () => {
         document.getElementById("logged-in-required").style.visibility = "visible";
         if (status === "OPEN") {
             document.getElementById("approve").hidden = false;

@@ -25,6 +25,14 @@ public class DatabaseManager extends HikariDatabaseManager {
         super(Main.instance);
         Debugger.info("Passed main as " + Main.instance);
         setup();
+
+        registerSDPair(ComplainData.ComplainStatus.class, obj -> "\"" + obj.toString() + "\"", obj -> ComplainData.ComplainStatus.valueOf(obj.toString()));
+        registerSDPair(ComplainData.ComplainDecision.class, obj -> "\"" + obj.toString() + "\"", obj -> ComplainData.ComplainDecision.valueOf(obj.toString()));
+        registerSDPair(UnbanData.UnbanStatus.class, obj -> "\"" + obj.toString() + "\"", obj -> UnbanData.UnbanStatus.valueOf(obj.toString()));
+        registerSDPair(UnbanData.UnbanDecision.class, obj -> "\"" + obj.toString() + "\"", obj -> UnbanData.UnbanDecision.valueOf(obj.toString()));
+        registerSDPair(BugsData.BugStatus.class, obj -> "\"" + obj.toString() + "\"", obj -> BugsData.BugStatus.valueOf(obj.toString()));
+        registerSDPair(ApplyData.ApplyDecision.class, obj -> "\"" + obj.toString() + "\"", obj -> ApplyData.ApplyDecision.valueOf(obj.toString()));
+        registerSDPair(ApplyData.ApplyStatus.class, obj -> "\"" + obj.toString() + "\"", obj -> ApplyData.ApplyStatus.valueOf(obj.toString()));
     }
 
     public void setup() {
@@ -411,32 +419,6 @@ public class DatabaseManager extends HikariDatabaseManager {
         return get(Bug.class, new HashMap<>() {{
             put("id", id);
         }}).stream().findFirst().orElse(null);
-    }
-
-    @Override
-    public HashMap<Class<?>, LambdaExecutor> getSerializeMap() {
-        return new HashMap<>() {{
-            put(ComplainData.ComplainStatus.class, obj -> "\"" + obj.toString() + "\"");
-            put(ComplainData.ComplainDecision.class, obj -> "\"" + obj.toString() + "\"");
-            put(UnbanData.UnbanStatus.class, obj -> "\"" + obj.toString() + "\"");
-            put(UnbanData.UnbanDecision.class, obj -> "\"" + obj.toString() + "\"");
-            put(BugsData.BugStatus.class, obj -> "\"" + obj.toString() + "\"");
-            put(ApplyData.ApplyDecision.class, obj -> "\"" + obj.toString() + "\"");
-            put(ApplyData.ApplyStatus.class, obj -> "\"" + obj.toString() + "\"");
-        }};
-    }
-
-    @Override
-    public HashMap<Class<?>, LambdaExecutor> getDeserializeMap() {
-        return new HashMap<>() {{
-            put(ComplainData.ComplainStatus.class, obj -> ComplainData.ComplainStatus.valueOf(obj.toString()));
-            put(ComplainData.ComplainDecision.class, obj -> ComplainData.ComplainDecision.valueOf(obj.toString()));
-            put(UnbanData.UnbanStatus.class, obj -> UnbanData.UnbanStatus.valueOf(obj.toString()));
-            put(UnbanData.UnbanDecision.class, obj -> UnbanData.UnbanDecision.valueOf(obj.toString()));
-            put(BugsData.BugStatus.class, obj -> BugsData.BugStatus.valueOf(obj.toString()));
-            put(ApplyData.ApplyDecision.class, obj -> ApplyData.ApplyDecision.valueOf(obj.toString()));
-            put(ApplyData.ApplyStatus.class, obj -> ApplyData.ApplyStatus.valueOf(obj.toString()));
-        }};
     }
 
     public List<Bug> getRecentBugs(String user) {
