@@ -23,7 +23,7 @@ import java.util.List;
 public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
 
     public static Main instance;
-    public final boolean maintenance = true;
+    public final boolean maintenance = false;
     public SQLConfig sqlConfig;
     public FileManager fileManager;
     public DatabaseManager databaseManager;
