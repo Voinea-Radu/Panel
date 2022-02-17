@@ -174,7 +174,6 @@ public class RestEndPoints {
 
         @SuppressWarnings("unchecked") List<Staff> staffs = (List<Staff>) Main.instance.cacheManager.staffs.get();
 
-
         if (staffs.stream().anyMatch(staff -> {
             if (staff.username.equalsIgnoreCase(user)) {
                 if (useCase.equals("complain")) {
@@ -192,9 +191,9 @@ public class RestEndPoints {
                 if (useCase.equals("any")) {
                     return true;
                 }
-
                 return false;
             }
+
             return false;
         })) {
             return Response.OK_200();

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @SuppressWarnings("SpringMVCViewInspection")
 @Controller
@@ -154,7 +155,7 @@ public class EndPoints {
     }
 
     @GetMapping("/entries")
-    public String entries(Model model, HttpServletRequest request) {
+    public String entries(Model model, HttpServletRequest request, String type) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -162,11 +163,39 @@ public class EndPoints {
             return "maintenance.html";
         }
 
-        model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
-        model.addAttribute("unbans", Main.instance.databaseManager.getUnbans());
-        model.addAttribute("bugs", Main.instance.databaseManager.getBugs());
-        model.addAttribute("applies", Main.instance.databaseManager.getApplications());
-
+        if (type == null) {
+            model.addAttribute("display", false);
+            model.addAttribute("entries", new ArrayList<>());
+            model.addAttribute("name", "None");
+        } else {
+            switch (type) {
+                case "complains" -> {
+                    model.addAttribute("display", true);
+                    model.addAttribute("entries", Main.instance.databaseManager.getComplains());
+                    model.addAttribute("name", "Complains");
+                }
+                case "unbans" -> {
+                    model.addAttribute("display", true);
+                    model.addAttribute("entries", Main.instance.databaseManager.getUnbans());
+                    model.addAttribute("name", "Unbans");
+                }
+                case "bugs" -> {
+                    model.addAttribute("display", true);
+                    model.addAttribute("entries", Main.instance.databaseManager.getBugs());
+                    model.addAttribute("name", "Bugs");
+                }
+                case "applies" -> {
+                    model.addAttribute("display", true);
+                    model.addAttribute("entries", Main.instance.databaseManager.getApplications());
+                    model.addAttribute("name", "Applies");
+                }
+                default -> {
+                    model.addAttribute("display", false);
+                    model.addAttribute("entries", new ArrayList<>());
+                    model.addAttribute("name", "None");
+                }
+            }
+        }
         return "entries.html";
     }
 

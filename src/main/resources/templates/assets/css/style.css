@@ -889,3 +889,8 @@ body {
     top: 5px;
     background: #282f37;
 }
+
+.entries-entry{
+    color: #FFFFFF;
+    text-decoration: none
+}

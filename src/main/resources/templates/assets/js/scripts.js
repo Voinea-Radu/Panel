@@ -72,12 +72,10 @@ async function loginCookie() {
 
         try {
             if ((await verifyCookie()).code !== "200") {
-                console.log("Invalid login data - Success")
                 setCookie("login_data", "", 0)
             }
 
         } catch (error) {
-            console.log("Invalid login data - Error")
             setCookie("login_data", "", 0)
         }
 
@@ -116,7 +114,6 @@ async function isLoggedIn() {
 async function checkLoggedStatus() {
     loggedStatus = await isLoggedIn();
     if (!loggedStatus) {
-        console.log("Not logged in");
         redirect("/401");
         return;
     }

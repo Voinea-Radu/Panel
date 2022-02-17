@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>
 <!--suppress HtmlUnknownTarget, JSUnresolvedLibraryURL, ThymeleafVariablesResolveInspection, HtmlRequiredTitleElement -->
-<html xmlns:th="http://www.thymeleaf.org" lang="en_us">
+<html lang="en_us" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/global :: head(title='Entries')"></head>
 <body>
 <div id="page">
@@ -11,8 +11,59 @@
 
         <div class="content-wrap" id="logged-in-required">
             <div class="container">
+                <h1 class="panel-title">Entries</h1>
+                <div class="grid" style="display: grid !important;">
+                    <a class="entries-entry" href="/entries?type=complains">
+                        <div class="grid-card">
+                            <h2>Complains</h2>
+                        </div>
+                    </a>
+
+                    <a class="entries-entry" href="/entries?type=unbans">
+                        <div class="grid-card">
+                            <h2>Unbans</h2>
+                        </div>
+                    </a>
+
+                    <a class="entries-entry" href="/entries?type=bugs">
+                        <div class="grid-card">
+                            <h2>Bugs</h2>
+                        </div>
+                    </a>
+
+                    <a class="entries-entry" href="/entries?type=applies">
+                        <div class="grid-card">
+                            <h2>Applies</h2>
+                        </div>
+                    </a>
+                </div>
+
+                <div th:if="${display} == true" style="display: block">
+                    <h2><strong th:text="${name}"></strong></h2>
+                    <div class="panel-table">
+                        <table>
+                            <tr>
+                                <th>ID</th>
+                                <th id="by">By</th>
+                                <th id="creation_date">Creation Date</th>
+                            </tr>
+                            <tr onclick="redirect(this.getAttribute('data-arg1'));" th:data-arg1="${entry.getURL}"
+                                th:each="entry : ${entries}">
+                                <td class="no-decorate-url" th:text="${entry.id}">Unknown</td>
+                                <td th:text="${entry.user}">Unknown</td>
+                                <td th:text="${entry.getTimestampDate}">Unknown</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        <div class="content-wrap" id="logged-in-required">
+            <div class="container">
                 <div style="display: block">
-                    <h2><strong>Complaints</strong></h2>
+                    <h2><strong th:text="${name}"></strong></h2>
                     <div class="panel-table">
                         <table>
                             <tr>
@@ -92,10 +143,8 @@
                         </table>
                     </div>
                 </div>
-
-
             </div>
-        </div>
+            -->
     </div>
 </div>
 <div th:replace="fragments/global :: scripts"></div>
