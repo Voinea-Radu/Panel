@@ -51,23 +51,6 @@ function getSkinURL(name) {
 }
 
 async function verifyCookie() {
-    /*
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            alert(this.responseText);
-        }
-    };
-    xhttp.open("POST", "/api/login/validate", true);
-    xhttp.setRequestHeader("Content-type", "application/json");
-    xhttp.send(getCookie("login_data"));
-
-    console.log(1);
-    wait(5000);
-    console.log(2);
-    console.log(xhttp.responseText);
-    */
-
     blob = await fetch("/api/login/validate", {
         method: "post",
         body: getCookie("login_data")
@@ -106,7 +89,13 @@ async function loginCookie() {
             let obj = JSON.parse(getCookie("login_data"));
             url = getSkinURL(obj.username);
 
-            login.outerHTML = "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "') alt=\"profile\">";
+            login.outerHTML = "" +
+                "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "') alt='profile'> " +
+                "<button class='top-btn login' id='logout-button' style='margin-left: 20px'>Logout</button>";
+            document.getElementById("logout-button").addEventListener("click", ()=>{
+                setCookie("login_data", "");
+                location.reload();
+            })
         }
     }
 }
@@ -236,11 +225,3 @@ async function callAPI2(api, data, callback, failCallback) {
     await callAPI(api, data, callback, callback, failCallback, failCallback);
 }
 
-
-function wait(ms) {
-    var start = Date.now(),
-        now = start;
-    while (now - start < ms) {
-        now = Date.now();
-    }
-}
