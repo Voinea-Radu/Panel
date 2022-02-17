@@ -10,13 +10,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @SuppressWarnings("SpringMVCViewInspection")
 @Controller
 public class EndPoints {
     @GetMapping("/")
-    public String index(Model model, String message) {
+    public String index(Model model, String message, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         model.addAttribute("donors_count", Main.instance.cacheManager.donorsCount.get());
@@ -40,9 +45,12 @@ public class EndPoints {
     }
 
     @GetMapping("/staff")
-    public String staff(Model model) {
+    public String staff(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         model.addAttribute("staffs", Main.instance.cacheManager.staffs.get());
@@ -50,14 +58,20 @@ public class EndPoints {
     }
 
     @GetMapping("/rules")
-    public String rules() {
+    public String rules(HttpServletRequest request) {
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
+        }
         return "server-rules.html";
     }
 
     @GetMapping("/complain")
-    public String complain(Model model, Integer id) {
+    public String complain(Model model, Integer id, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         if (id == null) {
@@ -76,9 +90,12 @@ public class EndPoints {
     }
 
     @GetMapping("/profile")
-    public String profile(Model model, String user) {
+    public String profile(Model model, String user, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         PlayerProfile profile = new PlayerProfile(user);
@@ -89,45 +106,60 @@ public class EndPoints {
     }
 
     @GetMapping("/unauthorised")
-    public String unauthorised() {
+    public String unauthorised(HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         return "401.html";
     }
 
     @GetMapping("/401")
-    public String unauthorised_401() {
+    public String unauthorised_401(HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         return "401.html";
     }
 
     @GetMapping("/notfound")
-    public String notFound() {
+    public String notFound(HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         return "404.html";
     }
 
     @GetMapping("/404")
-    public String notFound_404() {
+    public String notFound_404(HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         return "404.html";
     }
 
     @GetMapping("/entries")
-    public String entries(Model model) {
+    public String entries(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         model.addAttribute("complaints", Main.instance.databaseManager.getComplains());
@@ -139,9 +171,12 @@ public class EndPoints {
     }
 
     @GetMapping("/unban")
-    public String unban(Model model, Integer id) {
+    public String unban(Model model, Integer id, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         if (id == null) {
@@ -160,9 +195,12 @@ public class EndPoints {
     }
 
     @GetMapping("/bug")
-    public String bugs(Model model, Integer id) {
+    public String bugs(Model model, Integer id, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         if (id == null) {
@@ -181,9 +219,12 @@ public class EndPoints {
     }
 
     @GetMapping("/apply")
-    public String apply(Model model, Integer id) {
+    public String apply(Model model, Integer id, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
         }
 
         if (id == null) {

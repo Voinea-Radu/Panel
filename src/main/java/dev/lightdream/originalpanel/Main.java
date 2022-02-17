@@ -17,10 +17,13 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
 
     public static Main instance;
+    public final boolean maintenance = true;
     public SQLConfig sqlConfig;
     public FileManager fileManager;
     public DatabaseManager databaseManager;
@@ -33,6 +36,8 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
     public Config config;
     public JDAConfig jdaConfig;
     public DriverConfig driverConfig;
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public static List<String> maintenanceIP = Arrays.asList("86.105.77.16");
     @SuppressWarnings("FieldMayBeFinal")
     private boolean enabled;
 
@@ -66,11 +71,18 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
         return enabled;
     }
 
+    public boolean maintenance(String ip) {
+        if (maintenance) {
+            return !maintenanceIP.contains(ip);
+        }
+        return maintenance;
+    }
+
     public void loadConfigs() {
         sqlConfig = fileManager.load(SQLConfig.class);
         config = fileManager.load(Config.class);
         jdaConfig = fileManager.load(JDAConfig.class);
-        driverConfig=fileManager.load(DriverConfig.class);
+        driverConfig = fileManager.load(DriverConfig.class);
     }
 
     public boolean debug() {
