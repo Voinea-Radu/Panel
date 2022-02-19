@@ -82,7 +82,8 @@ public class EndPoints {
         Complain complain = Main.instance.databaseManager.getComplain(id);
 
         if (complain == null) {
-            return "404.html";
+            model.addAttribute("error", "404");
+            return "error.html";
         }
 
         model.addAttribute("complain", complain);
@@ -107,7 +108,7 @@ public class EndPoints {
     }
 
     @GetMapping("/unauthorised")
-    public String unauthorised(HttpServletRequest request) {
+    public String unauthorised(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -115,11 +116,12 @@ public class EndPoints {
             return "maintenance.html";
         }
 
-        return "401.html";
+        model.addAttribute("error", "401");
+        return "error.html";
     }
 
     @GetMapping("/401")
-    public String unauthorised_401(HttpServletRequest request) {
+    public String unauthorised_401(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -127,11 +129,12 @@ public class EndPoints {
             return "maintenance.html";
         }
 
-        return "401.html";
+        model.addAttribute("error", "401");
+        return "error.html";
     }
 
     @GetMapping("/notfound")
-    public String notFound(HttpServletRequest request) {
+    public String notFound(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -139,11 +142,12 @@ public class EndPoints {
             return "maintenance.html";
         }
 
-        return "404.html";
+        model.addAttribute("error", "404");
+        return "error.html";
     }
 
     @GetMapping("/404")
-    public String notFound_404(HttpServletRequest request) {
+    public String notFound_404(Model model, HttpServletRequest request) {
         if (!Main.instance.isEnabled()) {
             return "starting.html";
         }
@@ -151,8 +155,36 @@ public class EndPoints {
             return "maintenance.html";
         }
 
-        return "404.html";
+        model.addAttribute("error", "404");
+        return "error.html";
     }
+
+    @GetMapping("/unauthorised-login")
+    public String unauthorisedLogin(Model model, HttpServletRequest request) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
+        }
+
+        model.addAttribute("error", "401-login");
+        return "error.html";
+    }
+
+    @GetMapping("/401-login")
+    public String unauthorised_401_Login(Model model, HttpServletRequest request) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
+        }
+
+        model.addAttribute("error", "401-login");
+        return "error.html";
+    }
+
 
     @GetMapping("/entries")
     public String entries(Model model, HttpServletRequest request, String type) {
@@ -215,7 +247,8 @@ public class EndPoints {
         UnbanRequest unbanRequest = Main.instance.databaseManager.getUnbanRequest(id);
 
         if (unbanRequest == null) {
-            return "404.html";
+            model.addAttribute("error", "404");
+            return "error.html";
         }
 
         model.addAttribute("unbanRequest", unbanRequest);
@@ -239,7 +272,8 @@ public class EndPoints {
         Bug bug = Main.instance.databaseManager.getBug(id);
 
         if (bug == null) {
-            return "404.html";
+            model.addAttribute("error", "404");
+            return "error.html";
         }
 
         model.addAttribute("bug", bug);
@@ -263,12 +297,25 @@ public class EndPoints {
         Apply apply = Main.instance.databaseManager.getApplication(id);
 
         if (apply == null) {
-            return "404.html";
+            model.addAttribute("error", "404");
+            return "error.html";
         }
 
         model.addAttribute("apply", apply);
 
         return "apply-details.html";
+    }
+
+    @GetMapping("/store")
+    public String store(HttpServletRequest request) {
+        if (!Main.instance.isEnabled()) {
+            return "starting.html";
+        }
+        if (Main.instance.maintenance(request.getHeader("X-FORWARDED-FOR"))) {
+            return "maintenance.html";
+        }
+
+        return "store.html";
     }
 
 }

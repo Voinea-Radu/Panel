@@ -114,7 +114,7 @@ async function isLoggedIn() {
 async function checkLoggedStatus() {
     loggedStatus = await isLoggedIn();
     if (!loggedStatus) {
-        redirect("/401");
+        redirect("/401-login");
         return;
     }
     body = document.getElementById("logged-in-required");

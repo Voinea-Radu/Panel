@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<!--suppress HtmlUnknownTarget, JSUnresolvedLibraryURL, HtmlRequiredTitleElement -->
+<!--suppress HtmlUnknownTarget, JSUnresolvedLibraryURL, HtmlRequiredTitleElement, ThymeleafVariablesResolveInspection, RequiredAttributes -->
 <html lang="en_us">
 <head th:replace="fragments/global :: head(title='401')"></head>
 <body>
@@ -8,7 +8,7 @@
     <div class="page-content">
         <div th:replace="fragments/global :: topbar"></div>
         <div class="center-div">
-            <img alt="401" class="error-image" src="https://images.original.gg/401.png">
+            <img alt="error" class="error-image" th:src="'https://images.original.gg/' + ${error} + '.png'">
         </div>
     </div>
 </div>

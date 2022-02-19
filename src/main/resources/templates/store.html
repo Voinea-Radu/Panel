@@ -1,0 +1,17 @@
+
+<!DOCTYPE HTML>
+<!--suppress HtmlUnknownTarget, JSUnresolvedLibraryURL, HtmlRequiredTitleElement, HtmlDeprecatedAttribute -->
+<html lang="en_us">
+<head th:replace="fragments/global :: head(title='Store')"></head>
+<body>
+<div id="page">
+    <div th:replace="fragments/global :: sidebar"></div>
+    <div class="page-content" style="height: 100vh !important;">
+        <div th:replace="fragments/global :: topbar"></div>
+        <iframe id="store-iframe" src="https://store.original.gg/" width="98%" height="90%" allowfullscreen="allowfullscreen" frameBorder="0" style="padding-left: 1%"></iframe>
+    </div>
+</div>
+<div th:replace="fragments/global :: scripts"></div>
+<script src="https://js.original.gg/translator.js"></script>
+</body>
+</html>
