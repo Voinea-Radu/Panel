@@ -125,6 +125,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         List<Staff> owner = staffs.stream().filter(staff -> staff.rank.equals("owner")).collect(Collectors.toList());
         List<Staff> hManager = staffs.stream().filter(staff -> staff.rank.equals("h-manager")).collect(Collectors.toList());
         List<Staff> manager = staffs.stream().filter(staff -> staff.rank.equals("manager")).collect(Collectors.toList());
+        List<Staff> supervizor = staffs.stream().filter(staff -> staff.rank.equals("supervizor")).collect(Collectors.toList());
         List<Staff> operator = staffs.stream().filter(staff -> staff.rank.equals("operator")).collect(Collectors.toList());
         List<Staff> srAdmin = staffs.stream().filter(staff -> staff.rank.equals("sradmin")).collect(Collectors.toList());
         List<Staff> admin = staffs.stream().filter(staff -> staff.rank.equals("admin")).collect(Collectors.toList());
@@ -137,6 +138,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         Collections.sort(owner);
         Collections.sort(hManager);
         Collections.sort(manager);
+        Collections.sort(supervizor);
         Collections.sort(operator);
         Collections.sort(srAdmin);
         Collections.sort(admin);
@@ -151,6 +153,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         output.addAll(owner);
         output.addAll(hManager);
         output.addAll(manager);
+        output.addAll(supervizor);
         output.addAll(operator);
         output.addAll(srAdmin);
         output.addAll(admin);
