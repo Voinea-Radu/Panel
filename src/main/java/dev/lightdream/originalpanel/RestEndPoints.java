@@ -336,7 +336,8 @@ public class RestEndPoints {
         }
 
         bug.status = BugsData.BugStatus.CLOSED;
-        Main.instance.notificationManager.notifyUser(bug, loginData.username);
+        bug.save();
+        Main.instance.notificationManager.notifyUser(bug, bug.user);
         return Response.OK_200();
     }
 
