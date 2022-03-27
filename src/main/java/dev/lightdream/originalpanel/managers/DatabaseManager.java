@@ -2,7 +2,6 @@ package dev.lightdream.originalpanel.managers;
 
 import dev.lightdream.databasemanager.OrderByType;
 import dev.lightdream.databasemanager.database.HikariDatabaseManager;
-import dev.lightdream.databasemanager.dto.LambdaExecutor;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Staff;
@@ -354,6 +353,7 @@ public class DatabaseManager extends HikariDatabaseManager {
         output.addAll(get(Complain.class, new HashMap<>() {{
             put("target", username);
         }}, "id", 10, OrderByType.DESCENDENT));
+        output.sort((o1, o2) -> Integer.compare(o1.id, o2.id) * -1);
 
         return output;
     }

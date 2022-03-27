@@ -25,7 +25,6 @@ async function complaintsDetails() {
     await checkLoggedStatus();
     document.getElementById("logged-in-required").style.visibility = "visible";
 
-    var status = document.getElementById("status").value;
     var creator = document.getElementById("user").value;
     var target = document.getElementById("target").value;
     var user = JSON.parse(getCookie("login_data"));

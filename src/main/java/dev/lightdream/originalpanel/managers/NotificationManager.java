@@ -25,7 +25,6 @@ public class NotificationManager {
         notifyUser(data, discordID, false);
     }
 
-
     public void notifyUser(FrontEndData data, Long discordID, boolean target) {
         //Send panel notification
         if (data instanceof Complain) {

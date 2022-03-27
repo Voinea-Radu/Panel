@@ -47,16 +47,8 @@
                             <textarea class="form-control vertical-text" id="proof" readonly="readonly" th:text="${complain.proof}"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="target-response" id="target-response-label" hidden>Target Response</label>
-                            <textarea class="form-control vertical-text" id="target-response" hidden></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="target-response-db" id="target-response-db-label" hidden>Target Response</label>
-                            <textarea class="form-control vertical-text" id="target-response-db" hidden th:text="${complain.targetResponse}"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="status" id="status-label" hidden="hidden">Status</label>
-                            <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${complain.status}" hidden="hidden"></textarea>
+                            <label for="target-response" id="target-response-label">Target Response</label>
+                            <textarea class="form-control vertical-text" id="target-response" th:text="${complain.targetResponse}"></textarea>
                         </div>
                         <div class="form-buttons">
                             <button class="form-button submit" id="complain-submit" type="button" hidden>Submit</button>
@@ -74,8 +66,8 @@
 </div>
 <div th:replace="fragments/global :: scripts"></div>
 <script src="https://js.original.gg/complains.js"></script>
-
-<script>
+<script th:inline="javascript">
+    var status = /*[[${complain.status}]]*/ "";
     complaintsDetails();
 </script>
 
