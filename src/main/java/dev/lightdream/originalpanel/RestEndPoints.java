@@ -172,7 +172,7 @@ public class RestEndPoints {
             return Response.INVALID_ENTRY_422();
         }
 
-        @SuppressWarnings("unchecked") List<Staff> staffs = (List<Staff>) Main.instance.cacheManager.staffs.get();
+        List<Staff> staffs = Main.instance.cacheManager.staffs.get();
 
         if (staffs.stream().anyMatch(staff -> {
             if (staff.username.equalsIgnoreCase(user)) {
