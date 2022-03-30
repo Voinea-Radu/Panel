@@ -5,6 +5,7 @@ import dev.lightdream.databasemanager.database.IDatabaseManager;
 import dev.lightdream.databasemanager.dto.SQLConfig;
 import dev.lightdream.filemanager.FileManager;
 import dev.lightdream.filemanager.FileManagerMain;
+import dev.lightdream.lambda.LambdaExecutor;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.logger.LoggableMain;
 import dev.lightdream.logger.Logger;
@@ -12,7 +13,6 @@ import dev.lightdream.originalpanel.dto.Config;
 import dev.lightdream.originalpanel.dto.DriverConfig;
 import dev.lightdream.originalpanel.dto.JDAConfig;
 import dev.lightdream.originalpanel.managers.*;
-import lombok.SneakyThrows;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
@@ -23,6 +23,8 @@ import java.util.List;
 public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
 
     public static Main instance;
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    public static List<String> maintenanceIP = Arrays.asList("86.105.77.16");
     public final boolean maintenance = false;
     public SQLConfig sqlConfig;
     public FileManager fileManager;
@@ -36,25 +38,25 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
     public Config config;
     public JDAConfig jdaConfig;
     public DriverConfig driverConfig;
-    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
-    public static List<String> maintenanceIP = Arrays.asList("86.105.77.16");
     @SuppressWarnings("FieldMayBeFinal")
     private boolean enabled;
 
-    @SneakyThrows
     public Main() {
         Debugger.init(this);
         Logger.init(this);
         Main.instance = this;
 
-        Logger.good("Starting Panel version 1.7");
+        Logger.good("Starting Panel version 1.8");
 
-        this.fileManager = new FileManager(this, FileManager.PersistType.YAML);
+        this.fileManager = new FileManager(this);
         loadConfigs();
         this.databaseManager = new DatabaseManager();
         this.notificationManager = new NotificationManager();
 
-        this.bot = JDABuilder.createDefault(config.botToken).build();
+
+        LambdaExecutor.LambdaCatch.NoReturnLambdaCatch.executeCatch(() ->
+                this.bot = JDABuilder.createDefault(config.botToken).build());
+
         this.discordManager = new DiscordManager();
 
         this.cacheManager = new CacheManager(this);

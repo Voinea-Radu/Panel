@@ -6,13 +6,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
-public class Cache {
+public class Cache<T> {
 
     public long updatePeriod;
-    public Object value;
-    public Consumer<Cache> updater;
+    public T value;
+    public Consumer<Cache<T>> updater;
 
-    public Cache(Consumer<Cache> updater, long updatePeriod) {
+    public Cache(Consumer<Cache<T>> updater, long updatePeriod) {
         this.updater = updater;
         this.updatePeriod = updatePeriod;
         registerUpdater();
@@ -24,7 +24,7 @@ public class Cache {
         this.updater.accept(this);
     }
 
-    public void update(Object value) {
+    public void update(T value) {
         Debugger.info("Updating cache to " + value);
         this.value = value;
     }
@@ -41,7 +41,7 @@ public class Cache {
         timer.schedule(task, 0, updatePeriod);
     }
 
-    public Object get() {
+    public T get() {
         return value;
     }
 

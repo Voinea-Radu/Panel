@@ -58,6 +58,9 @@ public class ApplyData {
         public String cookie;
         public String decision;
         public int id;
+
+        //All args constructor and no args constructor
+
     }
 
 

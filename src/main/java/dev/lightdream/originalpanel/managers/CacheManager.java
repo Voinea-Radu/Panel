@@ -3,6 +3,8 @@ package dev.lightdream.originalpanel.managers;
 import dev.lightdream.logger.Logger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Cache;
+import dev.lightdream.originalpanel.dto.Staff;
+import dev.lightdream.originalpanel.dto.TopDonator;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.frontend.Complain;
 import me.nurio.minecraft.pinger.MinecraftServerPinger;
@@ -14,23 +16,24 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class CacheManager {
 
     public Main main;
-    public Cache onlinePlayers;
-    public Cache registeredPlayersCount;
-    public Cache donorsCount;
-    public Cache staffs;
-    public Cache donationsGoal;
-    public Cache topDonator;
+    public Cache<Integer> onlinePlayers;
+    public Cache<Integer> registeredPlayersCount;
+    public Cache<Integer> donorsCount;
+    public Cache<List<Staff>> staffs;
+    public Cache<Integer> donationsGoal;
+    public Cache<TopDonator> topDonator;
 
     @SuppressWarnings("TextBlockMigration")
     public CacheManager(Main main) {
         Logger.good("Started caching");
         this.main = main;
 
-        onlinePlayers = new Cache(cache -> {
+        onlinePlayers = new Cache<>(cache -> {
 
             MinecraftServerStatus server = MinecraftServerPinger.ping("original.gg");
 
@@ -42,13 +45,13 @@ public class CacheManager {
             cache.update(server.getPlayers().getOnline());
         }, 60000L); //60 seconds
 
-        registeredPlayersCount = new Cache(cache -> cache.update(Main.instance.databaseManager.getRegisteredCount()), 1800000L); // 30 minutes
+        registeredPlayersCount = new Cache<>(cache -> cache.update(Main.instance.databaseManager.getRegisteredCount()), 1800000L); // 30 minutes
 
-        donorsCount = new Cache(cache -> cache.update(Main.instance.databaseManager.getDonorsCount()), 1800000L); //30 minutes
+        donorsCount = new Cache<>(cache -> cache.update(Main.instance.databaseManager.getDonorsCount()), 1800000L); //30 minutes
 
-        staffs = new Cache(cache -> cache.update(Main.instance.databaseManager.getStaff()), 43200000L); // 12 hours
+        staffs = new Cache<>(cache -> cache.update(Main.instance.databaseManager.getStaff()), 43200000L); // 12 hours
 
-        new Cache(cache -> Main.instance.databaseManager.getAll(Complain.class).forEach(complain -> {
+        new Cache<>(cache -> Main.instance.databaseManager.getAll(Complain.class).forEach(complain -> {
             // 7 days
             if (System.currentTimeMillis() > complain.timestamp + 604800000L &&
                     complain.status == ComplainData.ComplainStatus.OPEN_AWAITING_TARGET_RESPONSE) {
@@ -59,7 +62,7 @@ public class CacheManager {
             }
         }), 43200000L); // 12 hours
 
-        donationsGoal = new Cache(cache -> {
+        donationsGoal = new Cache<>(cache -> {
             StringBuilder storeScrape = new StringBuilder();
 
             URLConnection connection;
@@ -100,7 +103,7 @@ public class CacheManager {
 
         }, 3600000L); //1 hour
 
-        topDonator = new Cache(cache -> {
+        topDonator = new Cache<>(cache -> {
             StringBuilder storeScrape = new StringBuilder();
 
             URLConnection connection;
@@ -122,10 +125,11 @@ public class CacheManager {
                 e.printStackTrace();
             }
 
-            String rawData = (storeScrape.substring(storeScrape.indexOf("div class=\"panel-heading\"><i class=\"fas fa-medal\"></i> Top Customer</div>"), storeScrape.indexOf("</div><div id=\"js-payments\" class=\"panel panel-default module\">")));
+            String rawData = (storeScrape.substring(storeScrape.indexOf("div class=\"panel-heading\"><i class=\"fas fa-medal\"></i> Top Customer</div>"),
+                    storeScrape.indexOf("</div><div id=\"js-payments\" class=\"panel panel-default module\">")));
 
-            String nameData = rawData.substring(rawData.indexOf("<div class=\"ign\">"), rawData.indexOf(" </div>\n" +
-                    "                <div class=\"amount\">"));
+            String nameData = rawData.substring(rawData.indexOf("<div class=\"ign\">"),
+                    rawData.indexOf(" </div>\n                <div class=\"amount\">"));
 
             String amountData = rawData.substring(rawData.indexOf("<div class=\"amount\">"), rawData.indexOf("<small>EUR</small>"));
 
@@ -136,7 +140,10 @@ public class CacheManager {
             amountData = amountData.replace("Donated", "");
             amountData = amountData.replace("<divclass=\"amount\">\n", "");
 
-            cache.update(nameData + "|||" + amountData);
+            TopDonator topDonator = new TopDonator(
+                    nameData, Double.parseDouble(amountData)
+            );
+            cache.update(topDonator);
         }, 3600000L);
 
         Logger.good("Caching data finished");
