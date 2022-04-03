@@ -450,7 +450,7 @@ public class DatabaseManager extends ProgrammaticHikariDatabaseManager {
     public List<UnbanRequest> getRecentUnbanRequests(String user) {
         return get(UnbanRequest.class, new HashMap<>() {{
             put("user", user);
-            put(">timestamp", System.currentTimeMillis() - 7 * 25 * 60 * 60 * 1000L);
+            put(">timestamp", System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000L);
         }});
     }
 
@@ -464,7 +464,7 @@ public class DatabaseManager extends ProgrammaticHikariDatabaseManager {
     public List<Apply> getRecentApplications(String user) {
         return get(Apply.class, new HashMap<>() {{
             put("user", user);
-            put(">timestamp", System.currentTimeMillis() - 60 * 60 * 1000L);
+            put(">timestamp", System.currentTimeMillis() - 30 * 24 * 60 * 60 * 1000L);
         }});
     }
 

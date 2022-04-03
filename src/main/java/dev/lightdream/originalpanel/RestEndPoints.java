@@ -344,11 +344,6 @@ public class RestEndPoints {
     @PostMapping("/api/form/apply")
     public @ResponseBody
     Response apply(@RequestBody ApplyData.ApplyCreateData data) {
-
-        if (Main.instance.databaseManager.getRecentApplications(Utils.getUsernameFromCookie(data.cookie)).size() != 0) {
-            return Response.RATE_LIMITED_429();
-        }
-
         if (!validateCookie(data.cookie).code.equals("200")) {
             return Response.BAD_CREDENTIALS_401();
         }
