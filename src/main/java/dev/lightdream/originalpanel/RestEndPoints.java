@@ -353,7 +353,13 @@ public class RestEndPoints {
             return Response.BAD_CREDENTIALS_401();
         }
 
-        PlayerProfile profile = new PlayerProfile(Utils.getUsernameFromCookie(data.cookie));
+        String username = Utils.getUsernameFromCookie(data.cookie);
+
+        if (Main.instance.databaseManager.getRecentApplications(username).size() != 0) {
+            return Response.RATE_LIMITED_429();
+        }
+
+        PlayerProfile profile = new PlayerProfile(username);
 
         data.status = ApplyData.ApplyStatus.OPEN;
         data.timestamp = System.currentTimeMillis();
