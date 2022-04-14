@@ -13,45 +13,55 @@
                 <h1 class="panel-title">Unban</h1>
 
                 <h3 id="error">Error message here</h3>
-                <h2 class="approved" id="approved" th:if="${unbanRequest.decision.toString() == 'APPROVED'}">Approved</h2>
+                <h2 class="approved" id="approved" th:if="${unbanRequest.decision.toString() == 'APPROVED'}">
+                    Approved</h2>
                 <h2 class="denied" id="denied" th:if="${unbanRequest.decision.toString() =='DENIED'}">Denied</h2>
                 <div class="panel-form">
                     <form>
                         <div class="form-group">
                             <label for="id" id="id-label">ID</label>
-                            <input class="form-control" id="id" type="text" readonly="readonly" th:value="${unbanRequest.id}">
+                            <input class="form-control" id="id" readonly="readonly" th:value="${unbanRequest.id}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="user" id="user-label">By</label>
-                            <input class="form-control" id="user" type="text" readonly="readonly" th:value="${unbanRequest.user}">
+                            <input class="form-control" id="user" readonly="readonly" th:value="${unbanRequest.user}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="staff-user" id="staff-user-label">Staff</label>
-                            <input class="form-control" id="staff-user" type="text" readonly="readonly" th:value="${unbanRequest.staff}">
+                            <input class="form-control" id="staff-user" readonly="readonly" th:value="${unbanRequest.staff}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="reason" id="reason-label">Reason</label>
-                            <input class="form-control" id="reason" type="text" readonly="readonly" th:value="${unbanRequest.reason}">
+                            <input class="form-control" id="reason" readonly="readonly" th:value="${unbanRequest.reason}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="date_and_time" id="date_and_time-label">Date and Time</label>
-                            <input class="form-control" id="date_and_time" type="text" readonly="readonly" th:value="${unbanRequest.dateAndTime}">
+                            <input class="form-control" id="date_and_time" readonly="readonly" th:value="${unbanRequest.dateAndTime}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="ban" id="ban-label">Ban Image</label>
-                            <input class="form-control" id="ban" readonly="readonly" type="text" th:value="${unbanRequest.ban}">
+                            <input class="form-control" id="ban" readonly="readonly" th:value="${unbanRequest.ban}"
+                                   type="text">
                         </div>
                         <div class="form-group">
                             <label for="argument" id="argument-label">Argument</label>
-                            <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${unbanRequest.argument}"></textarea>
+                            <textarea class="form-control vertical-text" id="argument" readonly="readonly"
+                                      th:text="${unbanRequest.argument}"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="status" id="status-label" hidden="hidden">Status</label>
-                            <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${unbanRequest.status}" hidden="hidden"></textarea>
+                            <label for="status" hidden="hidden" id="status-label">Status</label>
+                            <textarea class="form-control vertical-text" hidden="hidden" id="status"
+                                      readonly="readonly" th:text="${unbanRequest.status}"></textarea>
                         </div>
                         <div class="form-buttons">
-                            <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve</button>
-                            <button class="form-button deny" id="deny" type="button"  hidden="hidden">Deny</button>
+                            <button class="form-button approve" hidden="hidden" id="approve" type="button">Approve
+                            </button>
+                            <button class="form-button deny" hidden="hidden" id="deny" type="button">Deny</button>
                         </div>
                     </form>
                 </div>

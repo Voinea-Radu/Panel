@@ -15,5 +15,4 @@ public class JDAConfig extends dev.lightdream.jdaextension.dto.JDAConfig {
     ), new ArrayList<>());
 
 
-
 }

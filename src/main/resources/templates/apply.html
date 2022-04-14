@@ -3,61 +3,62 @@
 <head th:replace="fragments/global :: head(title='Apply')"></head>
 <body>
 <div id="page">
-  <div th:replace="fragments/global :: sidebar"></div>
+    <div th:replace="fragments/global :: sidebar"></div>
 
-  <div class="page-content">
-    <div th:replace="fragments/global :: topbar"></div>
+    <div class="page-content">
+        <div th:replace="fragments/global :: topbar"></div>
 
-    <div class="content-wrap" id="logged-in-required">
-      <div class="container">
-        <h1 class="panel-title" id="apply-title">Trainee Application</h1>
+        <div class="content-wrap" id="logged-in-required">
+            <div class="container">
+                <h1 class="panel-title" id="apply-title">Trainee Application</h1>
 
-        <h3 id="error">Error message here</h3>
+                <h3 id="error">Error message here</h3>
 
-        <h3>You must have your discord DMs open until you receive the response from our discord bot!</h3>
+                <h3>You must have your discord DMs open until you receive the response from our discord bot!</h3>
 
-        <div class="panel-form">
-          <form id="form-id">
-            <div class="form-group">
-              <label for="age" id="age-label">Age</label>
-              <input class="form-control" id="age" type="number">
+                <div class="panel-form">
+                    <form id="form-id">
+                        <div class="form-group">
+                            <label for="age" id="age-label">Age</label>
+                            <input class="form-control" id="age" type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="section" id="section-label">Section</label>
+                            <input class="form-control" id="section" type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="english" id="english-label">English Knowledge</label>
+                            <select class="form-control" id="english" name="Level">
+                                <option value="none">None</option>
+                                <option value="decent">Decent</option>
+                                <option value="fluent">Fluent</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="commands" id="commands-label">Name some important commands used on the
+                                server</label>
+                            <textarea class="form-control vertical-text" id="commands"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="why" id="why-label">Why do you consider that you should be accepted?</label>
+                            <textarea class="form-control vertical-text" id="why"></textarea>
+                        </div>
+                        <div class="form-buttons">
+                            <button class="form-button submit" id="submit" type="button">Submit</button>
+                            <button class="form-button cancel" id="cancel">Cancel</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-              <label for="section" id="section-label">Section</label>
-              <input class="form-control" id="section" type="text">
-            </div>
-            <div class="form-group">
-              <label for="english" id="english-label">English Knowledge</label>
-              <select class="form-control" id="english" name="Level">
-                <option value="none">None</option>
-                <option value="decent">Decent</option>
-                <option value="fluent">Fluent</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="commands" id="commands-label">Name some important commands used on the server</label>
-              <textarea class="form-control vertical-text" id="commands"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="why" id="why-label">Why do you consider that you should be accepted?</label>
-              <textarea class="form-control vertical-text" id="why"></textarea>
-            </div>
-            <div class="form-buttons">
-              <button class="form-button submit" id="submit" type="button">Submit</button>
-              <button class="form-button cancel" id="cancel">Cancel</button>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <div th:replace="fragments/global :: scripts"></div>
 
 
 <script src="/js/apply.js"></script>
 <script>
-  applyTemplate();
+    applyTemplate();
 </script>
 
 </body>

@@ -90,7 +90,7 @@ async function loginCookie() {
             login.outerHTML = "" +
                 "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "') alt='profile'> " +
                 "<button class='top-btn login' id='logout-button' style='margin-left: 20px'>Logout</button>";
-            document.getElementById("logout-button").addEventListener("click", ()=>{
+            document.getElementById("logout-button").addEventListener("click", () => {
                 setCookie("login_data", "");
                 location.reload();
             })
@@ -121,16 +121,6 @@ async function checkLoggedStatus() {
     if (body !== undefined && body !== null) {
         body.style.visibility = "visible";
     }
-}
-
-function changeLanguage(language) {
-    if (language !== "ro" && language !== "en") {
-        return;
-    }
-
-    setCookie('lang', language, 0);
-
-    window.location.reload();
 }
 
 function redirect(path) {
