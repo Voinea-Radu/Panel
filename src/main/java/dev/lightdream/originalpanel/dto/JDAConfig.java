@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class JDAConfig {
+public class JDAConfig extends dev.lightdream.jdaextension.dto.JDAConfig {
 
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public JDAEmbed notificationEmbed = new JDAEmbed(0, 255, 0, "New Notification - %notification%", "", "", Arrays.asList(
             new JDAField("URL", "%url%", true)
     ), new ArrayList<>());
+
+
 
 }
