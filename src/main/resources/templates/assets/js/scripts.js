@@ -31,6 +31,7 @@ async function dashBoard() {
         document.getElementById("complaints-item").hidden = false;
         document.getElementById("unban-item").hidden = false;
         document.getElementById("bugs-item").hidden = false;
+        document.getElementById("apply-item").hidden = false;
         user = JSON.parse(getCookie("login_data"));
 
         callAPI(`/api/check/staff?user=${user.username}&useCase=any`, {},
@@ -121,16 +122,6 @@ async function checkLoggedStatus() {
     if (body !== undefined && body !== null) {
         body.style.visibility = "visible";
     }
-}
-
-function changeLanguage(language) {
-    if (language !== "ro" && language !== "en") {
-        return;
-    }
-
-    setCookie('lang', language, 0);
-
-    window.location.reload();
 }
 
 function redirect(path) {
