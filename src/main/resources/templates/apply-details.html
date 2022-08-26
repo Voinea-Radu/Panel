@@ -3,95 +3,108 @@
 <head th:replace="fragments/global :: head(title='Application ' + ${apply.id})"></head>
 <body>
 <div id="page">
-  <div th:replace="fragments/global :: sidebar"></div>
+    <div th:replace="fragments/global :: sidebar"></div>
 
-  <div class="page-content">
-    <div th:replace="fragments/global :: topbar"></div>
+    <div class="page-content">
+        <div th:replace="fragments/global :: topbar"></div>
 
-    <div class="content-wrap" id="logged-in-required">
-      <div class="container">
-        <h1 class="panel-title" id="unban-title">Trainee Application</h1>
+        <div class="content-wrap" id="logged-in-required">
+            <div class="container">
+                <h1 class="panel-title" id="unban-title">Trainee Application</h1>
 
-        <h3 id="error">Error message here</h3>
-        <h2 class="approved" id="approved" th:if="${apply.decision.toString() == 'APPROVED'}">Approved</h2>
-        <h2 class="denied" id="denied" th:if="${apply.decision.toString() =='DENIED'}">Denied</h2>
+                <h3 id="error">Error message here</h3>
+                <h2 class="approved" id="approved" th:if="${apply.decision.toString() == 'APPROVED'}">Approved</h2>
+                <h2 class="denied" id="denied" th:if="${apply.decision.toString() =='DENIED'}">Denied</h2>
 
-        <h3>You must have your discord DMs open until you receive the response from our discord bot!</h3>
+                <h3>You must have your discord DMs open until you receive the response from our discord bot!</h3>
 
-        <div class="panel-form">
-          <form>
-            <div class="form-group">
-              <label for="id" id="id-label">ID</label>
-              <input class="form-control" id="id" type="text" readonly="readonly" th:value="${apply.id}">
-            </div>
-            <div class="form-group">
-              <label for="user" id="user-label">User</label>
-              <input class="form-control" id="user" type="text" readonly="readonly" th:value="${apply.user}">
-            </div>
-            <div class="form-group">
-              <label for="age" id="age-label">Age</label>
-              <input class="form-control" id="age" type="text" readonly="readonly" th:value="${apply.age}">
-            </div>
-            <div class="form-group">
-              <label for="section" id="section-label">Section</label>
-              <input class="form-control" id="section" type="text" readonly="readonly" th:value="${apply.section}">
-            </div>
-            <div class="form-group">
-              <label for="discord" id="discord-label">Discord</label>
-              <input class="form-control" id="discord" type="text" readonly="readonly" th:value="${apply.getDiscordTag}">
-            </div>
-            <div class="form-group">
-              <label for="english" id="english-label">English</label>
-              <input class="form-control" id="english" readonly="readonly" type="text" th:value="${apply.english}">
-            </div>
-            <div class="form-group">
-              <label for="commands" id="commands-label">Commands</label>
-              <textarea class="form-control vertical-text" id="commands" readonly="readonly" th:text="${apply.commands}"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="argument" id="argument-label">Argument</label>
-              <textarea class="form-control vertical-text" id="argument" readonly="readonly" th:text="${apply.argument}"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="kicks" id="kicks-label">Kicks</label>
-              <input class="form-control" id="kicks" readonly="readonly" type="text" th:value="${apply.kicks}">
-            </div>
-            <div class="form-group">
-              <label for="bans" id="bans-label">Bans</label>
-              <input class="form-control" id="bans" readonly="readonly" type="text" th:value="${apply.bans}">
-            </div>
-            <div class="form-group">
-              <label for="mutes" id="mutes-label">Mutes</label>
-              <input class="form-control" id="mutes" readonly="readonly" type="text" th:value="${apply.mutes}">
-            </div>
-            <div class="form-group">
-              <label for="warns" id="warns-label">Warns</label>
-              <input class="form-control" id="warns" readonly="readonly" type="text" th:value="${apply.warns}">
-            </div>
-            <div class="form-group">
-              <label for="sanctions" id="sanctions-label">Sanctions</label>
-              <div class="form-control" id="sanctions"></div>
-            </div>
-            <div class="form-group">
-              <label for="status" id="status-label" hidden="hidden">Status</label>
-              <textarea class="form-control vertical-text" id="status" readonly="readonly" th:text="${apply.status}" hidden="hidden"></textarea>
-            </div>
+                <div class="panel-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="id" id="id-label">ID</label>
+                            <input class="form-control" id="id" type="text" readonly="readonly" th:value="${apply.id}">
+                        </div>
+                        <div class="form-group">
+                            <label for="user" id="user-label">User</label>
+                            <input class="form-control" id="user" type="text" readonly="readonly"
+                                   th:value="${apply.user}">
+                        </div>
+                        <div class="form-group">
+                            <label for="age" id="age-label">Age</label>
+                            <input class="form-control" id="age" type="text" readonly="readonly"
+                                   th:value="${apply.age}">
+                        </div>
+                        <div class="form-group">
+                            <label for="section" id="section-label">Section</label>
+                            <input class="form-control" id="section" type="text" readonly="readonly"
+                                   th:value="${apply.section}">
+                        </div>
+                        <div class="form-group">
+                            <label for="discord" id="discord-label">Discord</label>
+                            <input class="form-control" id="discord" type="text" readonly="readonly"
+                                   th:value="${apply.getDiscordTag}">
+                        </div>
+                        <div class="form-group">
+                            <label for="english" id="english-label">English</label>
+                            <input class="form-control" id="english" readonly="readonly" type="text"
+                                   th:value="${apply.english}">
+                        </div>
+                        <div class="form-group">
+                            <label for="commands" id="commands-label">Commands</label>
+                            <textarea class="form-control vertical-text" id="commands" readonly="readonly"
+                                      th:text="${apply.commands}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="argument" id="argument-label">Argument</label>
+                            <textarea class="form-control vertical-text" id="argument" readonly="readonly"
+                                      th:text="${apply.argument}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="kicks" id="kicks-label">Kicks</label>
+                            <input class="form-control" id="kicks" readonly="readonly" type="text"
+                                   th:value="${apply.kicks}">
+                        </div>
+                        <div class="form-group">
+                            <label for="bans" id="bans-label">Bans</label>
+                            <input class="form-control" id="bans" readonly="readonly" type="text"
+                                   th:value="${apply.bans}">
+                        </div>
+                        <div class="form-group">
+                            <label for="mutes" id="mutes-label">Mutes</label>
+                            <input class="form-control" id="mutes" readonly="readonly" type="text"
+                                   th:value="${apply.mutes}">
+                        </div>
+                        <div class="form-group">
+                            <label for="warns" id="warns-label">Warns</label>
+                            <input class="form-control" id="warns" readonly="readonly" type="text"
+                                   th:value="${apply.warns}">
+                        </div>
+                        <div class="form-group">
+                            <label for="sanctions" id="sanctions-label">Sanctions</label>
+                            <div class="form-control" id="sanctions"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" id="status-label" hidden="hidden">Status</label>
+                            <textarea class="form-control vertical-text" id="status" readonly="readonly"
+                                      th:text="${apply.status}" hidden="hidden"></textarea>
+                        </div>
 
-            <div class="form-buttons">
-              <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve</button>
-              <button class="form-button deny" id="deny" type="button"  hidden="hidden">Deny</button>
+                        <div class="form-buttons">
+                            <button class="form-button approve" id="approve" type="button" hidden="hidden">Approve
+                            </button>
+                            <button class="form-button deny" id="deny" type="button" hidden="hidden">Deny</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <div th:replace="fragments/global :: scripts"></div>
 
-<script src="https://js.original.gg/apply.js"></script>
+<script src="/js/apply.js"></script>
 <script>
-  applyDetails();
+    applyDetails();
 </script>
 
 </body>

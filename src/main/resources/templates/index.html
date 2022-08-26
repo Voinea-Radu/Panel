@@ -43,7 +43,8 @@
                         <small id="top_donator">Top Donator</small>
                         <div>
                             <span style="font-size: 25px; color: #ffffff" th:text="${top_donator_name + ' - '}">Panda110_ - </span>
-                            <span style="color: #81c8ff; font-size: 25px" th:text="${top_donator_amount + '€'}">10.000€</span>
+                            <span style="color: #81c8ff; font-size: 25px"
+                                  th:text="${top_donator_amount + '€'}">10.000€</span>
                         </div>
                     </div>
                 </div>
@@ -60,7 +61,7 @@
 <div th:replace="fragments/global :: scripts"></div>
 
 
-<script src="https://js.original.gg/notifications.js"></script>
+<script src="/js/notifications.js"></script>
 <script>
     loadNotifications();
 </script>

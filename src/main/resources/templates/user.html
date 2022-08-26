@@ -13,7 +13,7 @@
             <div class="container">
                 <div class="user-wrap">
                     <div class="panel-sidebar">
-                        <div class="user-avatar"><img th:src="@{${profile.avatarURL}}" alt="avatar" src=""></div>
+                        <div class="user-avatar"><img alt="avatar" src="" th:src="@{${profile.avatarURL}}"></div>
                         <div class="user-info">
                             <div class="user-name" th:text="${profile.username}">Username</div>
                             <br><br>
@@ -43,7 +43,8 @@
                                   th:if="${profile.rank == 'admin'}">Admin</span>
                             <span class="label sradmin" style="font-size: 20px" th:if="${profile.rank == 'sradmin'}">Sr.Admin</span>
                             <span class="label operator" style="font-size: 20px" th:if="${profile.rank == 'operator'}">Operator</span>
-                            <span class="label supervizor" style="font-size: 20px" th:if="${profile.rank == 'supervizor'}">Supervizor</span>
+                            <span class="label supervizor" style="font-size: 20px"
+                                  th:if="${profile.rank == 'supervizor'}">Supervizor</span>
                             <span class="label manager" style="font-size: 20px" th:if="${profile.rank == 'manager'}">Manager</span>
                             <span class="label hmanager" style="font-size: 20px" th:if="${profile.rank == 'h-manager'}">HManager</span>
                             <span class="label owner" style="font-size: 20px"
@@ -78,11 +79,12 @@
                             </tr>
                             <tr>
                                 <td class="row-name">Original Coins</td>
-                                <td style="text-align:right;"><span class="label default" th:text="${profile.originalCoins}">0</span></td>
+                                <td style="text-align:right;"><span class="label default"
+                                                                    th:text="${profile.originalCoins}">0</span></td>
                             </tr>
                             <tr>
-                                <td class="row-name" id="sanctions-row" hidden="hidden">Sanctions</td>
-                                <td style="text-align:right;" id="sanctions-row-data" hidden="hidden">
+                                <td class="row-name" hidden="hidden" id="sanctions-row">Sanctions</td>
+                                <td hidden="hidden" id="sanctions-row-data" style="text-align:right;">
                                     <span class="label default" th:text="|Bans: ${profile.bans}|">Unknown</span>
                                     <span class="label default" th:text="|Kicks: ${profile.kicks}|">Unknown</span>
                                     <span class="label default" th:text="|Mutes: ${profile.mutes}|">Unknown</span>
@@ -103,8 +105,9 @@
                             <th>Status</th>
                             <th>Creation Date</th>
                         </tr>
-                        <tr th:each="complain : ${profile.complaints}" th:data-arg1="${complain.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
-                            <td th:text="${complain.id}" class="no-decorate-url">Unknown</td>
+                        <tr onclick="redirect(this.getAttribute('data-arg1'));" th:data-arg1="${complain.getURL}"
+                            th:each="complain : ${profile.complaints}">
+                            <td class="no-decorate-url" th:text="${complain.id}">Unknown</td>
                             <td th:text="${complain.user}">Unknown</td>
                             <td th:text="${complain.target}">Unknown</td>
                             <td th:text="${complain.status.message}">Unknown</td>
@@ -122,8 +125,9 @@
                             <th>Status</th>
                             <th>Creation Date</th>
                         </tr>
-                        <tr th:each="unbanRequest : ${profile.unbanRequests}" th:data-arg1="${unbanRequest.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
-                            <td th:text="${unbanRequest.id}" class="no-decorate-url">Unknown</td>
+                        <tr onclick="redirect(this.getAttribute('data-arg1'));" th:data-arg1="${unbanRequest.getURL}"
+                            th:each="unbanRequest : ${profile.unbanRequests}">
+                            <td class="no-decorate-url" th:text="${unbanRequest.id}">Unknown</td>
                             <td th:text="${unbanRequest.user}">Unknown</td>
                             <td th:text="${unbanRequest.staff}">Unknown</td>
                             <td th:text="${unbanRequest.status.message}">Unknown</td>
@@ -139,8 +143,9 @@
                             <th>Status</th>
                             <th>Creation Date</th>
                         </tr>
-                        <tr th:each="apply : ${profile.applications}" th:data-arg1="${apply.getURL}" onclick="redirect(this.getAttribute('data-arg1'));">
-                            <td th:text="${apply.id}" class="no-decorate-url">Unknown</td>
+                        <tr onclick="redirect(this.getAttribute('data-arg1'));" th:data-arg1="${apply.getURL}"
+                            th:each="apply : ${profile.applications}">
+                            <td class="no-decorate-url" th:text="${apply.id}">Unknown</td>
                             <td th:text="${apply.status.message}">Unknown</td>
                             <td th:text="${apply.getTimestampDate}">Unknown</td>
                         </tr>
@@ -153,7 +158,7 @@
 <div th:replace="fragments/global :: scripts"></div>
 
 
-<script src="https://js.original.gg/profile.js"></script>
+<script src="/js/profile.js"></script>
 <script>
     profileTemplate();
 </script>

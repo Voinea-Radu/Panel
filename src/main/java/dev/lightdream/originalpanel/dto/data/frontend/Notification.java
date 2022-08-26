@@ -56,6 +56,7 @@ public class Notification {
         );
     }
 
+    @SuppressWarnings("unused")
     public String getURL() {
         return "/" + baseURL + "?id=" + id;
     }
