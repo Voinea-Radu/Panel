@@ -4,10 +4,10 @@
 <head th:fragment="head (title)">
     <title th:text="'Original | ' + ${title}">Title</title>
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <link href="https://images.original.gg/logo.png" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="/images/logo.png" rel="icon" sizes="32x32" type="image/png"/>
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
-    <link href="https://css.original.gg/style.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
     <link crossorigin="anonymous"
           href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.2.95/css/materialdesignicons.min.css"
           integrity="sha512-tYefTUoWKpCvU14EKu/b/VxnSaT3+1ZBlL0BhTPSYCiqsMTbGylad3l6HCr9i4vpsDgJIFke+LQBq3MCXko6Qw=="
@@ -26,7 +26,7 @@
 <div class="page-sidebar" th:fragment="sidebar">
     <div class="nav-content">
         <div id="logo">
-            <a href="/"><img src="https://images.original.gg/logo.png" alt="logo"></a>
+            <a href="/"><img src="/images/logo.png" alt="logo"></a>
         </div>
         <div id="sidebar-links">
             <ul>
@@ -55,9 +55,6 @@
             <a href="https://vote.original.gg" target="_blank"><i class="mdi mdi-map-marker-check"></i></a>
         </div>
         <div class="right">
-            <!--<img class="language-chose pointer" src="https://images.original.gg/english.png" onclick="changeLanguage('en')" alt="en">-->
-            <!--<img class="language-chose pointer" src="https://images.original.gg/romanian.png" onclick="changeLanguage('ro')" alt="ro">-->
-
             <!--<a class="search-btn" href="/"><i class="mdi mdi-magnify"></i></a>-->
             <a class="top-btn login" href="/login" id="login-button">Login</a>
         </div>
@@ -68,5 +65,5 @@
     <script crossorigin="anonymous"
             integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
             referrerpolicy="no-referrer" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" ></script>
-    <script src="https://js.original.gg/scripts.js"></script>
+    <script src="/js/scripts.js"></script>
 </div>

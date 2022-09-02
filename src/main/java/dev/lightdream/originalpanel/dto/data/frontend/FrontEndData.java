@@ -2,11 +2,12 @@ package dev.lightdream.originalpanel.dto.data.frontend;
 
 import dev.lightdream.databasemanager.DatabaseMain;
 import dev.lightdream.databasemanager.annotations.database.DatabaseField;
-import dev.lightdream.databasemanager.dto.DatabaseEntry;
+import dev.lightdream.databasemanager.dto.entry.DatabaseEntry;
+import dev.lightdream.databasemanager.dto.entry.impl.IntegerDatabaseEntry;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.utils.Utils;
 
-public abstract class FrontEndData extends DatabaseEntry {
+public abstract class FrontEndData extends IntegerDatabaseEntry {
 
     @DatabaseField(columnName = "user")
     public String user;
@@ -33,11 +34,11 @@ public abstract class FrontEndData extends DatabaseEntry {
 
     @SuppressWarnings("unused")
     public String getURL() {
-        return "/" + getBaseUrl() + "?id=" + id;
+        return "/" + getBaseUrl() + "?id=" + getID();
     }
 
     public String getFullURL() {
-        return Main.instance.config.baseURL + "/" + getBaseUrl() + "?id=" + id;
+        return Main.instance.config.baseURL + "/" + getBaseUrl() + "?id=" + getID();
     }
 
     public abstract String getBaseUrl();
