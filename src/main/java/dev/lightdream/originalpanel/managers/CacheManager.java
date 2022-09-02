@@ -68,6 +68,7 @@ public class CacheManager {
             URLConnection connection;
             try {
                 connection = new URL("https://store.original.gg").openConnection();
+                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
@@ -82,6 +83,8 @@ public class CacheManager {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                cache.update(0);
+                return;
             }
 
             String percentString = (storeScrape.substring(storeScrape.indexOf("<div id=\"js-goal\" class=\"donation-goal\">"), storeScrape.indexOf("<div class=\"progress  progress-striped   active \">")));
@@ -109,6 +112,7 @@ public class CacheManager {
             URLConnection connection;
             try {
                 connection = new URL("https://store.original.gg").openConnection();
+                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
@@ -123,6 +127,10 @@ public class CacheManager {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                cache.update(new TopDonator(
+                        "", 0
+                ));
+                return;
             }
 
             String rawData = (storeScrape.substring(storeScrape.indexOf("div class=\"panel-heading\"><i class=\"fas fa-medal\"></i> Top Customer</div>"),

@@ -54,7 +54,7 @@ public class Main implements DatabaseMain, LoggableMain, FileManagerMain {
         this.databaseManager = new DatabaseManager();
         this.notificationManager = new NotificationManager();
 
-        this.bot = JDABuilder.createDefault(config.botToken).build();
+        this.bot = JDABuilder.createDefault(jdaConfig.token).build();
 
         this.discordManager = new DiscordManager();
 
