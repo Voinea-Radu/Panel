@@ -2,7 +2,6 @@ package dev.lightdream.originalpanel.managers;
 
 import dev.lightdream.databasemanager.OrderBy;
 import dev.lightdream.databasemanager.database.ProgrammaticHikariDatabaseManager;
-import dev.lightdream.lambda.LambdaExecutor;
 import dev.lightdream.logger.Debugger;
 import dev.lightdream.originalpanel.Main;
 import dev.lightdream.originalpanel.dto.Staff;
@@ -11,6 +10,7 @@ import dev.lightdream.originalpanel.dto.data.BugsData;
 import dev.lightdream.originalpanel.dto.data.ComplainData;
 import dev.lightdream.originalpanel.dto.data.UnbanData;
 import dev.lightdream.originalpanel.dto.data.frontend.*;
+import lombok.SneakyThrows;
 
 import java.sql.ResultSet;
 import java.util.*;
@@ -49,324 +49,304 @@ public class DatabaseManager extends ProgrammaticHikariDatabaseManager {
         createTable(Apply.class);
     }
 
+    @SneakyThrows
     public int getDonorsCount() {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_user_permissions` WHERE permission LIKE \"group.%\" AND permission!=\"group.default\" AND server=\"global\";";
-            ResultSet r = executeQuery(sql, new ArrayList<>());
-            if (r.next()) {
-                return r.getInt(1);
-            }
-            return 0;
-        }, e -> 0);
+        String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_user_permissions` WHERE permission LIKE \"group.%\" AND permission!=\"group.default\" AND server=\"global\";";
+        ResultSet r = executeQuery(sql, new ArrayList<>());
+        if (r.next()) {
+            return r.getInt(1);
+        }
+        return 0;
     }
 
 
+    @SneakyThrows
     public int getRegisteredCount() {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `authme`.`authme` WHERE 1";
-            ResultSet r = executeQuery(sql, new ArrayList<>());
-            if (r.next()) {
-                return r.getInt(1);
-            }
-            return 0;
-        }, e -> 0);
+        String sql = "SELECT COUNT(*) FROM `authme`.`authme` WHERE 1";
+        ResultSet r = executeQuery(sql, new ArrayList<>());
+        if (r.next()) {
+            return r.getInt(1);
+        }
+        return 0;
     }
 
+    @SneakyThrows
     public String getAuthMePassword(String username) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT password FROM `authme`.`authme` WHERE username=? OR realname=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(username, username));
-            if (r.next()) {
-                return r.getString(1);
-            }
-            return "";
-        }, e -> "");
+        String sql = "SELECT password FROM `authme`.`authme` WHERE username=? OR realname=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username, username));
+        if (r.next()) {
+            return r.getString(1);
+        }
+        return "";
     }
 
+    @SneakyThrows
     public List<Staff> getStaff() {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
+        List<String> staffRanks = Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee");
 
+        String args1 = "";
+        String args2 = "";
 
-            List<String> staffRanks = Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee");
+        for (String staffRank : staffRanks) {
+            args1 += "permission=\"group." + staffRank + "\" OR ";
+            args2 += "primary_group=\"" + staffRank + "\" OR ";
+        }
+        args1 += "OR";
+        args1 = args1.replace("OR OR", "");
+        args2 += "OR";
+        args2 = args2.replace("OR OR", "");
 
-            String args1 = "";
-            String args2 = "";
+        String sql1 = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( " + args1 + " );";
+        String sql2 = "SELECT * FROM `luckperms`.`luckperms_players` WHERE " + args2;
 
-            for (String staffRank : staffRanks) {
-                args1 += "permission=\"group." + staffRank + "\" OR ";
-                args2 += "primary_group=\"" + staffRank + "\" OR ";
+        ResultSet r1 = executeQuery(sql1, new ArrayList<>());
+        ResultSet r2 = executeQuery(sql2, new ArrayList<>());
+
+        HashSet<String> staffsUUID = new HashSet<>();
+
+        while (r1.next()) {
+            staffsUUID.add(r1.getString("uuid"));
+        }
+
+        while (r2.next()) {
+            staffsUUID.add(r2.getString("uuid"));
+        }
+
+        List<Staff> staffs = new ArrayList<>();
+
+        staffsUUID.forEach(uuid -> {
+            Staff staff = new Staff();
+            staff.uuid = uuid;
+            staff.username = getPlayerName(uuid);
+            staff.rank = getRank(uuid);
+            if (!staff.username.equals("null")) {
+                staffs.add(staff);
             }
-            args1 += "OR";
-            args1 = args1.replace("OR OR", "");
-            args2 += "OR";
-            args2 = args2.replace("OR OR", "");
+        });
 
-            String sql1 = "SELECT * FROM `luckperms`.`luckperms_user_permissions` WHERE server=\"global\" AND ( " + args1 + " );";
-            String sql2 = "SELECT * FROM `luckperms`.`luckperms_players` WHERE " + args2;
+        //Sort staff
 
-            ResultSet r1 = executeQuery(sql1, new ArrayList<>());
-            ResultSet r2 = executeQuery(sql2, new ArrayList<>());
+        List<Staff> owner = staffs.stream().filter(staff -> staff.rank.equals("owner")).collect(Collectors.toList());
+        List<Staff> hManager = staffs.stream().filter(staff -> staff.rank.equals("h-manager")).collect(Collectors.toList());
+        List<Staff> manager = staffs.stream().filter(staff -> staff.rank.equals("manager")).collect(Collectors.toList());
+        List<Staff> supervizor = staffs.stream().filter(staff -> staff.rank.equals("supervizor")).collect(Collectors.toList());
+        List<Staff> operator = staffs.stream().filter(staff -> staff.rank.equals("operator")).collect(Collectors.toList());
+        List<Staff> srAdmin = staffs.stream().filter(staff -> staff.rank.equals("sradmin")).collect(Collectors.toList());
+        List<Staff> admin = staffs.stream().filter(staff -> staff.rank.equals("admin")).collect(Collectors.toList());
+        List<Staff> srMod = staffs.stream().filter(staff -> staff.rank.equals("srmod")).collect(Collectors.toList());
+        List<Staff> mod = staffs.stream().filter(staff -> staff.rank.equals("mod")).collect(Collectors.toList());
+        List<Staff> jrMod = staffs.stream().filter(staff -> staff.rank.equals("jrmod")).collect(Collectors.toList());
+        List<Staff> helper = staffs.stream().filter(staff -> staff.rank.equals("helper")).collect(Collectors.toList());
+        List<Staff> trainee = staffs.stream().filter(staff -> staff.rank.equals("trainee")).collect(Collectors.toList());
 
-            HashSet<String> staffsUUID = new HashSet<>();
+        Collections.sort(owner);
+        Collections.sort(hManager);
+        Collections.sort(manager);
+        Collections.sort(supervizor);
+        Collections.sort(operator);
+        Collections.sort(srAdmin);
+        Collections.sort(admin);
+        Collections.sort(srMod);
+        Collections.sort(mod);
+        Collections.sort(jrMod);
+        Collections.sort(helper);
+        Collections.sort(trainee);
 
-            while (r1.next()) {
-                staffsUUID.add(r1.getString("uuid"));
-            }
+        List<Staff> output = new ArrayList<>();
 
-            while (r2.next()) {
-                staffsUUID.add(r2.getString("uuid"));
-            }
+        output.addAll(owner);
+        output.addAll(hManager);
+        output.addAll(manager);
+        output.addAll(supervizor);
+        output.addAll(operator);
+        output.addAll(srAdmin);
+        output.addAll(admin);
+        output.addAll(srMod);
+        output.addAll(mod);
+        output.addAll(jrMod);
+        output.addAll(helper);
+        output.addAll(trainee);
 
-            List<Staff> staffs = new ArrayList<>();
-
-            staffsUUID.forEach(uuid -> {
-                Staff staff = new Staff();
-                staff.uuid = uuid;
-                staff.username = getPlayerName(uuid);
-                staff.rank = getRank(uuid);
-                if (!staff.username.equals("null")) {
-                    staffs.add(staff);
-                }
-            });
-
-            //Sort staff
-
-            List<Staff> owner = staffs.stream().filter(staff -> staff.rank.equals("owner")).collect(Collectors.toList());
-            List<Staff> hManager = staffs.stream().filter(staff -> staff.rank.equals("h-manager")).collect(Collectors.toList());
-            List<Staff> manager = staffs.stream().filter(staff -> staff.rank.equals("manager")).collect(Collectors.toList());
-            List<Staff> supervizor = staffs.stream().filter(staff -> staff.rank.equals("supervizor")).collect(Collectors.toList());
-            List<Staff> operator = staffs.stream().filter(staff -> staff.rank.equals("operator")).collect(Collectors.toList());
-            List<Staff> srAdmin = staffs.stream().filter(staff -> staff.rank.equals("sradmin")).collect(Collectors.toList());
-            List<Staff> admin = staffs.stream().filter(staff -> staff.rank.equals("admin")).collect(Collectors.toList());
-            List<Staff> srMod = staffs.stream().filter(staff -> staff.rank.equals("srmod")).collect(Collectors.toList());
-            List<Staff> mod = staffs.stream().filter(staff -> staff.rank.equals("mod")).collect(Collectors.toList());
-            List<Staff> jrMod = staffs.stream().filter(staff -> staff.rank.equals("jrmod")).collect(Collectors.toList());
-            List<Staff> helper = staffs.stream().filter(staff -> staff.rank.equals("helper")).collect(Collectors.toList());
-            List<Staff> trainee = staffs.stream().filter(staff -> staff.rank.equals("trainee")).collect(Collectors.toList());
-
-            Collections.sort(owner);
-            Collections.sort(hManager);
-            Collections.sort(manager);
-            Collections.sort(supervizor);
-            Collections.sort(operator);
-            Collections.sort(srAdmin);
-            Collections.sort(admin);
-            Collections.sort(srMod);
-            Collections.sort(mod);
-            Collections.sort(jrMod);
-            Collections.sort(helper);
-            Collections.sort(trainee);
-
-            List<Staff> output = new ArrayList<>();
-
-            output.addAll(owner);
-            output.addAll(hManager);
-            output.addAll(manager);
-            output.addAll(supervizor);
-            output.addAll(operator);
-            output.addAll(srAdmin);
-            output.addAll(admin);
-            output.addAll(srMod);
-            output.addAll(mod);
-            output.addAll(jrMod);
-            output.addAll(helper);
-            output.addAll(trainee);
-
-            return output;
-        }, e -> new ArrayList<>());
+        return output;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public String getPlayerName(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
 
-            String sql = "SELECT * FROM `luckperms`.`luckperms_players` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT * FROM `luckperms`.`luckperms_players` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getString("username");
-            }
+        if (r.next()) {
+            return r.getString("username");
+        }
 
-            return "Undefined";
-        }, e -> "Undefined");
+        return "Undefined";
     }
 
+    @SneakyThrows
     @SuppressWarnings({"ArraysAsListWithZeroOrOneArgument", "BooleanMethodIsAlwaysInverted"})
     public boolean validateUser(String username) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_players` WHERE username=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(username));
+        String sql = "SELECT COUNT(*) FROM `luckperms`.`luckperms_players` WHERE username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username));
 
-            if (r.next()) {
-                return r.getInt(1) >= 1;
-            }
+        if (r.next()) {
+            return r.getInt(1) >= 1;
+        }
 
-            return false;
-        }, e -> false);
+        return false;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public String getPlayerUUID(String username) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT uuid FROM `luckperms`.`luckperms_players` WHERE username=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
+        String sql = "SELECT uuid FROM `luckperms`.`luckperms_players` WHERE username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
 
-            if (r.next()) {
-                return r.getString(1);
-            }
+        if (r.next()) {
+            return r.getString(1);
+        }
 
-            return "";
-        }, e -> "");
+        return "";
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public String getRank(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
 
-            String sql1 = "SELECT primary_group FROM `luckperms`.`luckperms_players` WHERE uuid=?";
-            String sql2 = "SELECT permission FROM `luckperms`.`luckperms_user_permissions` WHERE permission LIKE \"group.%\" AND uuid=?";
+        String sql1 = "SELECT primary_group FROM `luckperms`.`luckperms_players` WHERE uuid=?";
+        String sql2 = "SELECT permission FROM `luckperms`.`luckperms_user_permissions` WHERE permission LIKE \"group.%\" AND uuid=?";
 
-            List<String> userRanks = new ArrayList<>();
+        List<String> userRanks = new ArrayList<>();
 
-            ResultSet r1 = executeQuery(sql1, Arrays.asList(uuid));
-            ResultSet r2 = executeQuery(sql2, Arrays.asList(uuid));
+        ResultSet r1 = executeQuery(sql1, Arrays.asList(uuid));
+        ResultSet r2 = executeQuery(sql2, Arrays.asList(uuid));
 
-            if (r1.next()) {
-                userRanks.add(r1.getString(1).replace("group.", ""));
-            }
+        if (r1.next()) {
+            userRanks.add(r1.getString(1).replace("group.", ""));
+        }
 
-            while (r2.next()) {
-                userRanks.add(r2.getString(1).replace("group.", ""));
-            }
+        while (r2.next()) {
+            userRanks.add(r2.getString(1).replace("group.", ""));
+        }
 
-            return selectHighestRank(userRanks);
-        }, e -> "");
+        return selectHighestRank(userRanks);
     }
 
     public String selectHighestRank(List<String> ranks) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            Debugger.info(ranks);
+        Debugger.info(ranks);
 
-            List<String> definedRanks = new ArrayList<>(Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee", "sponsor", "original", "eternal", "platinum", "legendary", "god", "xenon", "heda", "suprem", "alpha"));
+        List<String> definedRanks = new ArrayList<>(Arrays.asList("owner", "h-manager", "manager", "supervizor", "operator", "sradmin", "admin", "srmod", "mod", "jrmod", "helper", "trainee", "sponsor", "original", "eternal", "platinum", "legendary", "god", "xenon", "heda", "suprem", "alpha"));
 
-            for (String rank : definedRanks) {
-                if (ranks.contains(rank)) {
-                    return rank;
-                }
+        for (String rank : definedRanks) {
+            if (ranks.contains(rank)) {
+                return rank;
             }
+        }
 
-            return "default";
-        }, e -> "default");
+        return "default";
     }
 
+    @SneakyThrows
     public int getBanCount(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `litebans`.`bans` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT COUNT(*) FROM `litebans`.`bans` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getInt(1);
-            }
+        if (r.next()) {
+            return r.getInt(1);
+        }
 
-            return 0;
-        }, e -> 0);
+        return 0;
     }
 
+    @SneakyThrows
     public int getKickCount(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `litebans`.`kicks` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT COUNT(*) FROM `litebans`.`kicks` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getInt(1);
-            }
+        if (r.next()) {
+            return r.getInt(1);
+        }
 
-            return 0;
-        }, e -> 0);
+        return 0;
     }
 
+    @SneakyThrows
     public int getMuteCount(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `litebans`.`mutes` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT COUNT(*) FROM `litebans`.`mutes` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getInt(1);
-            }
+        if (r.next()) {
+            return r.getInt(1);
+        }
 
-            return 0;
-        }, e -> 0);
+        return 0;
     }
 
+    @SneakyThrows
     public int getWarningCount(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT COUNT(*) FROM `litebans`.`warnings` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT COUNT(*) FROM `litebans`.`warnings` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getInt(1);
-            }
+        if (r.next()) {
+            return r.getInt(1);
+        }
 
-            return 0;
-        }, e -> 0);
+        return 0;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public Long getJoinDate(String username) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT regdate FROM `authme`.`authme` WHERE  username=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
+        String sql = "SELECT regdate FROM `authme`.`authme` WHERE  username=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(username.toLowerCase()));
 
-            if (r.next()) {
-                return r.getLong(1);
-            }
+        if (r.next()) {
+            return r.getLong(1);
+        }
 
-            return 0L;
-        }, e -> 0L);
+        return 0L;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public int getPlayTime(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT playedtime FROM `bungeecord`.`playtime` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT playedtime FROM `bungeecord`.`playtime` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            int output = 0;
+        int output = 0;
 
-            while (r.next()) {
-                output += r.getInt(1);
-            }
+        while (r.next()) {
+            output += r.getInt(1);
+        }
 
-            return output;
-        }, e -> 0);
+        return output;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public int getOriginalCoins(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT points FROM `player_points`.`playerpoints_points` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT points FROM `player_points`.`playerpoints_points` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getInt(1);
-            }
+        if (r.next()) {
+            return r.getInt(1);
+        }
 
-            return 0;
-        }, e -> 0);
+        return 0;
     }
 
+    @SneakyThrows
     @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
     public Long getDiscordID(String uuid) {
-        return LambdaExecutor.LambdaCatch.ReturnLambdaCatch.executeCatch(() -> {
-            String sql = "SELECT discord_id FROM `royal_security`.`users` WHERE uuid=?";
-            ResultSet r = executeQuery(sql, Arrays.asList(uuid));
+        String sql = "SELECT discord_id FROM `royal_security`.`users` WHERE uuid=?";
+        ResultSet r = executeQuery(sql, Arrays.asList(uuid));
 
-            if (r.next()) {
-                return r.getLong(1);
-            }
+        if (r.next()) {
+            return r.getLong(1);
+        }
 
-            return 0L;
-        }, e -> 0L);
+        return 0L;
     }
 
 
