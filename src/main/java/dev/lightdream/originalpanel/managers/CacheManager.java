@@ -68,7 +68,10 @@ public class CacheManager {
             URLConnection connection;
             try {
                 connection = new URL("https://store.original.gg").openConnection();
-                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                connection.addRequestProperty("User-Agent", "Mozilla");
+                connection.setReadTimeout(5000);
+                connection.setConnectTimeout(5000);
+
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
@@ -112,7 +115,10 @@ public class CacheManager {
             URLConnection connection;
             try {
                 connection = new URL("https://store.original.gg").openConnection();
-                connection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+                connection.addRequestProperty("User-Agent", "Mozilla");
+                connection.setReadTimeout(5000);
+                connection.setConnectTimeout(5000);
+
                 BufferedReader reader = null;
                 try {
                     reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
