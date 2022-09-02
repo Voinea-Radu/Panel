@@ -7,7 +7,7 @@ import dev.lightdream.originalpanel.dto.data.UnbanData;
 
 public class DriverConfig extends dev.lightdream.databasemanager.dto.DriverConfig {
 
-    public DriverConfig(){
+    public DriverConfig() {
         MYSQL.dataTypes.put(ComplainData.ComplainStatus.class, "TEXT");
         MYSQL.dataTypes.put(ComplainData.ComplainDecision.class, "TEXT");
         MYSQL.dataTypes.put(UnbanData.UnbanStatus.class, "TEXT");

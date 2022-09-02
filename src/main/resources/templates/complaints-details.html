@@ -14,41 +14,51 @@
                 <h1 class="panel-title">Complain</h1>
 
                 <h3 id="error">Error message here</h3>
-                <h2 class="approved" id="approved" hidden="hidden" th:if="${complain.decision.toString() == 'APPROVED'}">Approved</h2>
-                <h2 class="denied" id="denied" hidden="hidden" th:if="${complain.decision.toString() =='DENIED'}">Denied</h2>
+                <h2 class="approved" id="approved" hidden="hidden"
+                    th:if="${complain.decision.toString() == 'APPROVED'}">Approved</h2>
+                <h2 class="denied" id="denied" hidden="hidden" th:if="${complain.decision.toString() =='DENIED'}">
+                    Denied</h2>
                 <div class="panel-form">
                     <form>
                         <div class="form-group">
                             <label for="id" id="id-label">ID</label>
-                            <input class="form-control" id="id" type="text" readonly="readonly" th:value="${complain.id}">
+                            <input class="form-control" id="id" type="text" readonly="readonly"
+                                   th:value="${complain.id}">
                         </div>
                         <div class="form-group">
                             <label for="user" id="user-label">By</label>
-                            <input class="form-control" id="user" type="text" readonly="readonly" th:value="${complain.user}">
+                            <input class="form-control" id="user" type="text" readonly="readonly"
+                                   th:value="${complain.user}">
                         </div>
                         <div class="form-group">
                             <label for="target" id="target-label">Target</label>
-                            <input class="form-control" id="target" type="text" readonly="readonly" th:value="${complain.target}">
+                            <input class="form-control" id="target" type="text" readonly="readonly"
+                                   th:value="${complain.target}">
                         </div>
                         <div class="form-group">
                             <label for="section" id="section-label">Section</label>
-                            <input class="form-control" id="section" type="text" readonly="readonly" th:value="${complain.section}">
+                            <input class="form-control" id="section" type="text" readonly="readonly"
+                                   th:value="${complain.section}">
                         </div>
                         <div class="form-group">
                             <label for="date_and_time" id="date_and_time-label">Date and Time</label>
-                            <input class="form-control" id="date_and_time" type="text" readonly="readonly" th:value="${complain.dateAndTime}">
+                            <input class="form-control" id="date_and_time" type="text" readonly="readonly"
+                                   th:value="${complain.dateAndTime}">
                         </div>
                         <div class="form-group">
                             <label for="description" id="description-label">Description</label>
-                            <textarea class="form-control vertical-text" id="description" readonly="readonly" th:text="${complain.description}"></textarea>
+                            <textarea class="form-control vertical-text" id="description" readonly="readonly"
+                                      th:text="${complain.description}"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="proof" id="proof-label">Proof</label>
-                            <textarea class="form-control vertical-text" id="proof" readonly="readonly" th:text="${complain.proof}"></textarea>
+                            <textarea class="form-control vertical-text" id="proof" readonly="readonly"
+                                      th:text="${complain.proof}"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="target-response" id="target-response-label">Target Response</label>
-                            <textarea class="form-control vertical-text" id="target-response" th:text="${complain.targetResponse}"></textarea>
+                            <textarea class="form-control vertical-text" id="target-response"
+                                      th:text="${complain.targetResponse}"></textarea>
                         </div>
                         <div class="form-buttons">
                             <button class="form-button submit" id="complain-submit" type="button" hidden>Submit</button>
@@ -56,7 +66,7 @@
                         </div>
                         <div class="form-buttons">
                             <button class="form-button approve" id="approve" type="button" hidden>Approve</button>
-                            <button class="form-button deny" id="deny" type="button"  hidden>Deny</button>
+                            <button class="form-button deny" id="deny" type="button" hidden>Deny</button>
                         </div>
                     </form>
                 </div>

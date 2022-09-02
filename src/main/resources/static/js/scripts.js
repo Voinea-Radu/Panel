@@ -91,7 +91,7 @@ async function loginCookie() {
             login.outerHTML = "" +
                 "<img class='user-icon' src='" + url + "' onclick=profile('" + obj.username + "') alt='profile'> " +
                 "<button class='top-btn login' id='logout-button' style='margin-left: 20px'>Logout</button>";
-            document.getElementById("logout-button").addEventListener("click", ()=>{
+            document.getElementById("logout-button").addEventListener("click", () => {
                 setCookie("login_data", "");
                 location.reload();
             })

@@ -21,6 +21,7 @@ public class NotificationManager {
         notifyUser(data, discordID, target);
     }
 
+    @SuppressWarnings("unused")
     public void notifyUser(FrontEndData data, Long discordID) {
         notifyUser(data, discordID, false);
     }
